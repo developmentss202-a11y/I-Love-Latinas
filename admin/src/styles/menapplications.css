@@ -1,0 +1,1059 @@
+
+/* =========================================================
+   MEN APPLICATIONS - FINAL RESPONSIVE CSS
+   Desktop + Laptop + Tablet + Mobile
+   Works with current MenApplications.jsx
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.men-applications-page {
+  width: 100%;
+  min-width: 0;
+  min-height: calc(100vh - 76px);
+  padding: 18px 16px 30px;
+  background: #fff8f4;
+  overflow-x: hidden;
+}
+
+.men-loading {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  color: #6f4b50;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   HEADING
+========================================================= */
+
+.men-page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.men-page-heading h1 {
+  margin: 0;
+  color: #0b315f;
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+.men-count-pill {
+  min-width: 82px;
+  padding: 10px 14px;
+  border: 1px solid #ead7d1;
+  border-radius: 999px;
+  background: #fff;
+  color: #6e4b50;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.men-filter-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns:
+    minmax(220px, 2fr)
+    minmax(130px, 0.9fr)
+    minmax(145px, 0.95fr)
+    minmax(145px, 0.95fr)
+    auto;
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid #eedbd6;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 5px 16px rgba(62, 18, 31, 0.035);
+}
+
+.men-filter-field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.men-filter-field label {
+  color: #63383f;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.men-filter-field input,
+.men-filter-field select {
+  width: 100%;
+  height: 40px;
+  padding: 0 11px;
+  border: 1px solid #e7d3ce;
+  border-radius: 8px;
+  outline: none;
+  background: #fff;
+  color: #2f2024;
+  font-size: 12px;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.men-filter-field input:focus,
+.men-filter-field select:focus {
+  border-color: #b33b5d;
+  box-shadow: 0 0 0 3px rgba(179, 59, 93, 0.08);
+}
+
+.men-filter-field input::placeholder {
+  color: #b09aa0;
+}
+
+.men-clear-filter-wrap {
+  display: flex;
+  align-items: flex-end;
+}
+
+.men-clear-filter-btn {
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid #efcbd2;
+  border-radius: 8px;
+  background: #fff7f8;
+  color: #b0193f;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.men-clear-filter-btn:hover {
+  background: #fff0f3;
+}
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.men-applications-page .dashboard-error,
+.men-action-message {
+  margin: 0 0 12px;
+  padding: 10px 13px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.men-applications-page .dashboard-error {
+  border: 1px solid #efc3cb;
+  background: #fff0f2;
+  color: #c53a53;
+}
+
+.men-action-message.approved {
+  border: 1px solid #bce5cd;
+  background: #eaf9f1;
+  color: #08763f;
+}
+
+.men-action-message.rejected {
+  border: 1px solid #efc4cd;
+  background: #fff0f3;
+  color: #d6425c;
+}
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.men-applications-page .admin-data-card {
+  width: 100%;
+  min-width: 0;
+  padding: 7px 8px 9px;
+  border: 1px solid #eedbd6;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(62, 18, 31, 0.04);
+}
+
+.men-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.men-applications-page .admin-table {
+  width: 100%;
+  min-width: 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.men-applications-page .admin-table thead tr {
+  background: #fff8f8;
+}
+
+.men-applications-page .admin-table th,
+.men-applications-page .admin-table td {
+  vertical-align: middle;
+  border-bottom: 1px solid #f1e3df;
+  text-align: left;
+}
+
+.men-applications-page .admin-table th {
+  padding: 8px 4px;
+  color: #63383f;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.men-applications-page .admin-table td {
+  height: 43px;
+  padding: 6px 4px;
+  color: #2d2225;
+  font-size: 11px;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.men-applications-page .admin-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.men-applications-page .admin-table tbody tr:hover {
+  background: #fffaf8;
+}
+
+/* =========================================================
+   DESKTOP COLUMN WIDTHS
+   Action heading remains at the same place.
+   User data columns are kept slightly left.
+========================================================= */
+
+.men-applications-page .admin-table th:nth-child(1),
+.men-applications-page .admin-table td:nth-child(1) {
+  width: 4%;
+  text-align: center;
+}
+
+.men-applications-page .admin-table th:nth-child(2),
+.men-applications-page .admin-table td:nth-child(2) {
+  width: 9%;
+  padding-left: 2px;
+}
+
+.men-applications-page .admin-table th:nth-child(3),
+.men-applications-page .admin-table td:nth-child(3) {
+  width: 14%;
+  padding-left: 1px;
+}
+
+.men-applications-page .admin-table th:nth-child(4),
+.men-applications-page .admin-table td:nth-child(4) {
+  width: 11%;
+  padding-left: 1px;
+}
+
+.men-applications-page .admin-table th:nth-child(5),
+.men-applications-page .admin-table td:nth-child(5) {
+  width: 18%;
+  padding-left: 1px;
+}
+
+.men-applications-page .admin-table th:nth-child(6),
+.men-applications-page .admin-table td:nth-child(6) {
+  width: 10%;
+  padding-left: 1px;
+}
+
+.men-applications-page .admin-table th:nth-child(7),
+.men-applications-page .admin-table td:nth-child(7) {
+  width: 14%;
+  padding-left: 1px;
+}
+
+.men-applications-page .admin-table th:nth-child(8),
+.men-applications-page .admin-table td:nth-child(8) {
+  width: 20%;
+  padding-left: 2px;
+}
+
+.men-applications-page .admin-table td:nth-child(2),
+.men-applications-page .admin-table td:nth-child(3),
+.men-applications-page .admin-table td:nth-child(4),
+.men-applications-page .admin-table td:nth-child(5),
+.men-applications-page .admin-table td:nth-child(6) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.men-date-cell {
+  color: #74535a;
+  font-size: 10.5px !important;
+  font-weight: 500 !important;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.men-applications-page .status-badge {
+  min-width: 74px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  line-height: 1;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.men-applications-page .status-badge.pending {
+  border: 1px solid #efd37d;
+  background: #fff6d7;
+  color: #9f6900;
+}
+
+.men-applications-page .status-badge.approved {
+  border: 1px solid #bce4cd;
+  background: #eaf9f1;
+  color: #087c40;
+}
+
+.men-applications-page .status-badge.rejected {
+  border: 1px solid #efc4cd;
+  background: #fff0f3;
+  color: #d9445e;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+   Heading stays fixed.
+   Row buttons are moved slightly LEFT.
+========================================================= */
+
+.men-action-buttons {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 3px;
+  margin-left: -8px;
+}
+
+.men-view-btn,
+.men-approve-btn,
+.men-reject-btn {
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0 6px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 9.5px;
+  line-height: 1;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.men-view-btn {
+  width: 51px;
+  border: 1px solid #c8dcfa;
+  background: #eef5ff;
+  color: #0f5ca9;
+}
+
+.men-approve-btn {
+  width: 64px;
+  border: 1px solid #bfe5cf;
+  background: #eefaf3;
+  color: #078342;
+}
+
+.men-reject-btn {
+  width: 57px;
+  border: 1px solid #f1c8d0;
+  background: #fff3f5;
+  color: #d33c54;
+}
+
+.men-view-btn:hover {
+  background: #e3efff;
+}
+
+.men-approve-btn:hover:not(:disabled) {
+  background: #e1f6ea;
+}
+
+.men-reject-btn:hover:not(:disabled) {
+  background: #ffe8ed;
+}
+
+.men-approve-btn:disabled,
+.men-reject-btn:disabled {
+  opacity: .38;
+  cursor: not-allowed;
+}
+
+.men-view-btn svg,
+.men-approve-btn svg,
+.men-reject-btn svg {
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  flex: 0 0 12px;
+}
+
+/* =========================================================
+   EMPTY ROW
+========================================================= */
+
+.men-empty-row {
+  padding: 24px !important;
+  text-align: center !important;
+  color: #9b747b !important;
+  font-size: 12px !important;
+  font-weight: 700;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.men-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 8px 4px 2px;
+}
+
+.men-page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.men-pagination > button,
+.men-page-numbers button {
+  min-width: 32px;
+  height: 31px;
+  padding: 0 9px;
+  border: 1px solid #ead6d1;
+  border-radius: 6px;
+  background: #fff;
+  color: #69434a;
+  font-size: 10.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.men-page-numbers button.active {
+  border-color: #9e183f;
+  background: #9e183f;
+  color: #fff;
+}
+
+.men-pagination button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   VIEW MODAL
+========================================================= */
+
+.men-view-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(28, 8, 14, .55);
+  backdrop-filter: blur(3px);
+}
+
+.men-view-modal {
+  width: min(620px, 94vw);
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 18px;
+  border: 1px solid #ecd9d4;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(28, 8, 14, .2);
+}
+
+.men-view-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0e2de;
+}
+
+.men-view-kicker {
+  display: block;
+  margin-bottom: 3px;
+  color: #a36e79;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.men-view-header h2 {
+  margin: 0;
+  color: #173052;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.men-view-header > button {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid #ead7d2;
+  border-radius: 7px;
+  background: #fff;
+  color: #8f4d5c;
+  cursor: pointer;
+}
+
+.men-view-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.men-detail-item {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #f0e1dd;
+  border-radius: 8px;
+  background: #fffaf8;
+}
+
+.men-detail-item--full {
+  grid-column: 1 / -1;
+}
+
+.men-detail-item span {
+  display: block;
+  margin-bottom: 4px;
+  color: #a17c83;
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.men-detail-item strong {
+  display: block;
+  color: #2f2427;
+  font-size: 11.5px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.men-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 7px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f0e1dd;
+}
+
+.men-modal-approve,
+.men-modal-reject {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 12px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.men-modal-approve {
+  border: 1px solid #bce4cd;
+  background: #eaf9f1;
+  color: #087d42;
+}
+
+.men-modal-reject {
+  border: 1px solid #efc5cd;
+  background: #fff0f3;
+  color: #d74860;
+}
+
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+   Full Laptop -> Half Laptop -> Tablet -> Mobile
+========================================================= */
+
+/* =========================
+   NORMAL LAPTOP / SMALL DESKTOP
+   1280px and below
+========================= */
+@media (max-width: 1280px) {
+  .men-applications-page {
+    padding: 16px 12px 26px;
+  }
+
+  .men-page-heading h1 {
+    font-size: 27px;
+  }
+
+  .men-filter-card {
+    grid-template-columns:
+      minmax(220px, 1.6fr)
+      minmax(125px, .8fr)
+      minmax(135px, .9fr)
+      minmax(135px, .9fr)
+      auto;
+    gap: 8px;
+  }
+
+  .men-applications-page .admin-table th,
+  .men-applications-page .admin-table td {
+    font-size: 10px;
+  }
+
+  .men-action-buttons {
+    margin-left: -6px;
+    gap: 2px;
+  }
+
+  .men-view-btn {
+    width: 48px;
+  }
+
+  .men-approve-btn {
+    width: 60px;
+  }
+
+  .men-reject-btn {
+    width: 54px;
+  }
+
+  .men-view-btn,
+  .men-approve-btn,
+  .men-reject-btn {
+    height: 29px;
+    padding: 0 5px;
+    font-size: 9px;
+  }
+}
+
+/* =========================
+   HALF-LAPTOP / NARROW WINDOW
+   1100px and below
+
+   Important:
+   At this width the sidebar already consumes
+   a lot of space, so the normal 8-column table
+   is converted into responsive application cards.
+========================= */
+@media (max-width: 1100px) {
+  .men-applications-page {
+    padding: 14px 10px 24px;
+  }
+
+  .men-page-heading {
+    margin-bottom: 12px;
+  }
+
+  .men-page-heading h1 {
+    font-size: 25px;
+  }
+
+  .men-count-pill {
+    min-width: 74px;
+    padding: 9px 11px;
+    font-size: 11px;
+  }
+
+  /* Filters become 2 columns */
+  .men-filter-card {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    padding: 12px;
+  }
+
+  .men-search-field {
+    grid-column: 1 / -1;
+  }
+
+  .men-clear-filter-wrap {
+    align-items: stretch;
+  }
+
+  .men-clear-filter-btn {
+    width: 100%;
+  }
+
+  /* No horizontal moving table in half-laptop */
+  .men-table-scroll {
+    overflow: visible !important;
+    width: 100%;
+  }
+
+  .men-applications-page .admin-table,
+  .men-applications-page .admin-table tbody,
+  .men-applications-page .admin-table tr,
+  .men-applications-page .admin-table td {
+    display: block;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .men-applications-page .admin-table {
+    table-layout: auto;
+  }
+
+  .men-applications-page .admin-table thead {
+    display: none;
+  }
+
+  .men-applications-page .admin-table tbody tr {
+    margin-bottom: 12px;
+    padding: 9px 11px;
+    border: 1px solid #efded9;
+    border-radius: 11px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(62, 18, 31, .035);
+  }
+
+  .men-applications-page .admin-table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Two-column detail layout inside every card */
+  .men-applications-page .admin-table td {
+    min-height: 36px;
+    height: auto;
+    display: grid;
+    grid-template-columns: 105px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    padding: 7px 2px !important;
+    border-bottom: 1px dashed #f0e2de;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    white-space: normal !important;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .men-applications-page .admin-table td:last-child {
+    border-bottom: 0;
+  }
+
+  .men-applications-page .admin-table td::before {
+    color: #6b3e46;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .men-applications-page .admin-table td:nth-child(1)::before {
+    content: "S.No.";
+  }
+
+  .men-applications-page .admin-table td:nth-child(2)::before {
+    content: "She Is";
+  }
+
+  .men-applications-page .admin-table td:nth-child(3)::before {
+    content: "Name";
+  }
+
+  .men-applications-page .admin-table td:nth-child(4)::before {
+    content: "Mobile";
+  }
+
+  .men-applications-page .admin-table td:nth-child(5)::before {
+    content: "Email";
+  }
+
+  .men-applications-page .admin-table td:nth-child(6)::before {
+    content: "Date";
+  }
+
+  .men-applications-page .admin-table td:nth-child(7)::before {
+    content: "Status";
+  }
+
+  .men-applications-page .admin-table td:nth-child(8)::before {
+    content: "Action";
+  }
+
+  .men-applications-page .admin-table td:nth-child(1) {
+    text-align: left;
+  }
+
+  .men-applications-page .admin-table td:nth-child(2),
+  .men-applications-page .admin-table td:nth-child(3),
+  .men-applications-page .admin-table td:nth-child(4),
+  .men-applications-page .admin-table td:nth-child(5),
+  .men-applications-page .admin-table td:nth-child(6) {
+    overflow-wrap: anywhere !important;
+  }
+
+  .men-applications-page .status-badge {
+    justify-self: start;
+  }
+
+  /* Action is visible immediately, no right-side scrolling */
+  .men-action-buttons {
+    width: 100%;
+    margin-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 5px;
+  }
+
+  .men-view-btn,
+  .men-approve-btn,
+  .men-reject-btn {
+    height: 29px;
+    font-size: 9px;
+    padding: 0 6px;
+  }
+
+  .men-view-btn {
+    width: 50px;
+  }
+
+  .men-approve-btn {
+    width: 62px;
+  }
+
+  .men-reject-btn {
+    width: 56px;
+  }
+}
+
+/* =========================
+   TABLET
+   820px and below
+========================= */
+@media (max-width: 820px) {
+  .men-applications-page {
+    padding: 12px 9px 22px;
+  }
+
+  .men-page-heading h1 {
+    font-size: 22px;
+  }
+
+  .men-filter-card {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .men-search-field {
+    grid-column: auto;
+  }
+
+  .men-filter-field label {
+    font-size: 11px;
+  }
+
+  .men-filter-field input,
+  .men-filter-field select,
+  .men-clear-filter-btn {
+    height: 38px;
+    font-size: 11px;
+  }
+
+  .men-applications-page .admin-data-card {
+    padding: 8px;
+  }
+
+  .men-applications-page .admin-table td {
+    grid-template-columns: 95px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .men-pagination {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+}
+
+/* =========================
+   MOBILE
+   640px and below
+========================= */
+@media (max-width: 640px) {
+  .men-page-heading {
+    gap: 8px;
+  }
+
+  .men-page-heading h1 {
+    font-size: 20px;
+  }
+
+  .men-count-pill {
+    min-width: 66px;
+    padding: 8px 9px;
+    font-size: 10px;
+  }
+
+  .men-applications-page .admin-table tbody tr {
+    padding: 8px 9px;
+    margin-bottom: 10px;
+  }
+
+  .men-applications-page .admin-table td {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 7px;
+    padding: 6px 1px !important;
+    font-size: 10.5px;
+  }
+
+  .men-applications-page .admin-table td::before {
+    font-size: 9.5px;
+  }
+
+  .men-view-btn,
+  .men-approve-btn,
+  .men-reject-btn {
+    height: 28px;
+    font-size: 8.5px;
+    padding: 0 5px;
+  }
+
+  .men-view-btn {
+    width: 47px;
+  }
+
+  .men-approve-btn {
+    width: 59px;
+  }
+
+  .men-reject-btn {
+    width: 53px;
+  }
+
+  .men-view-overlay {
+    align-items: flex-start;
+    padding: 10px;
+    overflow-y: auto;
+  }
+
+  .men-view-modal {
+    width: 100%;
+    max-height: none;
+    margin: 10px 0;
+    padding: 13px;
+    border-radius: 12px;
+  }
+
+  .men-view-header h2 {
+    font-size: 17px;
+  }
+
+  .men-view-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .men-detail-item--full {
+    grid-column: auto;
+  }
+
+  .men-modal-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .men-modal-approve,
+  .men-modal-reject {
+    width: 100%;
+  }
+}
+
+/* =========================
+   VERY SMALL MOBILE
+   420px and below
+========================= */
+@media (max-width: 420px) {
+  .men-applications-page {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .men-page-heading h1 {
+    font-size: 18px;
+  }
+
+  .men-count-pill {
+    min-width: 60px;
+    padding: 7px 8px;
+  }
+
+  .men-filter-card {
+    padding: 9px;
+  }
+
+  .men-applications-page .admin-table tbody tr {
+    padding: 7px 8px;
+  }
+
+  .men-applications-page .admin-table td {
+    grid-template-columns: 78px minmax(0, 1fr);
+    gap: 6px;
+    font-size: 10px;
+  }
+
+  .men-applications-page .admin-table td::before {
+    font-size: 9px;
+  }
+
+  .men-action-buttons {
+    gap: 4px;
+  }
+}

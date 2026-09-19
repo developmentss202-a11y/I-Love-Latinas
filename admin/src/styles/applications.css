@@ -1,0 +1,2631 @@
+
+
+
+
+
+
+/* 
+.applications-page {
+  background: red !important;
+} */
+/* =========================================
+   APPLICATION PAGE
+========================================= */
+
+.applications-page {
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.applications-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.applications-title-row h1 {
+  margin: 0;
+  font-size: 44px;
+  line-height: 1.1;
+  font-weight: 900;
+  color: #08264d;
+  letter-spacing: -1.5px;
+}
+
+.application-result-count {
+  min-width: 102px;
+  min-height: 60px;
+
+  padding: 0 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #eadbd7;
+  border-radius: 40px;
+
+  color: #70545b;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+
+/* =========================================
+   FILTER CARD
+========================================= */
+
+.application-filter-card {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #eadbd7;
+  border-radius: 20px;
+
+  padding: 27px 18px 18px;
+
+  margin-bottom: 22px;
+}
+
+.application-filter-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(260px, 2fr)
+    minmax(150px, 1fr)
+    minmax(170px, 1.15fr)
+    minmax(170px, 1.15fr)
+    minmax(100px, 0.65fr)
+    minmax(100px, 0.65fr)
+    130px;
+
+  gap: 12px;
+
+  align-items: end;
+}
+
+
+/* FILTER FIELD */
+
+.application-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  min-width: 0;
+}
+
+.application-filter-field > span {
+  font-size: 14px;
+  font-weight: 800;
+  color: #65464f;
+}
+
+.application-filter-field input,
+.application-filter-field select {
+  width: 100%;
+  height: 56px;
+
+  box-sizing: border-box;
+
+  padding: 0 16px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5d4d0;
+  border-radius: 12px;
+
+  outline: none;
+
+  color: #33151e;
+
+  font-size: 14px;
+}
+
+.application-filter-field input:focus,
+.application-filter-field select:focus {
+  border-color: #a62449;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(166, 36, 73, 0.08);
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+.application-search-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.application-search-input-wrap input {
+  padding-left: 46px;
+}
+
+.application-search-icon {
+  position: absolute;
+
+  left: 15px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #8d7580;
+
+  font-size: 20px;
+
+  z-index: 2;
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   CLEAR FILTER
+========================================= */
+
+.application-clear-filter-btn {
+  height: 56px;
+
+  padding: 0 18px;
+
+  background: #fff7f7;
+
+  color: #a31d42;
+
+  border: 1px solid #efd3d7;
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.application-clear-filter-btn:hover {
+  background: #ffedef;
+}
+
+
+/* =========================================
+   TABLE CARD
+========================================= */
+
+.applications-data-card {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #eadbd7;
+  border-radius: 20px;
+
+  padding: 20px;
+
+  overflow: hidden;
+}
+
+.applications-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+
+/* =========================================
+   TABLE
+========================================= */
+
+.applications-table {
+  width: 100%;
+
+  min-width: 1000px;
+
+  border-collapse: collapse;
+
+  background: #ffffff;
+}
+
+.applications-table thead {
+  background: #fffafa;
+}
+
+.applications-table th {
+  height: 84px;
+
+  padding: 0 14px;
+
+  text-align: left;
+  vertical-align: middle;
+
+  color: #72565d;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.applications-table td {
+  padding: 20px 14px;
+
+  vertical-align: middle;
+
+  color: #32131d;
+
+  font-size: 14px;
+
+  border-bottom: 1px solid #eee2df;
+}
+
+.applications-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.applications-table tbody tr:hover {
+  background: #fffdfc;
+}
+
+
+/* =========================================
+   PHOTO
+========================================= */
+
+.application-table-photo {
+  width: 58px;
+  height: 58px;
+
+  object-fit: cover;
+
+  display: block;
+
+  border-radius: 11px;
+
+  border: 1px solid #ead8d4;
+}
+
+.application-no-photo {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  border-radius: 11px;
+
+  background: #fff3f5;
+
+  border: 1px solid #efdcdf;
+
+  color: #9c747e;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.application-status-pill {
+  min-width: 110px;
+
+  min-height: 42px;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 8px 18px;
+
+  box-sizing: border-box;
+
+  border-radius: 30px;
+
+  text-transform: capitalize;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.application-status-pending {
+  background: #fff7db;
+
+  border: 1px solid #f0dca1;
+
+  color: #aa7500;
+}
+
+.application-status-approved {
+  background: #eaf9f0;
+
+  border: 1px solid #bde7cd;
+
+  color: #00823c;
+}
+
+.application-status-rejected {
+  background: #fff0f2;
+
+  border: 1px solid #f2cbd1;
+
+  color: #d14156;
+}
+
+
+/* =========================================
+   ACTION
+========================================= */
+
+.application-action-heading {
+  text-align: center !important;
+}
+
+.application-action-cell {
+  min-width: 245px;
+}
+
+.application-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  white-space: nowrap;
+}
+
+.application-icon-btn {
+  min-height: 47px;
+
+  padding: 0 12px;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  border-radius: 11px;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.application-view-icon-btn {
+  color: #174ea6;
+
+  background: #edf3ff;
+
+  border: 1px solid #d1dfff;
+}
+
+.application-approve-icon-btn {
+  color: #18884f;
+
+  background: #f0faf4;
+
+  border: 1px solid #d5eee0;
+}
+
+.application-reject-icon-btn {
+  color: #d25568;
+
+  background: #fff6f7;
+
+  border: 1px solid #f1dfe2;
+}
+
+.application-icon-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.applications-empty-result {
+  padding: 45px !important;
+
+  text-align: center !important;
+
+  color: #876c72 !important;
+}
+
+
+/* =========================================
+   PAGINATION
+========================================= */
+
+.application-pagination {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  margin-top: 20px;
+
+  padding-top: 18px;
+
+  border-top: 1px solid #eee2df;
+}
+
+.pagination-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  color: #72565d;
+
+  font-size: 13px;
+}
+
+.pagination-info select {
+  height: 40px;
+
+  padding: 0 12px;
+
+  background: #ffffff;
+
+  border: 1px solid #e3d5d1;
+  border-radius: 9px;
+
+  outline: none;
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.pagination-nav-btn,
+.pagination-page-btn {
+  height: 40px;
+
+  padding: 0 13px;
+
+  border: 1px solid #e4d6d2;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #61434c;
+
+  cursor: pointer;
+
+  font-weight: 700;
+}
+
+.pagination-page-btn {
+  min-width: 40px;
+}
+
+.pagination-page-btn.active {
+  background: #8f173b;
+
+  border-color: #8f173b;
+
+  color: #ffffff;
+}
+
+.pagination-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   VIEW MODAL
+========================================= */
+
+.application-view-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+
+  background:
+    rgba(27, 6, 14, 0.55);
+
+  box-sizing: border-box;
+}
+
+.application-view-modal {
+  width: min(950px, 100%);
+
+  max-height: 92vh;
+
+  background: #ffffff;
+
+  border-radius: 22px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 20px 70px
+    rgba(0, 0, 0, 0.18);
+}
+
+.application-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 22px 25px;
+
+  border-bottom: 1px solid #eee3df;
+}
+
+.application-view-header h2 {
+  margin: 0;
+
+  color: #08264d;
+
+  font-size: 26px;
+}
+
+.application-view-header p {
+  margin: 5px 0 0;
+
+  color: #977d83;
+}
+
+.application-modal-close {
+  width: 42px;
+  height: 42px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #fff2f4;
+
+  color: #9d2243;
+
+  font-size: 27px;
+
+  cursor: pointer;
+}
+
+.application-view-body {
+  max-height: calc(92vh - 90px);
+
+  overflow-y: auto;
+
+  padding: 25px;
+}
+
+
+/* PROFILE */
+
+.application-view-profile {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 20px;
+
+  background: #fff9f8;
+
+  border: 1px solid #eee0dc;
+  border-radius: 16px;
+
+  margin-bottom: 22px;
+}
+
+.application-view-profile-photo,
+.application-view-avatar {
+  width: 82px;
+  height: 82px;
+
+  border-radius: 50%;
+}
+
+.application-view-profile-photo {
+  object-fit: cover;
+}
+
+.application-view-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #f9dce3;
+
+  color: #8f173b;
+
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.application-view-profile h3 {
+  margin: 0 0 5px;
+
+  color: #30131d;
+}
+
+.application-view-profile p {
+  margin: 0 0 10px;
+
+  color: #8a7077;
+}
+
+
+/* DETAILS */
+
+.application-details-section {
+  margin-top: 24px;
+}
+
+.application-details-section h3 {
+  margin: 0 0 14px;
+
+  color: #08264d;
+
+  font-size: 18px;
+}
+
+.application-details-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+}
+
+.application-detail-card {
+  min-height: 80px;
+
+  padding: 14px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  background: #fffafa;
+
+  border: 1px solid #eee1de;
+  border-radius: 12px;
+}
+
+.application-detail-card span {
+  color: #967b81;
+
+  font-size: 12px;
+}
+
+.application-detail-card strong {
+  color: #31131c;
+
+  font-size: 14px;
+
+  word-break: break-word;
+}
+
+.application-detail-wide {
+  grid-column: span 2;
+}
+
+
+/* =========================================
+   MEDIA
+========================================= */
+
+.application-media-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 15px;
+}
+
+.application-media-card {
+  padding: 15px;
+
+  background: #fffafa;
+
+  border: 1px solid #eee0dd;
+  border-radius: 14px;
+}
+
+.application-media-card h4 {
+  margin: 0 0 12px;
+
+  color: #5b3641;
+}
+
+.application-photo-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 8px;
+}
+
+.application-photo-grid img {
+  width: 100%;
+  height: 130px;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+}
+
+.application-media-card audio,
+.application-media-card video {
+  width: 100%;
+}
+
+.application-video-preview {
+  max-height: 220px;
+
+  background: #000000;
+
+  border-radius: 10px;
+}
+
+.application-media-empty {
+  color: #9a7e85;
+
+  font-size: 13px;
+}
+
+
+/* =========================================
+   MODAL FOOTER
+========================================= */
+
+.application-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 25px;
+}
+
+.application-modal-footer button {
+  min-width: 110px;
+  height: 45px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #8f173b;
+
+  color: #ffffff;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+/* =========================================
+   CONFIRM MODAL
+========================================= */
+
+.confirm-action-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 10000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background:
+    rgba(24, 6, 12, 0.58);
+}
+
+.confirm-action-modal {
+  position: relative;
+
+  width: min(420px, 100%);
+
+  padding: 35px 28px 28px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border-radius: 20px;
+
+  text-align: center;
+}
+
+.confirm-action-close {
+  position: absolute;
+
+  right: 15px;
+  top: 12px;
+
+  border: none;
+  background: transparent;
+
+  font-size: 26px;
+
+  cursor: pointer;
+}
+
+.confirm-action-icon {
+  width: 70px;
+  height: 70px;
+
+  margin: 0 auto 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.confirm-action-icon.approve {
+  color: #078342;
+
+  background: #e8f8ef;
+}
+
+.confirm-action-icon.reject {
+  color: #d33d53;
+
+  background: #fff0f2;
+}
+
+.confirm-action-modal h2 {
+  margin: 0 0 10px;
+
+  color: #1c2738;
+}
+
+.confirm-action-modal p {
+  color: #7b6870;
+
+  line-height: 1.6;
+}
+
+.confirm-action-buttons {
+  display: flex;
+  gap: 10px;
+
+  margin-top: 24px;
+}
+
+.confirm-action-buttons button {
+  flex: 1;
+
+  height: 46px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-weight: 800;
+}
+
+.confirm-cancel-btn {
+  background: #ffffff;
+
+  border: 1px solid #ded3d0;
+
+  color: #5d444b;
+}
+
+.confirm-approve-btn {
+  border: none;
+
+  background: #078342;
+
+  color: #ffffff;
+}
+
+.confirm-reject-btn {
+  border: none;
+
+  background: #d33d53;
+
+  color: #ffffff;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1400px) {
+  .application-filter-grid {
+    grid-template-columns:
+      repeat(4, 1fr);
+  }
+}
+
+
+@media (max-width: 1000px) {
+  .application-filter-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .application-details-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .application-media-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 650px) {
+  .applications-title-row h1 {
+    font-size: 30px;
+  }
+
+  .application-result-count {
+    min-width: 82px;
+    min-height: 48px;
+
+    font-size: 12px;
+  }
+
+  .application-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .application-pagination {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pagination-info,
+  .pagination-buttons {
+    justify-content: center;
+
+    flex-wrap: wrap;
+  }
+
+  .application-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .application-detail-wide {
+    grid-column: span 1;
+  }
+
+  .application-view-profile {
+    align-items: flex-start;
+  }
+}
+/* =====================================================
+   FINAL COMPACT TABLE - SECOND IMAGE SIZE
+===================================================== */
+
+.applications-data-card {
+  padding: 14px 18px !important;
+}
+
+.applications-table-scroll {
+  width: 100% !important;
+  overflow-x: auto !important;
+}
+
+
+/* TABLE */
+
+.applications-table {
+  width: 100% !important;
+  min-width: 1100px !important;
+  border-collapse: collapse !important;
+}
+
+
+/* HEADER SIZE */
+
+.applications-table th {
+  height: 58px !important;
+
+  padding: 10px 12px !important;
+
+  font-size: 13px !important;
+
+  vertical-align: middle !important;
+
+  white-space: nowrap !important;
+}
+
+
+/* ROW SIZE */
+
+.applications-table td {
+  height: 62px !important;
+
+  padding: 10px 12px !important;
+
+  font-size: 13px !important;
+
+  vertical-align: middle !important;
+
+  white-space: nowrap !important;
+}
+
+
+/* S.NO */
+
+.applications-table th:first-child,
+.applications-table td:first-child {
+  width: 55px !important;
+}
+
+
+/* IMAGE COLUMN */
+
+.applications-table th:nth-child(2),
+.applications-table td:nth-child(2) {
+  width: 65px !important;
+}
+
+
+/* FIRST NAME */
+
+.applications-table th:nth-child(3),
+.applications-table td:nth-child(3) {
+  min-width: 140px !important;
+  max-width: 170px !important;
+}
+
+
+/* AGE */
+
+.applications-table th:nth-child(4),
+.applications-table td:nth-child(4) {
+  width: 60px !important;
+  min-width: 60px !important;
+}
+
+
+/* SMALL IMAGE */
+
+.application-table-photo {
+  width: 44px !important;
+  height: 44px !important;
+
+  object-fit: cover !important;
+
+  border-radius: 8px !important;
+}
+
+.application-no-photo {
+  width: 44px !important;
+  height: 44px !important;
+
+  border-radius: 8px !important;
+
+  font-size: 8px !important;
+}
+
+
+/* SMALL STATUS */
+
+.application-status-pill {
+  min-width: 95px !important;
+  min-height: 34px !important;
+
+  padding: 5px 12px !important;
+
+  font-size: 12px !important;
+
+  border-radius: 20px !important;
+}
+
+
+/* ACTION */
+
+.application-action-cell {
+  min-width: 210px !important;
+}
+
+.application-row-actions {
+  gap: 5px !important;
+}
+
+.application-icon-btn {
+  min-height: 36px !important;
+
+  padding: 0 9px !important;
+
+  gap: 3px !important;
+
+  border-radius: 8px !important;
+
+  font-size: 10px !important;
+}
+
+
+/* VIEW */
+
+.application-view-icon-btn {
+  min-width: 54px !important;
+}
+
+
+/* APPROVE + REJECT */
+
+.application-approve-icon-btn,
+.application-reject-icon-btn {
+  min-width: 68px !important;
+}
+
+
+/* DATE */
+
+.applications-table td {
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+
+/* SMALLER TABLE CARD RADIUS */
+
+.applications-data-card {
+  border-radius: 17px !important;
+}
+
+
+/* MOBILE / SMALL SCREEN */
+
+@media (max-width: 1200px) {
+
+  .applications-table {
+    min-width: 1050px !important;
+  }
+
+  .applications-table th {
+    padding: 9px 10px !important;
+  }
+
+  .applications-table td {
+    padding: 9px 10px !important;
+  }
+}
+/* =====================================================
+   EXTRA COMPACT TABLE + PROPER COLUMN SPACE
+===================================================== */
+
+.applications-data-card {
+  padding: 12px 16px !important;
+}
+
+
+/* TABLE */
+
+.applications-table {
+  width: 100% !important;
+  min-width: 1080px !important;
+  border-collapse: collapse !important;
+}
+
+
+/* HEADER */
+
+.applications-table th {
+  height: 50px !important;
+
+  padding: 8px 16px !important;
+
+  font-size: 12px !important;
+  font-weight: 800 !important;
+
+  white-space: nowrap !important;
+
+  vertical-align: middle !important;
+}
+
+
+/* ROW */
+
+.applications-table td {
+  height: 54px !important;
+
+  padding: 8px 16px !important;
+
+  font-size: 12px !important;
+
+  vertical-align: middle !important;
+
+  white-space: nowrap !important;
+}
+
+
+/* =========================================
+   COLUMN WIDTH + SPACE
+========================================= */
+
+
+/* S.NO */
+
+.applications-table th:nth-child(1),
+.applications-table td:nth-child(1) {
+  width: 50px !important;
+  min-width: 50px !important;
+
+  padding-right: 20px !important;
+}
+
+
+/* IMAGE */
+
+.applications-table th:nth-child(2),
+.applications-table td:nth-child(2) {
+  width: 55px !important;
+  min-width: 55px !important;
+
+  padding-left: 12px !important;
+  padding-right: 28px !important;
+}
+
+
+/* FIRST NAME */
+
+.applications-table th:nth-child(3),
+.applications-table td:nth-child(3) {
+  min-width: 135px !important;
+
+  padding-left: 16px !important;
+  padding-right: 30px !important;
+}
+
+
+/* AGE */
+
+.applications-table th:nth-child(4),
+.applications-table td:nth-child(4) {
+  width: 55px !important;
+  min-width: 55px !important;
+
+  padding-left: 15px !important;
+  padding-right: 30px !important;
+}
+
+
+/* LOCATION / COUNTRY */
+
+.applications-table th:nth-child(5),
+.applications-table td:nth-child(5) {
+  min-width: 125px !important;
+
+  padding-left: 15px !important;
+  padding-right: 30px !important;
+}
+
+
+/* STATUS */
+
+.applications-table th:nth-child(6),
+.applications-table td:nth-child(6) {
+  min-width: 120px !important;
+
+  padding-left: 15px !important;
+  padding-right: 30px !important;
+}
+
+
+/* DATE */
+
+.applications-table th:nth-child(7),
+.applications-table td:nth-child(7) {
+  min-width: 145px !important;
+
+  padding-left: 15px !important;
+  padding-right: 30px !important;
+}
+
+
+/* ACTION */
+
+.applications-table th:last-child,
+.applications-table td:last-child {
+  min-width: 190px !important;
+
+  padding-left: 15px !important;
+  padding-right: 10px !important;
+}
+
+
+/* =========================================
+   SMALL PHOTO
+========================================= */
+
+.application-table-photo {
+  width: 38px !important;
+  height: 38px !important;
+
+  object-fit: cover !important;
+
+  border-radius: 7px !important;
+}
+
+.application-no-photo {
+  width: 38px !important;
+  height: 38px !important;
+
+  border-radius: 7px !important;
+
+  font-size: 7px !important;
+}
+
+
+/* =========================================
+   SMALL STATUS
+========================================= */
+
+.application-status-pill {
+  min-width: 88px !important;
+  min-height: 30px !important;
+
+  padding: 4px 10px !important;
+
+  font-size: 11px !important;
+
+  border-radius: 18px !important;
+}
+
+
+/* =========================================
+   SMALL ACTION BUTTONS
+========================================= */
+
+.application-action-cell {
+  min-width: 190px !important;
+}
+
+.application-row-actions {
+  display: flex !important;
+
+  align-items: center !important;
+
+  gap: 6px !important;
+}
+
+.application-icon-btn {
+  min-height: 32px !important;
+
+  padding: 0 8px !important;
+
+  gap: 3px !important;
+
+  border-radius: 7px !important;
+
+  font-size: 9px !important;
+}
+
+
+/* =========================================
+   ROW SEPARATOR
+========================================= */
+
+.applications-table td {
+  border-bottom:
+    1px solid #eee5e2 !important;
+}
+
+
+/* =========================================
+   TABLE SCROLL
+========================================= */
+
+.applications-table-scroll {
+  width: 100% !important;
+
+  overflow-x: auto !important;
+}
+/* =====================================================
+   FINAL EXTRA SMALL + FULL RESPONSIVE APPLICATION TABLE
+===================================================== */
+
+/* PAGE */
+.applications-page {
+  padding: 14px !important;
+}
+
+/* TITLE */
+.applications-title-row {
+  gap: 12px !important;
+  margin-bottom: 14px !important;
+}
+
+.applications-title-row h1 {
+  font-size: 30px !important;
+  letter-spacing: -0.7px !important;
+}
+
+.application-result-count {
+  min-width: 76px !important;
+  min-height: 42px !important;
+  padding: 0 12px !important;
+  font-size: 11px !important;
+}
+
+
+/* =====================================================
+   FILTER - SMALL
+===================================================== */
+
+.application-filter-card {
+  padding: 14px !important;
+  margin-bottom: 14px !important;
+  border-radius: 14px !important;
+}
+
+.application-filter-grid {
+  gap: 9px !important;
+
+  grid-template-columns:
+    minmax(210px, 2fr)
+    minmax(115px, 1fr)
+    minmax(135px, 1fr)
+    minmax(135px, 1fr)
+    80px
+    80px
+    105px !important;
+}
+
+.application-filter-field {
+  gap: 6px !important;
+}
+
+.application-filter-field > span {
+  font-size: 11px !important;
+}
+
+.application-filter-field input,
+.application-filter-field select {
+  height: 40px !important;
+  padding: 0 10px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+}
+
+.application-search-input-wrap input {
+  padding-left: 34px !important;
+}
+
+.application-search-icon {
+  left: 11px !important;
+  font-size: 15px !important;
+}
+
+.application-clear-filter-btn {
+  height: 40px !important;
+  padding: 0 10px !important;
+  border-radius: 8px !important;
+  font-size: 10px !important;
+}
+
+
+/* =====================================================
+   TABLE CARD
+===================================================== */
+
+.applications-data-card {
+  padding: 10px 12px !important;
+  border-radius: 14px !important;
+}
+
+.applications-table-scroll {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =====================================================
+   TABLE - EXTRA SMALL
+===================================================== */
+
+.applications-table {
+  width: 100% !important;
+  min-width: 930px !important;
+  border-collapse: collapse !important;
+}
+
+.applications-table th {
+  height: 42px !important;
+  padding: 6px 10px !important;
+
+  font-size: 10px !important;
+  font-weight: 800 !important;
+
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+}
+
+.applications-table td {
+  height: 46px !important;
+  padding: 6px 10px !important;
+
+  font-size: 10px !important;
+
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+
+  border-bottom:
+    1px solid #eee5e2 !important;
+}
+
+
+/* =====================================================
+   COLUMN SPACE
+===================================================== */
+
+/* S.NO */
+.applications-table th:nth-child(1),
+.applications-table td:nth-child(1) {
+  width: 38px !important;
+  min-width: 38px !important;
+
+  padding-left: 8px !important;
+  padding-right: 14px !important;
+}
+
+
+/* IMAGE */
+.applications-table th:nth-child(2),
+.applications-table td:nth-child(2) {
+  width: 42px !important;
+  min-width: 42px !important;
+
+  padding-left: 8px !important;
+  padding-right: 18px !important;
+}
+
+
+/* FIRST NAME */
+.applications-table th:nth-child(3),
+.applications-table td:nth-child(3) {
+  min-width: 110px !important;
+
+  padding-left: 10px !important;
+  padding-right: 20px !important;
+}
+
+
+/* AGE */
+.applications-table th:nth-child(4),
+.applications-table td:nth-child(4) {
+  width: 42px !important;
+  min-width: 42px !important;
+
+  padding-left: 8px !important;
+  padding-right: 20px !important;
+}
+
+
+/* OTHER COLUMNS */
+.applications-table th:nth-child(n + 5),
+.applications-table td:nth-child(n + 5) {
+  padding-left: 10px !important;
+  padding-right: 18px !important;
+}
+
+
+/* =====================================================
+   PHOTO
+===================================================== */
+
+.application-table-photo {
+  width: 30px !important;
+  height: 30px !important;
+
+  object-fit: cover !important;
+
+  border-radius: 6px !important;
+}
+
+.application-no-photo {
+  width: 30px !important;
+  height: 30px !important;
+
+  border-radius: 6px !important;
+
+  font-size: 6px !important;
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.application-status-pill {
+  min-width: 70px !important;
+  min-height: 25px !important;
+
+  padding: 3px 8px !important;
+
+  border-radius: 14px !important;
+
+  font-size: 9px !important;
+}
+
+
+/* =====================================================
+   ACTION
+===================================================== */
+
+.application-action-cell {
+  min-width: 160px !important;
+}
+
+.application-row-actions {
+  gap: 4px !important;
+}
+
+.application-icon-btn {
+  min-height: 27px !important;
+
+  padding: 0 6px !important;
+
+  gap: 2px !important;
+
+  border-radius: 6px !important;
+
+  font-size: 8px !important;
+}
+
+.application-view-icon-btn {
+  min-width: 44px !important;
+}
+
+.application-approve-icon-btn,
+.application-reject-icon-btn {
+  min-width: 54px !important;
+}
+
+
+/* =====================================================
+   PAGINATION SMALL
+===================================================== */
+
+.application-pagination {
+  margin-top: 12px !important;
+  padding-top: 12px !important;
+  gap: 10px !important;
+}
+
+.pagination-info {
+  gap: 8px !important;
+  font-size: 10px !important;
+}
+
+.pagination-info select {
+  height: 32px !important;
+  padding: 0 8px !important;
+  font-size: 10px !important;
+}
+
+.pagination-nav-btn,
+.pagination-page-btn {
+  height: 32px !important;
+  padding: 0 8px !important;
+  font-size: 9px !important;
+}
+
+.pagination-page-btn {
+  min-width: 32px !important;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1100px) {
+
+  .applications-page {
+    padding: 12px !important;
+  }
+
+  .application-filter-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .applications-table {
+    min-width: 900px !important;
+  }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 700px) {
+
+  .applications-page {
+    padding: 8px !important;
+  }
+
+  .applications-title-row {
+    align-items: center !important;
+    margin-bottom: 10px !important;
+  }
+
+  .applications-title-row h1 {
+    font-size: 23px !important;
+  }
+
+  .application-result-count {
+    min-width: 62px !important;
+    min-height: 34px !important;
+
+    padding: 0 8px !important;
+
+    font-size: 9px !important;
+  }
+
+
+  /* FILTER MOBILE */
+
+  .application-filter-card {
+    padding: 10px !important;
+    border-radius: 11px !important;
+  }
+
+  .application-filter-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr)) !important;
+
+    gap: 8px !important;
+  }
+
+  .application-filter-search {
+    grid-column: 1 / -1 !important;
+  }
+
+  .application-filter-field input,
+  .application-filter-field select {
+    height: 37px !important;
+    font-size: 10px !important;
+  }
+
+  .application-clear-filter-btn {
+    width: 100% !important;
+    height: 37px !important;
+  }
+
+
+  /* TABLE MOBILE */
+
+  .applications-data-card {
+    padding: 7px !important;
+    border-radius: 10px !important;
+  }
+
+  .applications-table {
+    min-width: 760px !important;
+  }
+
+  .applications-table th {
+    height: 35px !important;
+    padding: 5px 7px !important;
+
+    font-size: 8px !important;
+  }
+
+  .applications-table td {
+    height: 39px !important;
+    padding: 5px 7px !important;
+
+    font-size: 8px !important;
+  }
+
+  .application-table-photo,
+  .application-no-photo {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .application-status-pill {
+    min-width: 60px !important;
+    min-height: 22px !important;
+
+    padding: 2px 6px !important;
+
+    font-size: 8px !important;
+  }
+
+  .application-icon-btn {
+    min-height: 24px !important;
+
+    padding: 0 5px !important;
+
+    font-size: 7px !important;
+  }
+
+  .application-action-cell {
+    min-width: 140px !important;
+  }
+
+  .application-view-icon-btn {
+    min-width: 38px !important;
+  }
+
+  .application-approve-icon-btn,
+  .application-reject-icon-btn {
+    min-width: 46px !important;
+  }
+
+
+  /* PAGINATION MOBILE */
+
+  .application-pagination {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .pagination-info,
+  .pagination-buttons {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+
+/* =====================================================
+   VERY SMALL MOBILE
+===================================================== */
+
+@media (max-width: 430px) {
+
+  .applications-title-row h1 {
+    font-size: 20px !important;
+  }
+
+  .application-filter-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .application-filter-search {
+    grid-column: auto !important;
+  }
+
+  .applications-table {
+    min-width: 700px !important;
+  }
+
+  .application-view-modal {
+    width: 96% !important;
+    max-height: 94vh !important;
+  }
+
+  .application-view-body {
+    padding: 12px !important;
+  }
+
+  .application-details-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .application-detail-wide {
+    grid-column: span 1 !important;
+  }
+
+  .application-media-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* =========================================
+   FIRST NAME + AGE PROPER SPACE
+========================================= */
+
+/* First Name */
+.applications-table th:nth-child(3),
+.applications-table td:nth-child(3) {
+  min-width: 135px !important;
+  padding-right: 40px !important;
+}
+
+/* Age */
+.applications-table th:nth-child(4),
+.applications-table td:nth-child(4) {
+  min-width: 55px !important;
+  padding-left: 18px !important;
+  padding-right: 22px !important;
+}
+
+/* Name text overlap na ho */
+.applications-table td:nth-child(3) {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+/* MORE SPACE BETWEEN FIRST NAME AND AGE */
+
+.applications-table th:nth-child(3),
+.applications-table td:nth-child(3) {
+  min-width: 155px !important;
+  padding-right: 45px !important;
+}
+
+.applications-table th:nth-child(4),
+.applications-table td:nth-child(4) {
+  min-width: 60px !important;
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+}
+/* =====================================================
+   FINAL - ALL 8 COLUMNS EQUAL SPACE
+===================================================== */
+
+.applications-table {
+  width: 100% !important;
+  min-width: 1000px !important;
+
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+
+
+/* ALL COLUMNS SAME WIDTH + SAME SPACE */
+
+.applications-table th,
+.applications-table td {
+  width: 12.5% !important;
+
+  min-width: 0 !important;
+  max-width: none !important;
+
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+
+  box-sizing: border-box !important;
+
+  vertical-align: middle !important;
+
+  white-space: nowrap !important;
+}
+
+
+/* OLD SPECIAL WIDTHS RESET */
+
+.applications-table th:nth-child(1),
+.applications-table td:nth-child(1),
+
+.applications-table th:nth-child(2),
+.applications-table td:nth-child(2),
+
+.applications-table th:nth-child(3),
+.applications-table td:nth-child(3),
+
+.applications-table th:nth-child(4),
+.applications-table td:nth-child(4),
+
+.applications-table th:nth-child(5),
+.applications-table td:nth-child(5),
+
+.applications-table th:nth-child(6),
+.applications-table td:nth-child(6),
+
+.applications-table th:nth-child(7),
+.applications-table td:nth-child(7),
+
+.applications-table th:nth-child(8),
+.applications-table td:nth-child(8) {
+  width: 12.5% !important;
+
+  min-width: 0 !important;
+
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+}
+
+
+/* NAME OVERFLOW NA KARE */
+
+.applications-table td:nth-child(3) {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+
+/* DATE SAME LINE */
+
+.applications-table td:nth-child(7) {
+  white-space: nowrap !important;
+}
+
+
+/* ACTION */
+
+.application-action-cell {
+  min-width: 0 !important;
+}
+
+.application-row-actions {
+  display: flex !important;
+  align-items: center !important;
+
+  gap: 4px !important;
+}
+
+
+/* SMALL ACTION BUTTONS */
+
+.application-icon-btn {
+  min-width: 0 !important;
+  min-height: 27px !important;
+
+  padding: 0 5px !important;
+
+  font-size: 8px !important;
+
+  flex: 1 !important;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+  .applications-table {
+    min-width: 760px !important;
+  }
+
+  .applications-table th,
+  .applications-table td {
+    width: 12.5% !important;
+
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+
+    font-size: 8px !important;
+  }
+}
+/* FINAL BALANCED SPACE */
+
+.applications-table {
+  width: 100% !important;
+  min-width: 900px !important;
+  table-layout: fixed !important;
+}
+
+.applications-table th,
+.applications-table td {
+  width: 12.5% !important;
+
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
+}
+
+/* Name थोड़ा extra space */
+.applications-table th:nth-child(3),
+.applications-table td:nth-child(3) {
+  padding-right: 12px !important;
+}
+
+/* Age */
+.applications-table th:nth-child(4),
+.applications-table td:nth-child(4) {
+  padding-left: 12px !important;
+}
+
+/* Action */
+.application-row-actions {
+  gap: 3px !important;
+}
+
+.application-icon-btn {
+  padding: 0 4px !important;
+  font-size: 8px !important;
+}
+/* TABLE CONTENT MORE LEFT SIDE */
+
+.applications-table th,
+.applications-table td {
+  padding-left: 4px !important;
+  padding-right: 8px !important;
+
+  text-align: left !important;
+}
+
+/* First column aur left */
+.applications-table th:nth-child(1),
+.applications-table td:nth-child(1) {
+  padding-left: 2px !important;
+}
+
+/* Image bhi left rahe */
+.applications-table th:nth-child(2),
+.applications-table td:nth-child(2) {
+  padding-left: 4px !important;
+}
+
+/* Action bhi left aligned */
+.application-action-heading,
+.application-action-cell {
+  text-align: left !important;
+}
+
+.application-row-actions {
+  justify-content: flex-start !important;
+}
+/* MORE LEFT SIDE */
+
+.applications-data-card {
+  padding-left: 6px !important;
+  padding-right: 10px !important;
+}
+
+.applications-table {
+  margin-left: -6px !important;
+}
+
+.applications-table th,
+.applications-table td {
+  padding-left: 2px !important;
+  padding-right: 6px !important;
+  text-align: left !important;
+}
+
+/* S.No. बिल्कुल left */
+.applications-table th:first-child,
+.applications-table td:first-child {
+  padding-left: 0 !important;
+}
+
+/* Action भी left */
+.application-action-heading,
+.application-action-cell {
+  text-align: left !important;
+}
+
+.application-row-actions {
+  justify-content: flex-start !important;
+}
+
+/* =========================================
+   COLUMN WIDTH ACCORDING TO CONTENT
+========================================= */
+
+.applications-table {
+  width: 100% !important;
+  min-width: 900px !important;
+  table-layout: auto !important;
+}
+
+/* सभी में basic gap */
+.applications-table th,
+.applications-table td {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+}
+
+
+/* 1. S.No. - सबसे छोटा */
+.applications-table th:nth-child(1),
+.applications-table td:nth-child(1) {
+  width: 45px !important;
+  min-width: 45px !important;
+}
+
+
+/* 2. Image */
+.applications-table th:nth-child(2),
+.applications-table td:nth-child(2) {
+  width: 55px !important;
+  min-width: 55px !important;
+}
+
+
+/* 3. First Name - ज्यादा space */
+.applications-table th:nth-child(3),
+.applications-table td:nth-child(3) {
+  width: 150px !important;
+  min-width: 150px !important;
+}
+
+
+/* 4. Age - छोटा */
+.applications-table th:nth-child(4),
+.applications-table td:nth-child(4) {
+  width: 55px !important;
+  min-width: 55px !important;
+}
+
+
+/* 5. Location - ज्यादा */
+.applications-table th:nth-child(5),
+.applications-table td:nth-child(5) {
+  width: 145px !important;
+  min-width: 145px !important;
+}
+
+
+/* 6. Status */
+.applications-table th:nth-child(6),
+.applications-table td:nth-child(6) {
+  width: 105px !important;
+  min-width: 105px !important;
+}
+
+
+/* 7. Date */
+.applications-table th:nth-child(7),
+.applications-table td:nth-child(7) {
+  width: 125px !important;
+  min-width: 125px !important;
+}
+
+
+/* 8. Action - सबसे ज्यादा */
+.applications-table th:nth-child(8),
+.applications-table td:nth-child(8) {
+  width: 190px !important;
+  min-width: 190px !important;
+}
+
+
+/* Buttons left side */
+.application-row-actions {
+  justify-content: flex-start !important;
+  gap: 4px !important;
+}
+
+
+/* Mobile responsive */
+@media (max-width: 700px) {
+  .applications-table {
+    min-width: 760px !important;
+  }
+
+  .applications-table th,
+  .applications-table td {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+
+  .applications-table th:nth-child(3),
+  .applications-table td:nth-child(3) {
+    min-width: 120px !important;
+  }
+
+  .applications-table th:nth-child(5),
+  .applications-table td:nth-child(5) {
+    min-width: 110px !important;
+  }
+
+  .applications-table th:nth-child(8),
+  .applications-table td:nth-child(8) {
+    min-width: 150px !important;
+  }
+}
+/* S.NO. RIGHT SIDE + FULL VISIBLE */
+
+.applications-table th:nth-child(1),
+.applications-table td:nth-child(1) {
+  width: 55px !important;
+  min-width: 55px !important;
+
+  padding-left: 14px !important;
+  padding-right: 8px !important;
+
+  text-align: center !important;
+}
+
+/* Table ko left se cut na hone de */
+.applications-table {
+  margin-left: 0 !important;
+}
+
+.applications-data-card {
+  padding-left: 12px !important;
+}
+/* =====================================================
+   VIEW MODAL PROFILE - CENTER + BIG IMAGE
+   Table image par effect nahi hoga
+===================================================== */
+
+.application-view-profile {
+  display: flex !important;
+  flex-direction: column !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  text-align: center !important;
+
+  gap: 10px !important;
+
+  padding: 24px 20px !important;
+}
+
+
+/* ONLY VIEW MODAL BIG PHOTO */
+
+.application-view-profile-photo {
+  width: 135px !important;
+  height: 135px !important;
+
+  object-fit: cover !important;
+
+  border-radius: 50% !important;
+
+  border: 4px solid #ffffff !important;
+
+  box-shadow:
+    0 5px 18px rgba(0, 0, 0, 0.15) !important;
+}
+
+
+/* Agar photo na ho to avatar bhi bada */
+
+.application-view-avatar {
+  width: 135px !important;
+  height: 135px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  border-radius: 50% !important;
+
+  font-size: 42px !important;
+}
+
+
+/* NAME CENTER */
+
+.application-view-profile h3 {
+  margin: 5px 0 0 !important;
+
+  text-align: center !important;
+
+  font-size: 24px !important;
+}
+
+
+/* LOCATION CENTER */
+
+.application-view-profile p {
+  margin: 0 !important;
+
+  text-align: center !important;
+
+  font-size: 15px !important;
+}
+
+
+/* STATUS CENTER */
+
+.application-view-profile .application-status-pill {
+  margin: 5px auto 0 !important;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+  .application-view-profile {
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .application-view-profile-photo,
+  .application-view-avatar {
+    width: 105px !important;
+    height: 105px !important;
+  }
+
+  .application-view-profile h3 {
+    font-size: 20px !important;
+  }
+}
+/* BIGGER PROFILE IMAGE IN VIEW MODAL */
+
+.application-view-profile-photo,
+.application-view-avatar {
+  width: 180px !important;
+  height: 180px !important;
+}
+
+.application-view-profile-photo {
+  object-fit: cover !important;
+  border-radius: 50% !important;
+
+  border: 5px solid #ffffff !important;
+
+  box-shadow:
+    0 6px 22px rgba(0, 0, 0, 0.16) !important;
+}
+
+.application-view-avatar {
+  font-size: 54px !important;
+}
+
+/* Name bhi thoda bada */
+.application-view-profile h3 {
+  font-size: 26px !important;
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+  .application-view-profile-photo,
+  .application-view-avatar {
+    width: 135px !important;
+    height: 135px !important;
+  }
+
+  .application-view-profile h3 {
+    font-size: 21px !important;
+  }
+}
+/* VIEW PROFILE - BIG CIRCLE, NO ZOOM */
+
+.application-view-profile-photo {
+  width: 210px !important;
+  height: 210px !important;
+
+  object-fit: contain !important;   /* photo zoom/crop नहीं होगी */
+  object-position: center !important;
+
+  border-radius: 50% !important;
+
+  background: #ffffff !important;
+
+  border: 4px solid #f1dfe3 !important;
+}
+
+/* अगर image ना हो तो avatar भी same size */
+.application-view-avatar {
+  width: 210px !important;
+  height: 210px !important;
+
+  border-radius: 50% !important;
+  font-size: 55px !important;
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+  .application-view-profile-photo,
+  .application-view-avatar {
+    width: 150px !important;
+    height: 150px !important;
+  }
+}
+/* EXTRA LARGE PROFILE IMAGE - VIEW MODAL ONLY */
+
+.application-view-profile-photo,
+.application-view-avatar {
+  width: 260px !important;
+  height: 260px !important;
+}
+
+.application-view-profile-photo {
+  object-fit: contain !important;
+  object-position: center !important;
+
+  border-radius: 50% !important;
+
+  background: #ffffff !important;
+
+  border: 4px solid #f0dfe3 !important;
+}
+
+.application-view-avatar {
+  font-size: 68px !important;
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+  .application-view-profile-photo,
+  .application-view-avatar {
+    width: 180px !important;
+    height: 180px !important;
+  }
+}
+
+
+/* =========================================
+   REJECT REASON
+========================================= */
+
+.reject-reason-box {
+  width: 100%;
+  margin-top: 18px;
+  text-align: left;
+}
+
+.reject-reason-box label {
+  display: block;
+  margin-bottom: 8px;
+  color: #48232e;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.reject-reason-box textarea {
+  width: 100%;
+  min-height: 105px;
+  padding: 12px 14px;
+  box-sizing: border-box;
+  resize: vertical;
+  border: 1px solid #e7d4d8;
+  border-radius: 10px;
+  outline: none;
+  background: #fffafa;
+  color: #34151f;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.reject-reason-box textarea:focus {
+  border-color: #d34861;
+  box-shadow: 0 0 0 3px rgba(211, 72, 97, 0.10);
+}
+
+.reject-reason-box textarea::placeholder {
+  color: #aa9299;
+}
+
+.confirm-reject-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

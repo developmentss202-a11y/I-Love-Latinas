@@ -1,0 +1,636 @@
+
+
+/* =========================================================
+   ALL USERS - EXTRA COMPACT + MOBILE RESPONSIVE
+========================================================= */
+
+.users-page {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 10px 12px 18px;
+}
+
+
+/* ================= HEADER ================= */
+
+.users-title-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.users-title-row h1 {
+  margin: 0;
+  color: #082f5f;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.4px;
+}
+
+.users-title-row p {
+  margin: 3px 0 0;
+  color: #8f6f78;
+  font-size: 9px;
+}
+
+.users-count {
+  flex: 0 0 auto;
+  min-width: 58px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border: 1px solid #eadbdd;
+  border-radius: 999px;
+  background: #fff;
+  color: #65414c;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+
+/* ================= FILTER BAR ================= */
+
+.users-filter-card {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 135px 105px;
+  gap: 6px;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 8px;
+  margin-bottom: 9px;
+  border: 1px solid #eadbdd;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.users-filter-card input,
+.users-filter-card select,
+.users-filter-card button {
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  box-sizing: border-box;
+  border-radius: 7px;
+  font-size: 9px;
+}
+
+.users-filter-card input,
+.users-filter-card select {
+  padding: 0 9px;
+  border: 1px solid #e5d0d4;
+  background: #fff;
+  color: #351822;
+  outline: none;
+}
+
+.users-filter-card input::placeholder {
+  color: #a48d94;
+}
+
+.users-filter-card input:focus,
+.users-filter-card select:focus {
+  border-color: #d23a62;
+  box-shadow: 0 0 0 2px rgba(210, 58, 98, 0.07);
+}
+
+.users-filter-card button {
+  border: 1px solid #efcbd3;
+  background: #fff3f5;
+  color: #b81d49;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+
+/* ================= TABLE WRAPPER ================= */
+
+.users-table-card {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid #eadbdd;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.users-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.users-table-scroll::-webkit-scrollbar {
+  height: 5px;
+}
+
+.users-table-scroll::-webkit-scrollbar-thumb {
+  background: #d8bcc4;
+  border-radius: 20px;
+}
+
+
+/* ================= TABLE ================= */
+
+.users-table {
+  width: 100%;
+  min-width: 830px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.users-table th,
+.users-table td {
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.users-table th {
+  height: 34px;
+  padding: 5px 5px;
+  background: #fff8f9;
+  color: #6b424d;
+  font-size: 7.5px;
+  font-weight: 900;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid #efdee2;
+}
+
+.users-table td {
+  height: 42px;
+  padding: 5px;
+  border-bottom: 1px solid #f1e4e7;
+  color: #3c2229;
+  font-size: 7.8px;
+  line-height: 1.15;
+}
+
+.users-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.users-table tbody tr:hover {
+  background: #fffafb;
+}
+
+
+/* ================= COLUMN WIDTHS ================= */
+
+.users-table th:nth-child(1),
+.users-table td:nth-child(1) {
+  width: 38px;
+  text-align: center;
+}
+
+.users-table th:nth-child(2),
+.users-table td:nth-child(2) {
+  width: 48px;
+  text-align: center;
+}
+
+.users-table th:nth-child(3),
+.users-table td:nth-child(3) {
+  width: 105px;
+}
+
+.users-table th:nth-child(4),
+.users-table td:nth-child(4) {
+  width: 245px;
+}
+
+.users-table th:nth-child(5),
+.users-table td:nth-child(5) {
+  width: 42px;
+  text-align: center;
+}
+
+.users-table th:nth-child(6),
+.users-table td:nth-child(6) {
+  width: 62px;
+}
+
+.users-table th:nth-child(7),
+.users-table td:nth-child(7) {
+  width: 82px;
+}
+
+.users-table th:nth-child(8),
+.users-table td:nth-child(8) {
+  width: 70px;
+}
+
+.users-table th:nth-child(9),
+.users-table td:nth-child(9) {
+  width: 100px;
+}
+
+.users-table th:nth-child(10),
+.users-table td:nth-child(10) {
+  width: 62px;
+  text-align: center;
+}
+
+
+/* ================= TEXT ELLIPSIS ================= */
+
+.users-table td:nth-child(3),
+.users-table td:nth-child(4),
+.users-table td:nth-child(7),
+.users-table td:nth-child(9) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.users-table td:nth-child(3) strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ================= PHOTO ================= */
+
+.user-photo {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover;
+  border: 1px solid #eadbdd;
+  border-radius: 6px;
+  background: #fff1f4;
+}
+
+.user-photo-large {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+}
+
+.user-photo-placeholder {
+  color: #9d1640;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+
+/* ================= STATUS ================= */
+
+.user-status {
+  min-width: 48px;
+  min-height: 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 6.8px;
+  font-weight: 900;
+}
+
+.user-status-active {
+  border: 1px solid #bfe7cd;
+  background: #e8f8ee;
+  color: #13823c;
+}
+
+.user-status-blocked {
+  border: 1px solid #f2c3cc;
+  background: #fff0f3;
+  color: #ca304d;
+}
+
+
+/* ================= VIEW BUTTON ================= */
+
+.user-view-btn {
+  min-width: 43px;
+  min-height: 23px;
+  padding: 0 6px;
+  border: 1px solid #d8e4fb;
+  border-radius: 5px;
+  background: #eef4ff;
+  color: #2654a3;
+  font-size: 6.8px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+
+/* ================= EMPTY ================= */
+
+.users-empty {
+  height: 70px !important;
+  padding: 18px 10px !important;
+  text-align: center !important;
+  color: #9b878e !important;
+  font-size: 8px !important;
+  font-weight: 700;
+}
+
+
+/* ================= MODAL ================= */
+
+.user-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: rgba(31, 6, 15, 0.55);
+}
+
+.user-modal {
+  width: min(520px, 94vw);
+  max-height: 86vh;
+  overflow-y: auto;
+  border-radius: 13px;
+  background: #fff;
+}
+
+.user-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+  padding: 11px 12px;
+  border-bottom: 1px solid #f0e4e6;
+}
+
+.user-modal-header h2 {
+  margin: 0;
+  color: #082f5f;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.user-modal-header p {
+  margin: 2px 0 0;
+  color: #8d747c;
+  font-size: 8px;
+}
+
+.user-modal-header button {
+  width: 25px;
+  height: 25px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff0f3;
+  color: #a91843;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.user-modal-profile {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px;
+}
+
+.user-modal-profile h3 {
+  margin: 0 0 3px;
+  color: #34141e;
+  font-size: 13px;
+}
+
+.user-modal-profile p {
+  margin: 0;
+  color: #856f76;
+  font-size: 8px;
+}
+
+.user-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  padding: 0 12px 12px;
+}
+
+.user-detail-card {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #f0e1e4;
+  border-radius: 7px;
+  background: #fffafa;
+}
+
+.user-detail-card span {
+  display: block;
+  margin-bottom: 3px;
+  color: #9b7c84;
+  font-size: 6.8px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.user-detail-card strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #3b2028;
+  font-size: 8px;
+}
+
+.user-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 12px 12px;
+}
+
+.user-modal-footer button {
+  min-width: 68px;
+  min-height: 27px;
+  border: 0;
+  border-radius: 7px;
+  background: #8c0a31;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+  .users-page {
+    padding: 10px;
+  }
+
+  .users-filter-card {
+    grid-template-columns: minmax(0, 1fr) 130px 100px;
+  }
+
+  .users-table {
+    min-width: 800px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  .users-page {
+    padding: 8px 7px 14px;
+  }
+
+  .users-title-row {
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .users-title-row h1 {
+    font-size: 18px;
+  }
+
+  .users-title-row p {
+    font-size: 7.5px;
+  }
+
+  .users-count {
+    min-width: 50px;
+    min-height: 28px;
+    padding: 0 8px;
+    font-size: 7px;
+  }
+
+  .users-filter-card {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    padding: 7px;
+    margin-bottom: 8px;
+  }
+
+  .users-filter-card input,
+  .users-filter-card select,
+  .users-filter-card button {
+    height: 31px;
+    font-size: 8px;
+  }
+
+  .users-table {
+    min-width: 720px;
+  }
+
+  .users-table th {
+    height: 30px;
+    padding: 4px;
+    font-size: 6.5px;
+  }
+
+  .users-table td {
+    height: 38px;
+    padding: 4px;
+    font-size: 6.8px;
+  }
+
+  .user-photo {
+    width: 23px;
+    height: 23px;
+  }
+
+  .user-status {
+    min-width: 44px;
+    min-height: 18px;
+    font-size: 6px;
+  }
+
+  .user-view-btn {
+    min-width: 40px;
+    min-height: 21px;
+    font-size: 6px;
+  }
+
+  .user-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 430px) {
+  .users-page {
+    padding: 7px 5px 12px;
+  }
+
+  .users-title-row h1 {
+    font-size: 16px;
+  }
+
+  .users-title-row p {
+    display: none;
+  }
+
+  .users-count {
+    min-width: 44px;
+    min-height: 25px;
+    font-size: 6.5px;
+  }
+
+  .users-filter-card {
+    padding: 6px;
+    border-radius: 8px;
+  }
+
+  .users-filter-card input,
+  .users-filter-card select,
+  .users-filter-card button {
+    height: 29px;
+    font-size: 7.5px;
+  }
+
+  .users-table-card {
+    border-radius: 8px;
+  }
+
+  .users-table {
+    min-width: 680px;
+  }
+
+  .users-table th {
+    height: 28px;
+    font-size: 6px;
+  }
+
+  .users-table td {
+    height: 36px;
+    font-size: 6.3px;
+  }
+
+  .user-photo {
+    width: 21px;
+    height: 21px;
+  }
+
+  .user-modal {
+    width: 97vw;
+    max-height: 92vh;
+  }
+}
