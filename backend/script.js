@@ -78,6 +78,7 @@ app.use(
       "http://localhost:3002",
 
       "https://latina.myaibusiness.online",
+      "https://latinas.myaibusiness.online",
       "https://admin.latina.myaibusiness.online",
     ],
 

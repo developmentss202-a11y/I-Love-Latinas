@@ -13,6 +13,7 @@ export default function Header({ variant = "default" }) {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const path = location.pathname;
+  const hideLang = path === "/men" || path === "/profiles" || variant === "navy";
   const hideNav = variant === "minimal" || variant === "home" || variant === "dark";
   const navItems = variant === "navy" ? manNavItems : [];
 
@@ -23,7 +24,13 @@ export default function Header({ variant = "default" }) {
     logoTo = "/pending";
   } else if (path === "/men" || path === "/profiles" || variant === "navy") {
     logoTo = "/men";
-  } else if (path === "/women" || path === "/register" || path === "/hotels") {
+  } else if (path === "/hotels" || path === "/hotels/") {
+    try {
+      logoTo = sessionStorage.getItem("ill-role") === "man" ? "/men" : "/women";
+    } catch {
+      logoTo = "/women";
+    }
+  } else if (path === "/women" || path === "/register") {
     logoTo = "/women";
   }
 
@@ -38,7 +45,7 @@ export default function Header({ variant = "default" }) {
           <Logo />
         </Link>
 
-        <LanguageButtons />
+        {hideLang ? null : <LanguageButtons />}
 
         {hideNav ? null : (
           <>

@@ -1,20 +1,24 @@
-const LIVE_SITE_URL = "https://latina.myaibusiness.online";
+const LIVE_SITE_URL = "https://latinas.myaibusiness.online";
+
+function normalizeSiteOrigin(origin) {
+  return String(origin || "")
+    .replace(/\/$/, "")
+    .replace("://latina.myaibusiness.online", "://latinas.myaibusiness.online");
+}
 
 function publicSiteOrigin() {
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host !== "localhost" && host !== "127.0.0.1") {
+      return normalizeSiteOrigin(window.location.origin);
+    }
+  }
+
   const configured = String(
     import.meta.env.VITE_PUBLIC_SITE_URL || ""
   ).replace(/\/$/, "");
 
-  if (configured) return configured;
-
-  if (typeof window === "undefined") return LIVE_SITE_URL;
-
-  const host = window.location.hostname;
-  if (host === "localhost" || host === "127.0.0.1") {
-    return LIVE_SITE_URL;
-  }
-
-  return window.location.origin;
+  return normalizeSiteOrigin(configured || LIVE_SITE_URL);
 }
 
 export function profilePath(slug) {

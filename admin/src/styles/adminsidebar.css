@@ -41,6 +41,7 @@
 .sidebar-logo {
   display: flex;
   align-items: center;
+  justify-content: center;
 
   gap: 11px;
 
@@ -50,6 +51,13 @@
 
   border-bottom:
     1px solid rgba(255,255,255,0.14);
+}
+
+.sidebar-logo-img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  display: block;
 }
 
 
@@ -432,6 +440,11 @@
 
     padding:
       4px 0 15px;
+  }
+
+  .sidebar-logo-img {
+    width: 42px;
+    height: 42px;
   }
 
 

@@ -291,6 +291,13 @@
   margin-bottom: 30px;
 }
 
+.login-logo-img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  display: block;
+}
+
 
 .login-heart {
   width: 58px;

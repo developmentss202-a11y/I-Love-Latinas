@@ -19,7 +19,7 @@ const spanish = {
   "Honesty. Respect. Commitment.": "Honestidad. Respeto. Compromiso.",
   "Maybe your life is missing a man who means it.": "Tal vez a tu vida le falta un hombre que lo dice en serio.",
   "Register yourself →": "Regístrate →",
-  "Explore our Hotels": "Explora nuestros hoteles",
+  "Explore our Places": "Explora nuestros lugares",
   "Owner hotels": "Hoteles del propietario",
   "Private places to meet, stay, and take your time.":
     "Lugares privados para encontrarse, quedarse y tomarse el tiempo.",

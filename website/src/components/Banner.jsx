@@ -29,7 +29,7 @@ export default function Banner({ side = "man", onSelectMan, onSelectWoman, onExp
                 {t("Register yourself →")}
               </button>
               <button type="button" className="btn btn--outline" onClick={onExploreHotels}>
-                {t("Explore our Hotels")}
+                {t("Explore our Places")}
               </button>
             </div>
           </div>
@@ -55,9 +55,14 @@ export default function Banner({ side = "man", onSelectMan, onSelectWoman, onExp
             <p>
               {t("Maybe your life is missing a Latina.")} <span className="copy-heart">❤</span>
             </p>
-            <button type="button" className="btn btn--gold" onClick={onSelectMan}>
-              {t("Explore Options →")}
-            </button>
+            <div className="gender-panel__actions">
+              <button type="button" className="btn btn--gold" onClick={onSelectMan}>
+                {t("Explore Options →")}
+              </button>
+              <button type="button" className="btn btn--outline" onClick={onExploreHotels}>
+                {t("Explore our Places")}
+              </button>
+            </div>
           </div>
         </article>
       )}

@@ -69,27 +69,11 @@ function AdminSidebar({
       {/* ================= LOGO ================= */}
 
       <div className="sidebar-logo">
-
-        <div className="sidebar-logo-icon">
-          ♥
-        </div>
-
-        <div className="sidebar-brand-text">
-
-          <span className="brand-i">
-            I
-          </span>
-
-          <span className="brand-love">
-            Love
-          </span>
-
-          <span className="brand-latinas">
-            Latinas
-          </span>
-
-        </div>
-
+        <img
+          className="sidebar-logo-img"
+          src="/images/website-logo.png"
+          alt="I Love Latinas"
+        />
       </div>
 
 

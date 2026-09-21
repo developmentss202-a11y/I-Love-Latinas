@@ -197,27 +197,11 @@ function AdminLogin() {
         ============================== */}
 
         <div className="login-main-brand">
-
-          <div className="login-heart">
-            ♥
-          </div>
-
-          <div className="login-title">
-
-            I{" "}
-
-            <span className="love-word">
-              Love
-            </span>
-
-            {" "}
-
-            <span className="latinas-word">
-              Latinas
-            </span>
-
-          </div>
-
+          <img
+            className="login-logo-img"
+            src="/images/website-logo.png"
+            alt="I Love Latinas"
+          />
         </div>
 
 

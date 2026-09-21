@@ -26,6 +26,10 @@ function isWomanProfilePath(path) {
   return path === '/profile' || path.startsWith('/profile/') || path === '/my-profile'
 }
 
+function isHotelsPath(path) {
+  return path === '/hotels' || path === '/hotels/'
+}
+
 function writeRole(role) {
   try {
     if (role) sessionStorage.setItem(ROLE_KEY, role)
@@ -55,18 +59,18 @@ export default function App() {
 
     if (path === '/') writeRole(null)
     else if (path === '/men' || path === '/profiles') writeRole('man')
-    else if (path === '/women' || path === '/register' || path === '/hotels' || path === '/pending' || isWomanProfilePath(path)) writeRole('woman')
+    else if (path === '/women' || path === '/register' || path === '/pending' || isWomanProfilePath(path)) writeRole('woman')
   }, [path])
 
   const role =
     path === '/men' || path === '/profiles' || (path === '/contact' && storedRole === 'man')
       ? 'man'
-      : path === '/women' || path === '/pending' || path === '/register' || path === '/hotels' || isWomanProfilePath(path)
+      : path === '/women' || path === '/pending' || path === '/register' || isWomanProfilePath(path)
         ? 'woman'
         : storedRole
 
   const headerVariant =
-    path === '/pending' || path === '/hotels' || isWomanProfilePath(path)
+    path === '/pending' || isHotelsPath(path) || isWomanProfilePath(path)
       ? 'dark'
       : path === '/men' || path === '/women' || path === '/register'
         ? 'home'
@@ -77,13 +81,15 @@ export default function App() {
   const hideHeader = path === '/'
 
   const hideFooter =
-    path === '/' ||
-    path === '/men' ||
-    path === '/women' ||
-    path === '/register' ||
-    path === '/pending' ||
-    isWomanProfilePath(path) ||
-    role === 'man'
+    isHotelsPath(path)
+      ? false
+      : path === '/' ||
+        path === '/men' ||
+        path === '/women' ||
+        path === '/register' ||
+        path === '/pending' ||
+        isWomanProfilePath(path) ||
+        role === 'man'
 
   return (
     <div className={path === '/' ? 'app-shell app-shell--blank' : 'app-shell'}>
@@ -98,6 +104,7 @@ export default function App() {
               <Banner
                 side="man"
                 onSelectMan={() => navigate('/profiles')}
+                onExploreHotels={() => navigate('/hotels')}
               />
             }
           />
@@ -122,6 +129,7 @@ export default function App() {
             }
           />
           <Route path="/hotels" element={<HotelsPage />} />
+          <Route path="/hotels/" element={<HotelsPage />} />
           <Route
             path="/profiles"
             element={
@@ -147,7 +155,7 @@ export default function App() {
         </Routes>
       </main>
 
-      {hideFooter ? null : <Footer compact={path === '/hotels'} />}
+      {hideFooter ? null : <Footer compact={isHotelsPath(path)} />}
 
       <RegisterModal
         open={path === '/register'}

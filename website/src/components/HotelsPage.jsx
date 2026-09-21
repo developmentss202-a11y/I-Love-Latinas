@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../language";
 
 const photos = [
@@ -90,7 +91,16 @@ function VideoThumb({ src }) {
 
 export default function HotelsPage() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [active, setActive] = useState(null);
+
+  function backPath() {
+    try {
+      return sessionStorage.getItem("ill-role") === "man" ? "/men" : "/women";
+    } catch {
+      return "/women";
+    }
+  }
 
   useEffect(() => {
     if (!active) return undefined;
@@ -111,11 +121,16 @@ export default function HotelsPage() {
     <section className="page hotels-page">
       <div className="simple-hero">
         <div className="simple-hero__inner">
-          <p className="eyebrow eyebrow--on-dark">
-            <span className="eyebrow__ring" aria-hidden="true" />
-            {t("Owner hotels")}
-          </p>
-          <h1>{t("Explore our Hotels")}</h1>
+          <div className="hotels-hero-row">
+            <h1>{t("Explore our Places")}</h1>
+            <button
+              type="button"
+              className="hotels-back"
+              onClick={() => navigate(backPath())}
+            >
+              ← {t("Back")}
+            </button>
+          </div>
           <p className="page__lead">
             {t("Private places to meet, stay, and take your time.")}
           </p>
@@ -168,7 +183,7 @@ export default function HotelsPage() {
           className="hotel-lightbox"
           role="dialog"
           aria-modal="true"
-          aria-label={t("Explore our Hotels")}
+          aria-label={t("Explore our Places")}
           onClick={() => setActive(null)}
         >
           <button
