@@ -36,6 +36,9 @@ function AdminDashboard() {
   const [activeMenu, setActiveMenu] =
     useState("Dashboard");
 
+  const [sidebarOpen, setSidebarOpen] =
+    useState(false);
+
 
   const [admin, setAdmin] =
     useState(() => {
@@ -134,6 +137,12 @@ function AdminDashboard() {
         }
       );
     }, [navigate]);
+
+
+  const [
+    showLogoutConfirm,
+    setShowLogoutConfirm,
+  ] = useState(false);
 
 
   /* =========================================
@@ -404,27 +413,13 @@ function AdminDashboard() {
     );
 
 
-  /* =========================================
-     AUTO REFRESH COUNTS
-     New application / approve / reject ke baad
-     count automatically update hoga.
-  ========================================= */
-
+  /* Load dashboard numbers only when that screen is open.
+     No timer. Browser refresh or opening Dashboard loads once. */
   useEffect(() => {
+    if (activeMenu !== "Dashboard") return;
+
     loadDashboard(true);
-
-    const interval =
-      setInterval(
-        () => {
-          loadDashboard(false);
-        },
-        2000
-      );
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [loadDashboard]);
+  }, [activeMenu, loadDashboard]);
 
 
   /* =========================================
@@ -600,9 +595,12 @@ function AdminDashboard() {
           setActiveMenu(menu);
 
           setActionMessage("");
+          setSidebarOpen(false);
         }}
 
-        logout={logout}
+        logout={() => setShowLogoutConfirm(true)}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
 
 
@@ -613,6 +611,9 @@ function AdminDashboard() {
 
           setActiveMenu={
             setActiveMenu
+          }
+          onMenuClick={() =>
+            setSidebarOpen((open) => !open)
           }
         />
 
@@ -1168,6 +1169,39 @@ function AdminDashboard() {
 
 
       </main>
+
+      {showLogoutConfirm ? (
+        <div
+          className="logout-confirm-overlay"
+          onClick={() => setShowLogoutConfirm(false)}
+        >
+          <div
+            className="logout-confirm-box"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h2>Do you want to logout?</h2>
+            <p>You will need to login again to use the admin panel.</p>
+
+            <div className="logout-confirm-buttons">
+              <button
+                type="button"
+                className="logout-confirm-cancel"
+                onClick={() => setShowLogoutConfirm(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="logout-confirm-yes"
+                onClick={logout}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
     </div>
   );

@@ -27,8 +27,37 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: 16px;
+}
+
+.women-applications-page .refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid #eadbd7;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #6e4b50;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.women-applications-page .refresh-btn:hover:not(:disabled) {
+  background: #fff7f8;
+  border-color: #efcbd2;
+  color: #b0193f;
+}
+
+.women-applications-page .refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .women-applications-page .applications-title-row h1 {
@@ -38,15 +67,17 @@
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.6px;
+  min-width: 0;
 }
 
 .women-applications-page .application-result-count {
-  min-width: 86px;
-  height: 48px;
-  padding: 0 15px;
+  min-width: 72px;
+  height: 36px;
+  padding: 0 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   border: 1px solid #eadbd7;
   border-radius: 999px;
   background: #ffffff;
@@ -54,6 +85,31 @@
   font-size: 12px;
   font-weight: 800;
   white-space: nowrap;
+}
+
+/* Stack the title above the refresh + counter on phones so nothing overlaps. */
+@media (max-width: 640px) {
+  .women-applications-page .applications-title-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px 8px;
+  }
+
+  .women-applications-page .applications-title-row h1 {
+    grid-column: 1 / -1;
+  }
+
+  .women-applications-page .refresh-btn {
+    justify-self: start;
+    height: 34px;
+    padding: 0 10px;
+    font-size: 11px;
+    white-space: normal;
+    text-align: left;
+    line-height: 1.2;
+    max-width: 100%;
+  }
 }
 
 /* =========================================================
@@ -1653,7 +1709,9 @@
   .women-applications-page {
     padding: 12px 9px 22px !important;
   }
+}
 
+@media (max-width: 820px) and (min-width: 641px) {
   .women-applications-page .applications-title-row {
     display: flex !important;
     align-items: center !important;
@@ -1774,6 +1832,21 @@
 
   .women-applications-page .application-action-cell {
     min-height: 128px !important;
+  }
+}
+
+/* Phones: title on its own row, refresh + counter together underneath. */
+@media (max-width: 640px) {
+  .women-applications-page .applications-title-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center !important;
+    justify-content: unset !important;
+    gap: 10px 8px !important;
+  }
+
+  .women-applications-page .applications-title-row h1 {
+    grid-column: 1 / -1;
   }
 }
 

@@ -172,7 +172,7 @@ function ApplicationsPage({
         );
 
         window.location.href =
-          "/admin/login";
+          "/#/admin/login";
 
         throw new Error(
           data.message ||

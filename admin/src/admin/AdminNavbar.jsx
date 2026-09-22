@@ -1,15 +1,24 @@
 
+import { Menu } from "lucide-react";
+
 import "../styles/adminnavbar.css";
 
 function AdminNavbar({
   admin,
+  onMenuClick,
 }) {
   return (
-    <header className="admin-top-navbar">
+    <header className="admin-top-navbar admin-topbar">
 
       {/* LEFT SIDE */}
-   
-   
+      <button
+        type="button"
+        className="admin-menu-btn"
+        aria-label="Open menu"
+        onClick={onMenuClick}
+      >
+        <Menu size={22} />
+      </button>
 
       {/* RIGHT SIDE */}
       <div className="navbar-right">

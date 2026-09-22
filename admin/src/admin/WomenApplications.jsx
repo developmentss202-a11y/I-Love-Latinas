@@ -12,6 +12,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { RefreshCw } from "lucide-react";
 
 import "../styles/admindashboard.css";
 import "../styles/womenapplications.css";
@@ -173,7 +174,7 @@ function WomenApplications() {
         );
 
         window.location.href =
-          "/admin/login";
+          "/#/admin/login";
 
         throw new Error(
           data.message ||
@@ -999,12 +1000,19 @@ function WomenApplications() {
 
       <div className="page-title-row applications-title-row">
 
-        <div>
-          <h1>
-            {title}
-          </h1>
-        </div>
+        <h1>
+          {title}
+        </h1>
 
+        <button
+          type="button"
+          className="refresh-btn"
+          onClick={loadApplications}
+          disabled={applicationsLoading}
+        >
+          <RefreshCw size={15} />
+          <span>Refresh to see the new entries</span>
+        </button>
 
         <div className="application-result-count">
 

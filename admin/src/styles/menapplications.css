@@ -41,6 +41,37 @@
   justify-content: space-between;
   gap: 14px;
   margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.men-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.men-refresh-btn {
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid #efcbd2;
+  border-radius: 999px;
+  background: #fff7f8;
+  color: #b0193f;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.men-refresh-btn:hover:not(:disabled) {
+  background: #fff0f3;
+}
+
+.men-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .men-page-heading h1 {

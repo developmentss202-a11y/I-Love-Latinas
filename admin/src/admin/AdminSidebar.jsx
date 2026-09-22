@@ -29,6 +29,8 @@ function AdminSidebar({
   activeMenu,
   setActiveMenu,
   logout,
+  isOpen = false,
+  onClose,
 }) {
 
   /* =====================================
@@ -62,8 +64,15 @@ function AdminSidebar({
 
 
   return (
+    <>
+      <div
+        className={`sidebar-overlay${isOpen ? " is-open" : ""}`}
+        onClick={onClose}
+      />
 
-    <aside className="admin-left-sidebar">
+      <aside
+        className={`admin-left-sidebar sidebar-drawer${isOpen ? " is-open" : ""}`}
+      >
 
 
       {/* ================= LOGO ================= */}
@@ -429,7 +438,7 @@ function AdminSidebar({
       </div>
 
     </aside>
-
+    </>
   );
 }
 

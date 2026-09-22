@@ -164,7 +164,7 @@ function MenApplications() {
         );
 
         window.location.href =
-          "/admin/login";
+          "/#/admin/login";
 
         return;
       }
@@ -200,32 +200,12 @@ function MenApplications() {
   }
 
 
-  /* =========================================
-     FIRST LOAD + AUTO REFRESH
-
-     Men form submit hone ke baad admin page
-     ko manually refresh nahi karna padega.
-  ========================================= */
-
+  /* Load once when the page opens.
+     New entries come from the Refresh button or a browser refresh. */
   useEffect(() => {
     loadApplications(
       true
     );
-
-    const interval =
-      setInterval(
-        () => {
-          loadApplications(
-            false
-          );
-        },
-        2000
-      );
-
-    return () =>
-      clearInterval(
-        interval
-      );
   }, []);
 
 
@@ -496,7 +476,7 @@ function MenApplications() {
         );
 
         window.location.href =
-          "/admin/login";
+          "/#/admin/login";
 
         return;
       }
@@ -631,6 +611,23 @@ function MenApplications() {
       <section
         className="admin-page-content men-applications-page"
       >
+        <div className="men-page-heading">
+          <h1>
+            Men Applications
+          </h1>
+
+          <div className="men-heading-actions">
+            <button
+              type="button"
+              className="men-refresh-btn"
+              onClick={() => loadApplications(true)}
+              disabled={loading}
+            >
+              Refresh to see the new entries
+            </button>
+          </div>
+        </div>
+
         <div className="men-loading">
           Loading Men Applications...
         </div>
@@ -653,14 +650,25 @@ function MenApplications() {
           Men Applications
         </h1>
 
-        <div className="men-count-pill">
-          {
-            filteredApplications.length
-          }
-          {" "}of{" "}
-          {
-            applications.length
-          }
+        <div className="men-heading-actions">
+          <button
+            type="button"
+            className="men-refresh-btn"
+            onClick={() => loadApplications(true)}
+            disabled={loading}
+          >
+            Refresh to see the new entries
+          </button>
+
+          <div className="men-count-pill">
+            {
+              filteredApplications.length
+            }
+            {" "}of{" "}
+            {
+              applications.length
+            }
+          </div>
         </div>
 
       </div>

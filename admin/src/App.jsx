@@ -1,6 +1,6 @@
 
 import {
-  BrowserRouter,
+  HashRouter,
   Navigate,
   Route,
   Routes,
@@ -13,7 +13,10 @@ import AdminProtectedRoute from "./admin/AdminProtectedRoute";
 
 function App() {
   return (
-    <BrowserRouter>
+    // HashRouter keeps the page path after #.
+    // Example: /#/admin/dashboard
+    // Refresh then asks nginx for / (index.html), not /admin/dashboard.
+    <HashRouter>
       <Routes>
 
         {/* FIRST PAGE ALWAYS LOGIN */}
@@ -54,7 +57,7 @@ function App() {
         />
 
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

@@ -151,7 +151,7 @@ function SettingsPanel({
             );
 
             window.location.href =
-              "/admin/login";
+              "/#/admin/login";
 
             return;
           }
@@ -315,7 +315,7 @@ function SettingsPanel({
           );
 
           window.location.href =
-            "/admin/login";
+            "/#/admin/login";
 
           return;
         }

@@ -84,7 +84,7 @@ function AllUsers() {
           );
 
           window.location.href =
-            "/admin/login";
+            "/#/admin/login";
 
           return;
         }
@@ -200,7 +200,7 @@ function AllUsers() {
           );
 
           window.location.href =
-            "/admin/login";
+            "/#/admin/login";
 
           return;
         }

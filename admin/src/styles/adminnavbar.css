@@ -35,9 +35,30 @@
    LEFT
 ========================= */
 
-.navbar-left {
+.admin-menu-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
   margin: 0;
   padding: 0;
+  border: 1px solid #eee1dc;
+  border-radius: 10px;
+  background: #fff;
+  color: #32131e;
+  cursor: pointer;
+}
+
+.admin-menu-btn:hover {
+  background: #fff1f4;
+}
+
+/* Hamburger only below tablet (~768px), where the sidebar is a drawer. */
+@media (max-width: 768px) {
+  .admin-menu-btn {
+    display: inline-flex;
+  }
 }
 
 .navbar-left h2 {

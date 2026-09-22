@@ -1016,7 +1016,7 @@ select {
    16. TABLET - 900px
 ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 900px) and (min-width: 769px) {
   .admin-left-sidebar {
     width: 72px !important;
   }
@@ -1025,7 +1025,9 @@ select {
     width: calc(100% - 72px);
     margin-left: 72px;
   }
+}
 
+@media (max-width: 900px) {
   .admin-page-content {
     padding: 20px 16px 30px;
   }
@@ -1053,6 +1055,11 @@ select {
     padding: 17px 11px 28px;
   }
 
+  .admin-main-content {
+    width: 100%;
+    margin-left: 0;
+  }
+
   .dashboard-welcome h1,
   .admin-page-content > h1,
   .page-title-row h1,
@@ -1064,6 +1071,11 @@ select {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+  }
+
+  .women-applications-page .applications-title-row {
+    flex-direction: row;
+    align-items: center;
   }
 
   .application-filter-grid {
@@ -1259,12 +1271,12 @@ select {
 
 @media (max-width: 600px) {
   .admin-left-sidebar {
-    width: 58px !important;
+    width: min(280px, 90vw) !important;
   }
 
   .admin-main-content {
-    width: calc(100% - 58px);
-    margin-left: 58px;
+    width: 100%;
+    margin-left: 0;
   }
 
   .admin-page-content {
@@ -1601,4 +1613,65 @@ button.dashboard-stat-button:hover .summary-card {
   .dashboard-stat-button .summary-card-content h2 {
     font-size: 20px;
   }
+}
+
+.logout-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(18, 8, 14, 0.45);
+}
+
+.logout-confirm-box {
+  width: 100%;
+  max-width: 420px;
+  padding: 28px 24px 22px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(18, 8, 14, 0.18);
+}
+
+.logout-confirm-box h2 {
+  margin: 0 0 8px;
+  color: #16243f;
+  font-size: 22px;
+}
+
+.logout-confirm-box p {
+  margin: 0 0 22px;
+  color: #6e4b50;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.logout-confirm-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.logout-confirm-cancel,
+.logout-confirm-yes {
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.logout-confirm-cancel {
+  border: 1px solid #ead7d1;
+  background: #fff;
+  color: #6e4b50;
+}
+
+.logout-confirm-yes {
+  border: 0;
+  background: #b0193f;
+  color: #fff;
 }
