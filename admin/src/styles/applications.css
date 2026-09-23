@@ -364,11 +364,9 @@
 }
 
 .application-status-approved {
-  background: #eaf9f0;
-
-  border: 1px solid #bde7cd;
-
-  color: #00823c;
+  background: #f8edd8;
+  border: 1px solid #e0c48e;
+  color: #2a0a19;
 }
 
 .application-status-rejected {
@@ -909,9 +907,8 @@
 }
 
 .confirm-action-icon.approve {
-  color: #078342;
-
-  background: #e8f8ef;
+  color: #6f1f3f;
+  background: #f8edd8;
 }
 
 .confirm-action-icon.reject {
@@ -961,9 +958,7 @@
 
 .confirm-approve-btn {
   border: none;
-
-  background: #078342;
-
+  background: var(--wine);
   color: #ffffff;
 }
 

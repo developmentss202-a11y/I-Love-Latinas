@@ -24,6 +24,7 @@ import {
 
 import "../styles/admindashboard.css";
 import "../styles/applications.css";
+import "../styles/admin-theme.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||

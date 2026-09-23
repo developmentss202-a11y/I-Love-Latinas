@@ -83,6 +83,23 @@ function hasUploadedMedia(req) {
 }
 
 
+const PRIVATE_APPLICATION_FIELDS = [
+];
+
+
+function sanitizePublicApplication(application) {
+  const plain = application?.toObject
+    ? application.toObject()
+    : { ...(application || {}) };
+
+  PRIVATE_APPLICATION_FIELDS.forEach((field) => {
+    delete plain[field];
+  });
+
+  return plain;
+}
+
+
 /* =========================
    SLUG
 ========================= */
@@ -465,6 +482,37 @@ const createApplication =
       }
 
 
+      const phone =
+        String(req.body?.phone || "")
+          .trim();
+
+      const email =
+        String(req.body?.email || "")
+          .trim()
+          .toLowerCase();
+
+      const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!phone || phone.length < 7) {
+        await cleanupUploadedFiles(req);
+
+        return res.status(400).json({
+          success: false,
+          message: "Please enter a valid phone number.",
+        });
+      }
+
+      if (!email || !emailPattern.test(email)) {
+        await cleanupUploadedFiles(req);
+
+        return res.status(400).json({
+          success: false,
+          message: "Please enter a valid email address.",
+        });
+      }
+
+
       /* =====================
          WOMEN REGISTRATION
       ===================== */
@@ -689,6 +737,10 @@ const createApplication =
 
         gender:
           normalizedGender,
+
+        phone,
+
+        email,
 
         photos,
 
@@ -1043,6 +1095,48 @@ const getApplicationStatus =
 
 
 /* =========================
+   APPROVED APPLICATIONS (public)
+   Used by homepage cards + SHE IS dropdown
+========================= */
+
+const getApprovedApplications =
+  async (req, res) => {
+    try {
+      const applications =
+        await Application
+          .find({
+            status: "approved",
+          })
+          .sort({
+            createdAt: -1,
+          })
+          .select(
+            "firstName slug age photos profession countryOfResidence countryOfBirth relationshipDesired visionStatement personalityType"
+          )
+          .lean();
+
+      return res.json({
+        success: true,
+        applications,
+      });
+    } catch (error) {
+      console.error(
+        "GET APPROVED APPLICATIONS ERROR:",
+        error
+      );
+
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message:
+            "Approved applications load failed",
+        });
+    }
+  };
+
+
+/* =========================
    APPLICATION BY SLUG
    Unique profile URL for the woman form.
 ========================= */
@@ -1363,6 +1457,7 @@ const rejectApplication =
 module.exports = {
   createApplication,
   getApplications,
+  getApprovedApplications,
   getSingleApplication,
   getApplicationStatus,
   getApplicationBySlug,

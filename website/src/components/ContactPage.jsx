@@ -13,15 +13,36 @@ import {
 } from "react-router-dom";
 
 import {
-  PROFILES,
+  fetchApprovedProfiles,
 } from "./ProfileCard";
 
+import { useLanguage } from "../language";
 
-const API_BASE =
-  (
-    import.meta.env.VITE_API_URL ||
-    "http://localhost:5000"
-  ).replace(/\/$/, "");
+
+const LIVE_API =
+  "https://node.latina.myaibusiness.online";
+
+const API_BASE = (() => {
+  const fromEnv =
+    String(
+      import.meta.env.VITE_API_URL ||
+      ""
+    ).trim();
+
+  if (
+    !fromEnv ||
+    /localhost/i.test(
+      fromEnv
+    )
+  ) {
+    return LIVE_API;
+  }
+
+  return fromEnv.replace(
+    /\/$/,
+    ""
+  );
+})();
 
 
 /* =========================================
@@ -81,29 +102,8 @@ function memberLabel(item) {
 
 /* =========================================
    LOAD WOMEN / MEMBER NAMES
-
-   Remark:
-   Profile names will later come from the backend API
-   (GET /api/profiles or /api/members). Wire that fetch
-   back in once the endpoint is ready.
-
-   For now the API is not returning model names yet, so
-   the Contact dropdown uses the local PROFILES list.
-   That way opening Contact directly (Men → Contact)
-   still lists every profile, not only the name passed
-   through Connect (?member=).
+   Approved profiles from live API only.
 ========================================= */
-
-function localProfileNames() {
-  return [
-    ...new Set(
-      PROFILES
-        .map(memberLabel)
-        .filter(Boolean)
-    ),
-  ];
-}
-
 
 function withLockedName(
   list,
@@ -126,12 +126,16 @@ function withLockedName(
 
 
 async function fetchMemberNames() {
-  // TODO: Replace this with the backend profiles API.
-  // Example:
-  // const response = await fetch(`${API_BASE}/api/profiles`);
-  // const data = await response.json();
-  // return unique names from data.profiles / data.members
-  return localProfileNames();
+  const profiles =
+    await fetchApprovedProfiles();
+
+  return [
+    ...new Set(
+      profiles
+        .map(memberLabel)
+        .filter(Boolean)
+    ),
+  ];
 }
 
 
@@ -140,6 +144,8 @@ async function fetchMemberNames() {
 ========================================= */
 
 export default function ContactPage() {
+  const { t } = useLanguage();
+
   const [
     params,
   ] =
@@ -163,7 +169,7 @@ export default function ContactPage() {
     useState(
       () =>
         withLockedName(
-          localProfileNames(),
+          [],
           lockedName
         )
     );
@@ -235,10 +241,7 @@ export default function ContactPage() {
 
 
   /* =========================================
-     LOAD PROFILE NAMES
-
-     Uses local PROFILES for now.
-     Swap fetchMemberNames to the backend API later.
+     LOAD PROFILE NAMES (approved only, live API)
   ========================================= */
 
   useEffect(() => {
@@ -691,9 +694,19 @@ export default function ContactPage() {
 
           <div className="contact-hero__copy">
 
-            <p className="gender-kicker">
-              Private introduction
-            </p>
+            <div className="contact-hero__top">
+              <p className="gender-kicker">
+                Private introduction
+              </p>
+
+              <button
+                type="button"
+                className="page-back"
+                onClick={() => navigate("/profiles")}
+              >
+                ← {t("Back")}
+              </button>
+            </div>
 
 
             <h1>

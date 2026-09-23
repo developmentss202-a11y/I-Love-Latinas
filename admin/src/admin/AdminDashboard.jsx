@@ -19,10 +19,10 @@ import AdminNavbar from "./AdminNavbar";
 
 import MenApplications from "./MenApplications";
 import WomenApplications from "./WomenApplications";
-import ApplicationsPage from "./ApplicationsPage";
 import AllUsers from "./AllUsers";
 
 import "../styles/admindashboard.css";
+import "../styles/admin-theme.css";
 
 
 function AdminDashboard() {
@@ -67,6 +67,10 @@ function AdminDashboard() {
       approved: 0,
       rejected: 0,
     });
+
+
+  const [chartDays, setChartDays] =
+    useState([]);
 
 
   const [
@@ -357,6 +361,13 @@ function AdminDashboard() {
             rejected,
           });
 
+          setChartDays(
+            buildChartDays(
+              menApplications,
+              womenApplications
+            )
+          );
+
 
           /* =====================================
              ADMIN DATA
@@ -566,22 +577,6 @@ function AdminDashboard() {
 
 
   /* =========================================
-     COMMON STATUS COLUMNS
-  ========================================= */
-
-  const statusColumns = [
-    "S.No.",
-    "Image",
-    "First Name",
-    "Age",
-    "Location",
-    "Status",
-    "Date",
-    "Action",
-  ];
-
-
-  /* =========================================
      UI
   ========================================= */
 
@@ -686,7 +681,7 @@ function AdminDashboard() {
                 className="dashboard-stat-button"
                 onClick={() =>
                   setActiveMenu(
-                    "Rejected Applications"
+                    "Women Rejected"
                   )
                 }
               >
@@ -710,7 +705,7 @@ function AdminDashboard() {
                 className="dashboard-stat-button"
                 onClick={() =>
                   setActiveMenu(
-                    "Approved Applications"
+                    "Women Approved"
                   )
                 }
               >
@@ -734,7 +729,7 @@ function AdminDashboard() {
                 className="dashboard-stat-button"
                 onClick={() =>
                   setActiveMenu(
-                    "Men Applications"
+                    "Men Pending"
                   )
                 }
               >
@@ -758,7 +753,7 @@ function AdminDashboard() {
                 className="dashboard-stat-button"
                 onClick={() =>
                   setActiveMenu(
-                    "Women Applications"
+                    "Women Pending"
                   )
                 }
               >
@@ -782,7 +777,7 @@ function AdminDashboard() {
                 className="dashboard-stat-button"
                 onClick={() =>
                   setActiveMenu(
-                    "Pending Applications"
+                    "Women Pending"
                   )
                 }
               >
@@ -800,19 +795,12 @@ function AdminDashboard() {
 
             </div>
 
+
+            <DashboardChart
+              days={chartDays}
+            />
+
           </section>
-
-        )}
-
-
-        {/* =====================================
-            MEN
-        ===================================== */}
-
-        {activeMenu ===
-          "Men Applications" && (
-
-          <MenApplications />
 
         )}
 
@@ -821,77 +809,51 @@ function AdminDashboard() {
             WOMEN
         ===================================== */}
 
-        {activeMenu ===
-          "Women Applications" && (
+        {activeMenu === "Women Pending" && (
+          <WomenApplications
+            pageStatus="pending"
+            title="Women Pending"
+          />
+        )}
 
-          <WomenApplications />
+        {activeMenu === "Women Approved" && (
+          <WomenApplications
+            pageStatus="approved"
+            title="Women Approved"
+          />
+        )}
 
+        {activeMenu === "Women Rejected" && (
+          <WomenApplications
+            pageStatus="rejected"
+            title="Women Rejected"
+          />
         )}
 
 
         {/* =====================================
-            PENDING
+            MEN
         ===================================== */}
 
-        {activeMenu ===
-          "Pending Applications" && (
-
-          <ApplicationsPage
-            gender="all"
-
-            title="Pending Applications"
-
-            initialStatus="pending"
-
-            columns={
-              statusColumns
-            }
+        {activeMenu === "Men Pending" && (
+          <MenApplications
+            pageStatus="pending"
+            title="Men Pending"
           />
-
         )}
 
-
-        {/* =====================================
-            APPROVED
-        ===================================== */}
-
-        {activeMenu ===
-          "Approved Applications" && (
-
-          <ApplicationsPage
-            gender="all"
-
-            title="Approved Applications"
-
-            initialStatus="approved"
-
-            columns={
-              statusColumns
-            }
+        {activeMenu === "Men Contacted" && (
+          <MenApplications
+            pageStatus="contacted"
+            title="Men Contacted"
           />
-
         )}
 
-
-        {/* =====================================
-            REJECTED
-        ===================================== */}
-
-        {activeMenu ===
-          "Rejected Applications" && (
-
-          <ApplicationsPage
-            gender="all"
-
-            title="Rejected Applications"
-
-            initialStatus="rejected"
-
-            columns={
-              statusColumns
-            }
+        {activeMenu === "Men Duplicates" && (
+          <MenApplications
+            pageStatus="duplicates"
+            title="Men Duplicates"
           />
-
         )}
 
 
@@ -908,18 +870,103 @@ function AdminDashboard() {
 
 
         {/* =====================================
-            PROFILE
+            SETTINGS HUB
         ===================================== */}
 
-        {activeMenu ===
-          "Profile" && (
+        {(
+          activeMenu === "Settings" ||
+          activeMenu === "Settings General" ||
+          activeMenu === "Settings Registration" ||
+          activeMenu === "Settings Application" ||
+          activeMenu === "Settings System" ||
+          activeMenu === "Settings Profile" ||
+          activeMenu === "Profile"
+        ) && (
 
           <section className="admin-page-content">
 
-            <h1>
-              Admin Profile
-            </h1>
+            <div className="settings-hub-tabs">
 
+              <button
+                type="button"
+                className={
+                  activeMenu === "Settings" ||
+                  activeMenu === "Settings General"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setActiveMenu("Settings General")
+                }
+              >
+                General
+              </button>
+
+              <button
+                type="button"
+                className={
+                  activeMenu === "Settings Registration"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setActiveMenu("Settings Registration")
+                }
+              >
+                Registration
+              </button>
+
+              <button
+                type="button"
+                className={
+                  activeMenu === "Settings Application"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setActiveMenu("Settings Application")
+                }
+              >
+                Application
+              </button>
+
+              <button
+                type="button"
+                className={
+                  activeMenu === "Settings System"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setActiveMenu("Settings System")
+                }
+              >
+                System
+              </button>
+
+              <button
+                type="button"
+                className={
+                  activeMenu === "Profile" ||
+                  activeMenu === "Settings Profile"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setActiveMenu("Profile")
+                }
+              >
+                Profile
+              </button>
+
+            </div>
+
+            {(
+              activeMenu === "Profile" ||
+              activeMenu === "Settings Profile"
+            ) ? (
+
+            <div className="new-settings-page">
 
             {actionMessage && (
 
@@ -937,6 +984,29 @@ function AdminDashboard() {
               </div>
 
             )}
+
+
+            <div className="settings-section-card">
+
+              <div className="settings-section-header">
+
+                <div className="settings-section-icon">
+                  ⚙
+                </div>
+
+                <div>
+
+                  <h2>
+                    Admin Profile
+                  </h2>
+
+                  <p>
+                    Update your name, email, and password
+                  </p>
+
+                </div>
+
+              </div>
 
 
             <div className="profile-settings-grid">
@@ -1136,22 +1206,11 @@ function AdminDashboard() {
 
             </div>
 
-          </section>
+            </div>
 
-        )}
+            </div>
 
-
-        {/* =====================================
-            SETTINGS
-        ===================================== */}
-
-        {(
-          activeMenu === "Settings" ||
-          activeMenu === "Settings General" ||
-          activeMenu === "Settings Registration" ||
-          activeMenu === "Settings Application" ||
-          activeMenu === "Settings System"
-        ) && (
+            ) : (
 
           <SettingsPanel
             section={
@@ -1164,6 +1223,10 @@ function AdminDashboard() {
                 : "general"
             }
           />
+
+            )}
+
+          </section>
 
         )}
 
@@ -1203,6 +1266,204 @@ function AdminDashboard() {
         </div>
       ) : null}
 
+    </div>
+  );
+}
+
+
+/* =========================================
+   DASHBOARD CHART
+========================================= */
+
+function localDayKey(value) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+
+function buildChartDays(menApplications, womenApplications, days = 14) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const list = [];
+  const map = {};
+
+  for (let i = days - 1; i >= 0; i -= 1) {
+    const day = new Date(today);
+    day.setDate(today.getDate() - i);
+
+    const key = localDayKey(day);
+    const item = {
+      key,
+      label: day.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+      }),
+      men: 0,
+      women: 0,
+    };
+
+    list.push(item);
+    map[key] = item;
+  }
+
+  menApplications.forEach((application) => {
+    const key = localDayKey(application.createdAt);
+    if (map[key]) {
+      map[key].men += 1;
+    }
+  });
+
+  womenApplications.forEach((application) => {
+    const key = localDayKey(application.createdAt);
+    if (map[key]) {
+      map[key].women += 1;
+    }
+  });
+
+  return list;
+}
+
+
+function DashboardChart({ days }) {
+  const rows = Array.isArray(days) ? days : [];
+  const width = 1000;
+  const height = 280;
+  const padL = 44;
+  const padR = 18;
+  const padT = 24;
+  const padB = 42;
+  const innerW = width - padL - padR;
+  const innerH = height - padT - padB;
+  const maxVal = Math.max(
+    1,
+    ...rows.map((day) => day.men + day.women)
+  );
+  const slot = innerW / Math.max(rows.length, 1);
+  const barW = Math.max(10, slot * 0.48);
+
+  const linePoints = rows
+    .map((day, index) => {
+      const total = day.men + day.women;
+      const x = padL + slot * index + slot / 2;
+      const y = padT + innerH - (total / maxVal) * innerH;
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  return (
+    <div className="dashboard-chart-card">
+      <div className="dashboard-chart-header">
+        <div>
+          <h2>Applications over time</h2>
+          <p>Men and women applications from the last 14 days</p>
+        </div>
+
+        <div className="dashboard-chart-legend">
+          <span className="legend-men">Men</span>
+          <span className="legend-women">Women</span>
+          <span className="legend-total">Total</span>
+        </div>
+      </div>
+
+      <div className="dashboard-chart-svg-wrap">
+        <svg
+          className="dashboard-chart-svg"
+          viewBox={`0 0 ${width} ${height}`}
+          role="img"
+          aria-label="Applications over the last 14 days"
+        >
+          {[0, 0.25, 0.5, 0.75, 1].map((tick) => {
+            const y = padT + innerH * (1 - tick);
+            const label = Math.round(maxVal * tick);
+
+            return (
+              <g key={tick}>
+                <line
+                  x1={padL}
+                  x2={width - padR}
+                  y1={y}
+                  y2={y}
+                  stroke="#f0e4de"
+                  strokeWidth="1"
+                />
+                <text
+                  x={padL - 8}
+                  y={y + 4}
+                  textAnchor="end"
+                  fontSize="11"
+                  fill="#8a7784"
+                >
+                  {label}
+                </text>
+              </g>
+            );
+          })}
+
+          {rows.map((day, index) => {
+            const x = padL + slot * index + (slot - barW) / 2;
+            const menH = (day.men / maxVal) * innerH;
+            const womenH = (day.women / maxVal) * innerH;
+            const womenY = padT + innerH - womenH;
+            const menY = womenY - menH;
+
+            return (
+              <g key={day.key}>
+                {day.women > 0 ? (
+                  <rect
+                    x={x}
+                    y={womenY}
+                    width={barW}
+                    height={Math.max(3, womenH)}
+                    fill="#e2536c"
+                    rx={day.men > 0 ? 0 : 7}
+                  />
+                ) : null}
+
+                {day.men > 0 ? (
+                  <rect
+                    x={x}
+                    y={menY}
+                    width={barW}
+                    height={Math.max(3, menH)}
+                    fill="#caa46a"
+                    rx="7"
+                  />
+                ) : null}
+
+                <text
+                  x={x + barW / 2}
+                  y={height - 14}
+                  textAnchor="middle"
+                  fontSize="11"
+                  fill="#5c4753"
+                >
+                  {day.label}
+                </text>
+              </g>
+            );
+          })}
+
+          {linePoints ? (
+            <polyline
+              fill="none"
+              stroke="#2a0a19"
+              strokeWidth="2.5"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              points={linePoints}
+            />
+          ) : null}
+        </svg>
+      </div>
     </div>
   );
 }

@@ -1,33 +1,64 @@
-import { useState } from "react";
-import ProfileCard, { ProfileDetail, PROFILES } from "./ProfileCard";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ProfileCard, { ProfileDetail, fetchApprovedProfiles } from "./ProfileCard";
 import Pagination from "./Pagination";
 import { useLanguage } from "../language";
 
 const PAGE_SIZE = 8;
-const PAGE_COUNT = 3;
 
 export default function ProfileGrid({ onRegister, onNavigate, onConnect, compact = false }) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [detailIndex, setDetailIndex] = useState(null);
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+
+    fetchApprovedProfiles().then((list) => {
+      if (!active) return;
+      setProfiles(list);
+      setLoading(false);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   function goTo(next) {
     setPage(next);
+    setDetailIndex(null);
     document.getElementById("members")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  const start = (page - 1) * PAGE_SIZE;
-  const cards = Array.from({ length: PAGE_SIZE }, (_, i) => (start + i) % PROFILES.length);
-  const detailProfile = detailIndex != null ? PROFILES[detailIndex % PROFILES.length] : null;
+  const totalPages = Math.max(1, Math.ceil(profiles.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const start = (safePage - 1) * PAGE_SIZE;
+  const pageProfiles = profiles.slice(start, start + PAGE_SIZE);
+  const detailProfile = detailIndex != null ? profiles[detailIndex] : null;
 
   return (
     <>
       <section id="members" className={`members ${compact ? "members--browse" : ""}`}>
         <div className="members__intro">
-            <p className="eyebrow">
-              <span className="eyebrow__ring" aria-hidden="true" />
-              {t("Private circle")}
-            </p>
+            <div className="members__intro-row">
+              <p className="eyebrow">
+                <span className="eyebrow__ring" aria-hidden="true" />
+                {t("Private circle")}
+              </p>
+              {compact ? (
+                <button
+                  type="button"
+                  className="page-back"
+                  onClick={() => navigate("/men")}
+                >
+                  ← {t("Back")}
+                </button>
+              ) : null}
+            </div>
             <h2>{compact ? t("Women who want to be wanted") : t("People currently seeking a match")}</h2>
             <p>
               {compact
@@ -37,17 +68,28 @@ export default function ProfileGrid({ onRegister, onNavigate, onConnect, compact
         </div>
 
         <div className="profile-grid">
-          {cards.map((profileIndex, i) => (
-            <ProfileCard
-              key={`${page}-${i}`}
-              profile={PROFILES[profileIndex]}
-              index={profileIndex}
-              onReadMore={() => setDetailIndex(profileIndex)}
-            />
-          ))}
+          {loading ? (
+            <p className="pending-card__body">{t("Loading…")}</p>
+          ) : pageProfiles.length === 0 ? (
+            <p className="pending-card__body">{t("No approved profiles yet.")}</p>
+          ) : (
+            pageProfiles.map((profile, i) => {
+              const absoluteIndex = start + i;
+              return (
+                <ProfileCard
+                  key={profile.slug || `${profile.name}-${absoluteIndex}`}
+                  profile={profile}
+                  index={absoluteIndex}
+                  onReadMore={() => setDetailIndex(absoluteIndex)}
+                />
+              );
+            })
+          )}
         </div>
 
-        <Pagination page={page} totalPages={PAGE_COUNT} onChange={goTo} />
+        {!loading && profiles.length > PAGE_SIZE ? (
+          <Pagination page={safePage} totalPages={totalPages} onChange={goTo} />
+        ) : null}
       </section>
 
       {compact ? null : (

@@ -592,6 +592,8 @@ const updateMenApplicationStatus =
           "pending",
           "approved",
           "rejected",
+          "contacted",
+          "duplicate",
         ].includes(
           status
         )
@@ -677,16 +679,26 @@ const updateMenApplicationStatus =
 
         message:
           status ===
-          "approved"
+          "contacted"
 
-            ? "Application approved successfully"
+            ? "Application marked as contacted"
 
             : status ===
-              "rejected"
+              "duplicate"
 
-              ? "Application rejected successfully"
+              ? "Application moved to duplicates"
 
-              : "Application moved to pending successfully",
+            : status ===
+              "approved"
+
+              ? "Application approved successfully"
+
+              : status ===
+                "rejected"
+
+                ? "Application rejected successfully"
+
+                : "Application moved to pending successfully",
 
         application:
           publicApplication(

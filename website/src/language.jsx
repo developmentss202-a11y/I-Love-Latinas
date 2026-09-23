@@ -60,7 +60,8 @@ const spanish = {
 
   "Identity": "Identidad",
   "Who you are": "Quién eres",
-  "Ten fields about you.": "Diez datos sobre ti.",
+  "Ten fields about you.": "Doce datos sobre ti.",
+  "Your identity details.": "Tus datos de identidad.",
   "Lifestyle": "Estilo de vida",
   "How you live": "Cómo vives",
   "Work, family, and travel.": "Trabajo, familia y viajes.",
@@ -70,6 +71,8 @@ const spanish = {
 
   // Field labels
   "First name": "Nombre",
+  "Phone number": "Número de teléfono",
+  "Email": "Correo electrónico",
   "Age": "Edad",
   "Gender": "Género",
   "Photo": "Foto",
@@ -104,6 +107,8 @@ const spanish = {
 
   // Placeholders
   "Enter first name": "Ingresa tu nombre",
+  "Enter phone number": "Ingresa tu número de teléfono",
+  "Enter email address": "Ingresa tu correo electrónico",
   "Enter age": "Ingresa tu edad",
   "Select Gender": "Selecciona el género",
   "Select Athletic type": "Selecciona el tipo atlético",
@@ -115,6 +120,8 @@ const spanish = {
   "Maximum 5 MB": "Máximo 5 MB",
   "Personal / professional • Maximum 10 MB": "Personal / profesional • Máximo 10 MB",
   "Age must be between {min} and {max} years": "La edad debe estar entre {min} y {max} años",
+  "Notice": "Aviso",
+  "Got it": "Entendido",
 
   // Options
   "Yes": "Sí",
@@ -163,6 +170,10 @@ const spanish = {
   "Maximum age is {max} years. Please enter age {max} or below.":
     "La edad máxima es {max} años. Ingresa {max} o menos.",
   "First name must contain at least 2 characters.": "El nombre debe tener al menos 2 caracteres.",
+  "Please enter a valid phone number.": "Ingresa un número de teléfono válido.",
+  "Please enter a valid email address.": "Ingresa un correo electrónico válido.",
+  "Your phone number and email address are kept private and will not be visible to other users. This information is accessible only to authorized administrators.":
+    "Tu número de teléfono y correo electrónico se mantienen privados y no serán visibles para otros usuarios. Esta información solo es accesible para administradores autorizados.",
   "Please complete the current step before continuing.": "Completa el paso actual antes de continuar.",
   "Website is currently under maintenance. Please try again later.":
     "El sitio está en mantenimiento. Inténtalo más tarde.",
@@ -170,6 +181,8 @@ const spanish = {
   "Women registration is currently closed.": "El registro de mujeres está cerrado.",
   "Something went wrong while submitting your application.": "Ocurrió un error al enviar tu solicitud.",
   "{label} must be maximum {max} MB.": "{label} debe ser de máximo {max} MB.",
+  "Loading…": "Cargando…",
+  "No approved profiles yet.": "Aún no hay perfiles aprobados.",
 
   // Media buttons
   "Add Photo": "Agregar foto",
@@ -209,6 +222,9 @@ const spanish = {
     "Esta es tu página de perfil. Guarda el enlace copiado para volver más tarde.",
   "Loading your profile…": "Cargando tu perfil…",
   "Your listing": "Tu ficha",
+  "Pending": "Pendiente",
+  "Approved": "Aprobada",
+  "Rejected": "Rechazada",
   "All of the details you submitted are shown below.": "A continuación están todos los datos que enviaste.",
   "Copy link": "Copiar enlace",
   "Save this link. You will need it to return to your profile later.":

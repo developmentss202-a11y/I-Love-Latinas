@@ -13,6 +13,7 @@ const adminAuth =
 const {
   createApplication,
   getApplications,
+  getApprovedApplications,
   getSingleApplication,
   getApplicationStatus,
   getApplicationBySlug,
@@ -602,6 +603,14 @@ router.get(
   "/applications/by-slug/:slug",
 
   getApplicationBySlug
+);
+
+
+// Public — approved women for cards + contact dropdown
+router.get(
+  "/applications/approved",
+
+  getApprovedApplications
 );
 
 

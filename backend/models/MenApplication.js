@@ -58,7 +58,13 @@ const menApplicationSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["pending", "approved", "rejected"],
+      enum: [
+        "pending",
+        "approved",
+        "rejected",
+        "contacted",
+        "duplicate",
+      ],
       default: "pending",
       index: true,
     },

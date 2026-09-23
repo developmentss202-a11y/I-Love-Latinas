@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import "../styles/adminlogin.css";
+import "../styles/admin-theme.css";
 
 function AdminLogin() {
   const navigate = useNavigate();
@@ -209,8 +210,10 @@ function AdminLogin() {
             TITLE
         ============================== */}
 
+        <h1 className="login-title">Admin Login</h1>
+
         <p className="auth-subtitle">
-          Admin Login
+          Sign in to manage the platform
         </p>
 
 
@@ -241,7 +244,7 @@ function AdminLogin() {
 
             <div className="auth-input-box">
 
-              <span className="auth-input-icon">
+              <span className="auth-input-icon" aria-hidden="true">
                 👤
               </span>
 
@@ -285,7 +288,7 @@ function AdminLogin() {
 
             <div className="auth-input-box">
 
-              <span className="auth-input-icon">
+              <span className="auth-input-icon" aria-hidden="true">
                 🔒
               </span>
 
@@ -379,23 +382,6 @@ function AdminLogin() {
     </svg>
   )}
 </button>
-{/* 
-              <button
-                type="button"
-
-                className="password-toggle"
-
-                onClick={() =>
-                  setShowPassword(
-                    (prev) =>
-                      !prev
-                  )
-                }
-              >
-                {showPassword
-                  ? "Hide"
-                  : "Show"}
-              </button> */}
 
             </div>
 
@@ -461,6 +447,10 @@ function AdminLogin() {
           </button>
 
         </form>
+
+        <p className="auth-footer">
+          I ❤️ Latinas Admin Panel
+        </p>
 
       </div>
 

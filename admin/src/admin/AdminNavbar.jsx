@@ -2,10 +2,12 @@
 import { Menu } from "lucide-react";
 
 import "../styles/adminnavbar.css";
+import "../styles/admin-theme.css";
 
 function AdminNavbar({
   admin,
   onMenuClick,
+  setActiveMenu,
 }) {
   return (
     <header className="admin-top-navbar admin-topbar">
@@ -23,7 +25,16 @@ function AdminNavbar({
       {/* RIGHT SIDE */}
       <div className="navbar-right">
 
-        <div className="navbar-admin-profile">
+        <button
+          type="button"
+          className="navbar-admin-profile"
+          aria-label="Open settings"
+          onClick={() =>
+            setActiveMenu?.(
+              "Settings General"
+            )
+          }
+        >
 
           <div className="navbar-admin-avatar">
             {admin?.name
@@ -34,20 +45,15 @@ function AdminNavbar({
           </div>
 
           <div className="navbar-admin-details">
-
-         
-         
-
+            <strong>
+              {admin?.name || "Admin"}
+            </strong>
             <span>
-              {admin?.email ||
-                "admin@example.com"}
+              {admin?.email || "admin@example.com"}
             </span>
-
-
-
           </div>
 
-        </div>
+        </button>
 
       </div>
 

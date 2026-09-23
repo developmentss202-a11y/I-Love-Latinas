@@ -12,10 +12,22 @@ import {
   useMemo,
   useState,
 } from "react";
-import { RefreshCw } from "lucide-react";
+import { createPortal } from "react-dom";
+import {
+  Briefcase,
+  Film,
+  Heart,
+  RefreshCw,
+  Search,
+  ShieldAlert,
+  User,
+  X,
+} from "lucide-react";
 
 import "../styles/admindashboard.css";
 import "../styles/womenapplications.css";
+import "../styles/admin-theme.css";
+import "../styles/application-detail-modal.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
@@ -26,9 +38,11 @@ const WEBSITE_API_URL =
   "http://localhost:5000";
 
 
-function WomenApplications() {
+function WomenApplications({
+  pageStatus = "pending",
+  title = "Women Pending",
+}) {
   const gender = "Women";
-  const title = "Women Applications";
 
   const columns = [
     "S.No.",
@@ -36,12 +50,11 @@ function WomenApplications() {
     "First Name",
     "Age",
     "Location",
-    "Status",
     "Date",
     "Action",
   ];
 
-  const initialStatus = "all";
+  const initialStatus = pageStatus;
   const [applications, setApplications] =
     useState([]);
 
@@ -56,6 +69,9 @@ function WomenApplications() {
 
   const [viewApplication, setViewApplication] =
     useState(null);
+
+  const [lightboxSrc, setLightboxSrc] =
+    useState("");
 
 
   /* ========================================
@@ -358,6 +374,15 @@ function WomenApplications() {
                 ""
             ).toLowerCase();
 
+          const contact =
+            [
+              application.phone,
+              application.email,
+              application.mobile,
+            ]
+              .join(" ")
+              .toLowerCase();
+
           const searchValue =
             applicationSearch
               .trim()
@@ -369,6 +394,9 @@ function WomenApplications() {
               searchValue
             ) &&
             !location.includes(
+              searchValue
+            ) &&
+            !contact.includes(
               searchValue
             )
           ) {
@@ -926,8 +954,11 @@ function WomenApplications() {
               </button>
 
 
-              {/* APPROVE */}
+              {/* APPROVE / REJECT only on Pending.
+                  After that the row moves to Approved or Rejected. */}
 
+              {pageStatus === "pending" ? (
+                <>
               <button
                 type="button"
                 className="application-icon-btn application-approve-icon-btn"
@@ -952,8 +983,6 @@ function WomenApplications() {
               </button>
 
 
-              {/* REJECT */}
-
               <button
                 type="button"
                 className="application-icon-btn application-reject-icon-btn"
@@ -976,6 +1005,8 @@ function WomenApplications() {
                   Reject
                 </span>
               </button>
+                </>
+              ) : null}
 
             </div>
           );
@@ -1004,17 +1035,18 @@ function WomenApplications() {
           {title}
         </h1>
 
-        <button
-          type="button"
-          className="refresh-btn"
-          onClick={loadApplications}
-          disabled={applicationsLoading}
-        >
-          <RefreshCw size={15} />
-          <span>Refresh to see the new entries</span>
-        </button>
+        <div className="applications-title-actions">
+          <button
+            type="button"
+            className="refresh-btn"
+            onClick={loadApplications}
+            disabled={applicationsLoading}
+          >
+            <RefreshCw size={14} />
+            Refresh to see the new entries
+          </button>
 
-        <div className="application-result-count">
+          <div className="application-result-count">
 
           {
             filteredApplications.length
@@ -1026,6 +1058,7 @@ function WomenApplications() {
             genderApplications.length
           }
 
+          </div>
         </div>
 
       </div>
@@ -1075,45 +1108,8 @@ function WomenApplications() {
           </label>
 
 
-          {/* STATUS */}
-
-          <label className="application-filter-field">
-
-            <span>
-              Status
-            </span>
-
-            <select
-              value={
-                applicationStatusFilter
-              }
-
-              onChange={(e) =>
-                setApplicationStatusFilter(
-                  e.target.value
-                )
-              }
-            >
-
-              <option value="all">
-                All Status
-              </option>
-
-              <option value="pending">
-                Pending
-              </option>
-
-              <option value="approved">
-                Approved
-              </option>
-
-              <option value="rejected">
-                Rejected
-              </option>
-
-            </select>
-
-          </label>
+          {/* STATUS FILTER IS THE PAGE ITSELF
+              Pending / Approved / Rejected menus already split the list. */}
 
 
           {/* FROM DATE */}
@@ -1573,157 +1569,116 @@ function WomenApplications() {
           VIEW APPLICATION MODAL
       ================================= */}
 
-      {viewApplication && (
-
+      {viewApplication && createPortal(
         <div
-          className="admin-modal-overlay application-view-overlay"
-
-          onClick={() =>
-            setViewApplication(
-              null
-            )
-          }
+          className="modal-overlay admin-modal-overlay application-view-overlay"
+          onClick={() => {
+            setLightboxSrc("");
+            setViewApplication(null);
+          }}
         >
-
           <div
-            className="application-view-modal"
-
-            onClick={(e) =>
-              e.stopPropagation()
-            }
+            className="modal application-view-modal"
+            onClick={(e) => e.stopPropagation()}
           >
-
-            <div className="application-view-header">
-
+            <div className="modal-head application-view-header">
               <div>
-                <h2>
-                  Application Details
-                </h2>
-
+                <h2>Application Details</h2>
                 <p>
-                  {
-                    viewApplication.firstName ||
+                  {viewApplication.firstName ||
                     viewApplication.name ||
-                    "Applicant"
-                  }
+                    "Applicant"}
                 </p>
               </div>
 
-
               <button
                 type="button"
-
-                className="application-modal-close"
-
-                onClick={() =>
-                  setViewApplication(
-                    null
-                  )
-                }
+                className="modal-close application-modal-close"
+                onClick={() => {
+                  setLightboxSrc("");
+                  setViewApplication(null);
+                }}
               >
                 ×
               </button>
-
             </div>
 
-
-            <div className="application-view-body">
-
-
-              {/* PROFILE */}
-
-              <div className="application-view-profile">
-
-                {getFirstPhoto(
-                  viewApplication.photos
-                ) ? (
-
-                  <img
-                    src={
-                      buildMediaUrl(
-                        getFirstPhoto(
-                          viewApplication.photos
+            <div className="modal-body application-view-body">
+              <div className="profile-strip">
+                <div className="avatar-wrap">
+                  {getFirstPhoto(viewApplication.photos) ? (
+                    <button
+                      type="button"
+                      className="application-photo-zoom"
+                      onClick={() =>
+                        setLightboxSrc(
+                          buildMediaUrl(
+                            getFirstPhoto(viewApplication.photos)
+                          )
                         )
-                      )
-                    }
-
-                    alt="Applicant"
-
-                    className="application-view-profile-photo"
-                  />
-
-                ) : (
-
-                  <div className="application-view-avatar">
-
-                    {
-                      (
+                      }
+                    >
+                      <img
+                        src={buildMediaUrl(
+                          getFirstPhoto(viewApplication.photos)
+                        )}
+                        alt="Applicant"
+                      />
+                      <span className="avatar-zoom application-photo-zoom-badge">
+                        <Search size={14} />
+                      </span>
+                    </button>
+                  ) : (
+                    <div className="application-view-avatar">
+                      {(
                         viewApplication.firstName ||
                         viewApplication.name ||
                         "A"
                       )
                         .charAt(0)
-                        .toUpperCase()
-                    }
-
-                  </div>
-
-                )}
-
-
-                <div>
-
-                  <h3>
-
-                    {
-                      viewApplication.firstName ||
-                      viewApplication.name ||
-                      "-"
-                    }
-
-                  </h3>
-
-                  <p>
-
-                    {
-                      viewApplication.countryOfResidence ||
-                      viewApplication.location ||
-                      "-"
-                    }
-
-                  </p>
-
-                  <span
-                    className={`application-status-pill application-status-${String(
-                      viewApplication.status ||
-                      "pending"
-                    ).toLowerCase()}`}
-                  >
-
-                    {formatApplicationStatus(
-                      String(
-                        viewApplication.status ||
-                        "pending"
-                      ).toLowerCase()
-                    )}
-
-                  </span>
-
+                        .toUpperCase()}
+                    </div>
+                  )}
                 </div>
 
-              </div>
+                {getFirstPhoto(viewApplication.photos) ? (
+                  <div className="tap-hint">Tap to view full image</div>
+                ) : null}
 
+                <h3>
+                  {viewApplication.firstName ||
+                    viewApplication.name ||
+                    "-"}
+                </h3>
+                <div className="loc">
+                  {viewApplication.countryOfResidence ||
+                    viewApplication.location ||
+                    "-"}
+                </div>
+                <span
+                  className={`application-status-pill application-status-${String(
+                    viewApplication.status || "pending"
+                  ).toLowerCase()}`}
+                >
+                  {formatApplicationStatus(
+                    String(
+                      viewApplication.status || "pending"
+                    ).toLowerCase()
+                  )}
+                </span>
+              </div>
 
               {/* BASIC INFORMATION */}
 
-              <div className="application-details-section">
-
-                <h3>
-                  Basic Information
-                </h3>
-
-
-                <div className="application-details-grid">
+              <div className="modal-section">
+                <div className="detail-card">
+                  <div className="detail-card-head">
+                    <div className="sec-icon">
+                      <User size={16} />
+                    </div>
+                    <h4>Basic Information</h4>
+                  </div>
+                  <div className="detail-list">
 
                   <ApplicationDetail
                     label="First Name"
@@ -1731,6 +1686,25 @@ function WomenApplications() {
                     value={
                       viewApplication.firstName ||
                       viewApplication.name
+                    }
+                  />
+
+
+                  <ApplicationDetail
+                    label="Phone Number"
+
+                    value={
+                      viewApplication.phone ||
+                      viewApplication.mobile
+                    }
+                  />
+
+
+                  <ApplicationDetail
+                    label="Email"
+
+                    value={
+                      viewApplication.email
                     }
                   />
 
@@ -1814,8 +1788,8 @@ function WomenApplications() {
                     }
                   />
 
+                  </div>
                 </div>
-
               </div>
 
 
@@ -1825,13 +1799,15 @@ function WomenApplications() {
                 viewApplication.status || ""
               ).toLowerCase() === "rejected" && (
 
-                <div className="application-details-section">
-
-                  <h3>
-                    Rejection Details
-                  </h3>
-
-                  <div className="application-details-grid">
+                <div className="modal-section">
+                  <div className="detail-card">
+                    <div className="detail-card-head">
+                      <div className="sec-icon">
+                        <ShieldAlert size={16} />
+                      </div>
+                      <h4>Rejection Details</h4>
+                    </div>
+                    <div className="detail-list">
 
                     <ApplicationDetail
                       label="Rejection Reason"
@@ -1844,8 +1820,8 @@ function WomenApplications() {
                       wide
                     />
 
+                    </div>
                   </div>
-
                 </div>
 
               )}
@@ -1853,14 +1829,15 @@ function WomenApplications() {
 
               {/* WORK */}
 
-              <div className="application-details-section">
-
-                <h3>
-                  Work & Lifestyle
-                </h3>
-
-
-                <div className="application-details-grid">
+              <div className="modal-section">
+                <div className="detail-card">
+                  <div className="detail-card-head">
+                    <div className="sec-icon">
+                      <Briefcase size={16} />
+                    </div>
+                    <h4>Work & Lifestyle</h4>
+                  </div>
+                  <div className="detail-list">
 
                   <ApplicationDetail
                     label="Business Owner"
@@ -1939,21 +1916,22 @@ function WomenApplications() {
                     }
                   />
 
+                  </div>
                 </div>
-
               </div>
 
 
               {/* RELATIONSHIP */}
 
-              <div className="application-details-section">
-
-                <h3>
-                  Relationship & Personal Details
-                </h3>
-
-
-                <div className="application-details-grid">
+              <div className="modal-section">
+                <div className="detail-card">
+                  <div className="detail-card-head">
+                    <div className="sec-icon">
+                      <Heart size={16} />
+                    </div>
+                    <h4>Relationship & Personal Details</h4>
+                  </div>
+                  <div className="detail-list">
 
                   <ApplicationDetail
                     label="Relationship Status"
@@ -2027,30 +2005,32 @@ function WomenApplications() {
                     wide
                   />
 
+                  </div>
                 </div>
-
               </div>
 
 
               {/* MEDIA */}
 
-              <div className="application-details-section">
+              <div className="modal-section">
+                <div className="detail-card">
+                  <div className="detail-card-head">
+                    <div className="sec-icon">
+                      <Film size={16} />
+                    </div>
+                    <h4>Media</h4>
+                  </div>
 
-                <h3>
-                  Media
-                </h3>
-
-
-                <div className="application-media-grid">
+                <div className="media-grid">
 
 
                   {/* PHOTOS */}
 
-                  <div className="application-media-card">
+                  <div className="media-box">
 
-                    <h4>
+                    <div className="k">
                       Photos
-                    </h4>
+                    </div>
 
 
                     {Array.isArray(
@@ -2059,7 +2039,7 @@ function WomenApplications() {
                     viewApplication.photos.length >
                       0 ? (
 
-                      <div className="application-photo-grid">
+                      <div className="media-photo-grid">
 
                         {viewApplication.photos.map(
                           (
@@ -2067,20 +2047,19 @@ function WomenApplications() {
                             index
                           ) => (
 
-                            <a
+                            <button
+                              type="button"
                               key={index}
-
-                              href={
-                                buildMediaUrl(
-                                  getPhotoPath(
-                                    photo
+                              className="application-photo-zoom media-photo"
+                              onClick={() =>
+                                setLightboxSrc(
+                                  buildMediaUrl(
+                                    getPhotoPath(
+                                      photo
+                                    )
                                   )
                                 )
                               }
-
-                              target="_blank"
-
-                              rel="noreferrer"
                             >
 
                               <img
@@ -2091,11 +2070,14 @@ function WomenApplications() {
                                     )
                                   )
                                 }
-
                                 alt={`Applicant ${index + 1}`}
                               />
 
-                            </a>
+                              <span className="zoom application-photo-zoom-badge">
+                                <Search size={13} />
+                              </span>
+
+                            </button>
 
                           )
                         )}
@@ -2104,7 +2086,7 @@ function WomenApplications() {
 
                     ) : (
 
-                      <p className="application-media-empty">
+                      <p className="media-empty application-media-empty">
                         No photo uploaded
                       </p>
 
@@ -2115,30 +2097,41 @@ function WomenApplications() {
 
                   {/* VOICE */}
 
-                  <div className="application-media-card">
+                  <div className="media-box">
 
-                    <h4>
+                    <div className="k">
                       Voice Recording
-                    </h4>
+                    </div>
 
 
                     {viewApplication.voiceRecording ? (
 
-                      <audio
-                        controls
-
-                        src={
-                          buildMediaUrl(
-                            getPhotoPath(
-                              viewApplication.voiceRecording
-                            )
-                          )
-                        }
-                      />
+                      <div className="media-player media-player--audio">
+                        <div className="media-player__controls">
+                          <audio
+                            controls
+                            src={
+                              buildMediaUrl(
+                                getPhotoPath(
+                                  viewApplication.voiceRecording
+                                )
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="media-player__wave" aria-hidden="true">
+                          <span /><span /><span /><span /><span />
+                          <span /><span /><span /><span /><span />
+                          <span /><span /><span /><span /><span />
+                          <span /><span /><span /><span /><span />
+                          <span /><span /><span /><span /><span />
+                          <span /><span /><span /><span /><span />
+                        </div>
+                      </div>
 
                     ) : (
 
-                      <p className="application-media-empty">
+                      <p className="media-empty application-media-empty">
                         No voice recording uploaded
                       </p>
 
@@ -2149,32 +2142,32 @@ function WomenApplications() {
 
                   {/* VIDEO */}
 
-                  <div className="application-media-card">
+                  <div className="media-box">
 
-                    <h4>
+                    <div className="k">
                       Video Recording
-                    </h4>
+                    </div>
 
 
                     {viewApplication.videoRecording ? (
 
-                      <video
-                        controls
-
-                        className="application-video-preview"
-
-                        src={
-                          buildMediaUrl(
-                            getPhotoPath(
-                              viewApplication.videoRecording
+                      <div className="media-player media-player--video">
+                        <video
+                          controls
+                          className="application-video-preview"
+                          src={
+                            buildMediaUrl(
+                              getPhotoPath(
+                                viewApplication.videoRecording
+                              )
                             )
-                          )
-                        }
-                      />
+                          }
+                        />
+                      </div>
 
                     ) : (
 
-                      <p className="application-media-empty">
+                      <p className="media-empty application-media-empty">
                         No video uploaded
                       </p>
 
@@ -2184,166 +2177,85 @@ function WomenApplications() {
 
                 </div>
 
-              </div>
-
-
-              {/* CLOSE */}
-
-              <div className="application-modal-footer">
-
-                <button
-                  type="button"
-
-                  onClick={() =>
-                    setViewApplication(
-                      null
-                    )
-                  }
-                >
-                  Close
-                </button>
-
+                </div>
               </div>
 
             </div>
 
+            <div className="modal-foot application-modal-footer">
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => {
+                  setLightboxSrc("");
+                  setViewApplication(null);
+                }}
+              >
+                Close
+              </button>
+            </div>
+
           </div>
-
-        </div>
-
+        </div>,
+        document.body
       )}
+
+
+      {lightboxSrc
+        ? createPortal(
+        <div
+          className="application-lightbox"
+          onClick={() => setLightboxSrc("")}
+        >
+          <button
+            type="button"
+            className="application-lightbox-close"
+            aria-label="Close full image"
+            onClick={() => setLightboxSrc("")}
+          >
+            <X size={18} />
+          </button>
+          <img
+            src={lightboxSrc}
+            alt="Full size applicant photo"
+            onClick={(event) => event.stopPropagation()}
+          />
+        </div>,
+        document.body
+      ) : null}
 
 
       {/* =================================
           CONFIRM MODAL
       ================================= */}
 
-      {confirmModal.open && (
-
-        <div
-          className="confirm-action-overlay"
-
-          onClick={
-            closeConfirmModal
-          }
-        >
-
+      {confirmModal.open &&
+        createPortal(
           <div
-            className={`confirm-action-modal ${
-              confirmModal.type ===
-              "approve"
-                ? "approve-modal"
-                : "reject-modal"
-            }`}
+            className="confirm-action-overlay women-confirm-overlay"
 
-            onClick={(e) =>
-              e.stopPropagation()
+            onClick={
+              closeConfirmModal
             }
           >
 
-            <button
-              type="button"
-
-              className="confirm-action-close"
-
-              onClick={
-                closeConfirmModal
-              }
-
-              disabled={
-                confirmModal.loading
-              }
-            >
-              ×
-            </button>
-
-
             <div
-              className={`confirm-action-icon ${
+              className={`confirm-action-modal ${
                 confirmModal.type ===
                 "approve"
-                  ? "approve"
-                  : "reject"
+                  ? "approve-modal"
+                  : "reject-modal"
               }`}
+
+              onClick={(e) =>
+                e.stopPropagation()
+              }
             >
-
-              {confirmModal.type ===
-              "approve"
-                ? "✓"
-                : "✕"}
-
-            </div>
-
-
-            <h2>
-
-              {confirmModal.type ===
-              "approve"
-                ? "Approve Application?"
-                : "Reject Application?"}
-
-            </h2>
-
-
-            <p>
-
-              Are you sure you want to{" "}
-
-              <strong>
-
-                {confirmModal.type ===
-                "approve"
-                  ? "approve"
-                  : "reject"}
-
-              </strong>{" "}
-
-              <strong>
-
-                {
-                  confirmModal.application
-                    ?.firstName ||
-                  confirmModal.application
-                    ?.name ||
-                  "this application"
-                }
-
-              </strong>
-
-              ?
-
-            </p>
-
-
-            {confirmModal.type === "reject" && (
-              <div className="reject-reason-box">
-                <label>
-                  Rejection Reason
-                </label>
-
-                <textarea
-                  value={rejectReason}
-                  onChange={(e) =>
-                    setRejectReason(
-                      e.target.value
-                    )
-                  }
-                  placeholder="Enter reason for rejecting this application..."
-                  rows="4"
-                  disabled={
-                    confirmModal.loading
-                  }
-                />
-              </div>
-            )}
-
-
-            <div className="confirm-action-buttons">
 
               <button
                 type="button"
 
-                className="confirm-cancel-btn"
+                className="confirm-action-close"
 
                 onClick={
                   closeConfirmModal
@@ -2353,50 +2265,149 @@ function WomenApplications() {
                   confirmModal.loading
                 }
               >
-                Cancel
+                ×
               </button>
 
 
-              <button
-                type="button"
-
-                className={
+              <div
+                className={`confirm-action-icon ${
                   confirmModal.type ===
                   "approve"
-                    ? "confirm-approve-btn"
-                    : "confirm-reject-btn"
-                }
-
-                onClick={
-                  confirmApplicationAction
-                }
-
-                disabled={
-                  confirmModal.loading ||
-                  (
-                    confirmModal.type ===
-                      "reject" &&
-                    !rejectReason.trim()
-                  )
-                }
+                    ? "approve"
+                    : "reject"
+                }`}
               >
 
-                {confirmModal.loading
-                  ? "Please wait..."
-                  : confirmModal.type ===
-                    "approve"
-                  ? "✓ Approve"
-                  : "✕ Reject"}
+                {confirmModal.type ===
+                "approve"
+                  ? "✓"
+                  : "✕"}
 
-              </button>
+              </div>
+
+
+              <h2>
+
+                {confirmModal.type ===
+                "approve"
+                  ? "Approve Application?"
+                  : "Reject Application?"}
+
+              </h2>
+
+
+              <p>
+
+                Are you sure you want to{" "}
+
+                <strong>
+
+                  {confirmModal.type ===
+                  "approve"
+                    ? "approve"
+                    : "reject"}
+
+                </strong>{" "}
+
+                <strong>
+
+                  {
+                    confirmModal.application
+                      ?.firstName ||
+                    confirmModal.application
+                      ?.name ||
+                    "this application"
+                  }
+
+                </strong>
+
+                ?
+
+              </p>
+
+
+              {confirmModal.type === "reject" && (
+                <div className="reject-reason-box">
+                  <label>
+                    Rejection Reason
+                  </label>
+
+                  <textarea
+                    value={rejectReason}
+                    onChange={(e) =>
+                      setRejectReason(
+                        e.target.value
+                      )
+                    }
+                    placeholder="Enter reason for rejecting this application..."
+                    rows="4"
+                    disabled={
+                      confirmModal.loading
+                    }
+                  />
+                </div>
+              )}
+
+
+              <div className="confirm-action-buttons">
+
+                <button
+                  type="button"
+
+                  className="confirm-cancel-btn"
+
+                  onClick={
+                    closeConfirmModal
+                  }
+
+                  disabled={
+                    confirmModal.loading
+                  }
+                >
+                  Cancel
+                </button>
+
+
+                <button
+                  type="button"
+
+                  className={
+                    confirmModal.type ===
+                    "approve"
+                      ? "confirm-approve-btn"
+                      : "confirm-reject-btn"
+                  }
+
+                  onClick={
+                    confirmApplicationAction
+                  }
+
+                  disabled={
+                    confirmModal.loading ||
+                    (
+                      confirmModal.type ===
+                        "reject" &&
+                      !rejectReason.trim()
+                    )
+                  }
+                >
+
+                  {confirmModal.loading
+                    ? "Please wait..."
+                    : confirmModal.type ===
+                      "approve"
+                    ? "✓ Approve"
+                    : "✕ Reject"}
+
+                </button>
+
+              </div>
 
             </div>
 
-          </div>
-
-        </div>
-
-      )}
+          </div>,
+          document.body
+        )}
 
     </section>
   );
@@ -2417,27 +2428,21 @@ function ApplicationDetail({
     value !== null &&
     String(value).trim() !== "";
 
+  const display = hasValue ? String(value) : "-";
+
+  if (wide) {
+    return (
+      <div className="text-row application-detail-wide">
+        <span className="detail-label">{label}</span>
+        <span className="detail-value">{display}</span>
+      </div>
+    );
+  }
+
   return (
-    <div
-      className={`application-detail-card ${
-        wide
-          ? "application-detail-wide"
-          : ""
-      }`}
-    >
-
-      <span>
-        {label}
-      </span>
-
-      <strong>
-        {
-          hasValue
-            ? String(value)
-            : "-"
-        }
-      </strong>
-
+    <div className="detail-row application-detail-card">
+      <span className="detail-label">{label}</span>
+      <span className="detail-value">{display}</span>
     </div>
   );
 }
