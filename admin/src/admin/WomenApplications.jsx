@@ -1290,7 +1290,13 @@ function WomenApplications({
                           : ""
                       }
                     >
-                      {column}
+                      {column === "Action" ? (
+                        <span className="application-action-heading-label">
+                          {column}
+                        </span>
+                      ) : (
+                        column
+                      )}
                     </th>
 
                   )

@@ -274,7 +274,7 @@
 
 .women-applications-page .applications-table {
   width: 100%;
-  min-width: 0 !important;
+  min-width: 1100px;
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
@@ -324,53 +324,65 @@
 }
 
 /* =========================================================
-   DESKTOP COLUMN WIDTHS
+   DESKTOP COLUMN WIDTHS (7 cols: S.No Image Name Age Location Date Action)
 ========================================================= */
 
 .women-applications-page .applications-table th:nth-child(1),
 .women-applications-page .applications-table td:nth-child(1) {
-  width: 5%;
+  width: 64px;
+  min-width: 64px;
+  max-width: 64px;
   text-align: center;
 }
 
 .women-applications-page .applications-table th:nth-child(2),
 .women-applications-page .applications-table td:nth-child(2) {
-  width: 7%;
+  width: 80px;
+  min-width: 80px;
+  max-width: 80px;
 }
 
 .women-applications-page .applications-table th:nth-child(3),
 .women-applications-page .applications-table td:nth-child(3) {
-  width: 16%;
+  width: 18%;
+  min-width: 140px;
+  max-width: 220px;
 }
 
 .women-applications-page .applications-table th:nth-child(4),
 .women-applications-page .applications-table td:nth-child(4) {
-  width: 6%;
+  width: 64px;
+  min-width: 64px;
+  max-width: 72px;
+  text-align: center;
 }
 
 .women-applications-page .applications-table th:nth-child(5),
 .women-applications-page .applications-table td:nth-child(5) {
   width: 14%;
+  min-width: 110px;
+  max-width: 180px;
 }
 
 .women-applications-page .applications-table th:nth-child(6),
 .women-applications-page .applications-table td:nth-child(6) {
-  width: 12%;
+  width: 150px;
+  min-width: 150px;
+  max-width: 170px;
 }
 
 .women-applications-page .applications-table th:nth-child(7),
 .women-applications-page .applications-table td:nth-child(7) {
-  width: 15%;
-}
-
-.women-applications-page .applications-table th:nth-child(8),
-.women-applications-page .applications-table td:nth-child(8) {
-  width: 25%;
+  width: 320px;
+  min-width: 320px;
+  max-width: 340px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 .women-applications-page .applications-table td:nth-child(3),
 .women-applications-page .applications-table td:nth-child(5),
-.women-applications-page .applications-table td:nth-child(7) {
+.women-applications-page .applications-table td:nth-child(6) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -447,38 +459,52 @@
 ========================================================= */
 
 .women-applications-page .application-action-heading {
-  text-align: left !important;
+  text-align: right !important;
+}
+
+.women-applications-page .application-action-heading-label {
+  display: block;
+  width: 100%;
+  max-width: 290px;
+  margin-left: auto;
+  text-align: left;
 }
 
 .women-applications-page .application-action-cell {
-  min-width: 0 !important;
-  overflow: visible;
+  min-width: 320px !important;
+  overflow: hidden;
+  text-align: right;
 }
 
 .women-applications-page .application-row-actions {
   width: 100%;
+  max-width: 290px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-start !important;
   gap: 10px;
+  flex-wrap: nowrap;
   white-space: nowrap;
+  overflow: hidden;
+  margin-left: auto;
 }
 
 .women-applications-page .application-icon-btn {
-  height: 44px;
-  min-height: 44px !important;
+  height: 40px;
+  min-height: 40px !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 18px;
+  gap: 6px;
+  padding: 8px 14px;
   border-radius: 10px;
-  font-size: 14.5px;
+  font-size: 13.5px;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
   box-sizing: border-box;
+  flex: 0 0 auto;
 }
 
 .women-applications-page .application-view-icon-btn {
@@ -1447,7 +1473,7 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: flex-end;
     gap: 10px;
   }
 

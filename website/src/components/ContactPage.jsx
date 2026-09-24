@@ -1025,7 +1025,7 @@ export default function ContactPage() {
                     <input
                       type="tel"
                       name="mobile"
-                      placeholder="+91 9999999999"
+                      placeholder="+1 9999999999"
 
                       aria-required="true"
 
