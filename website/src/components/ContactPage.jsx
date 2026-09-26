@@ -17,6 +17,10 @@ import {
 } from "./ProfileCard";
 
 import { useLanguage } from "../language";
+import {
+  manProfilePath,
+  storeManSlug,
+} from "../profileLink";
 
 
 const LIVE_API =
@@ -43,6 +47,48 @@ const API_BASE = (() => {
     ""
   );
 })();
+
+
+const LOOKING_FOR_OPTIONS = [
+  { value: "dating", label: "Serious dating" },
+  { value: "long-term", label: "Long-term relationship" },
+  { value: "marriage", label: "Marriage-minded" },
+  { value: "life-partner", label: "Life partner" },
+];
+
+const LONG_TERM_MEMBER_COUNT = 3;
+
+const PROCESS_STEPS = [
+  "Submit your introduction request with who you want to meet.",
+  "Our team reaches out based on your selections.",
+  "Meetings are arranged at our hotel for people seeking a real relationship.",
+];
+
+function lookingForLabel(value) {
+  return (
+    LOOKING_FOR_OPTIONS.find((option) => option.value === value)?.label || ""
+  );
+}
+
+function formatNameList(names) {
+  const list = names.filter(Boolean);
+  if (!list.length) return "";
+  if (list.length === 1) return list[0];
+  if (list.length === 2) return `${list[0]} and ${list[1]}`;
+  return `${list.slice(0, -1).join(", ")}, and ${list[list.length - 1]}`;
+}
+
+function buildMenSubject(lookingFor, names, translate) {
+  const nameList = formatNameList(names);
+  if (!nameList) return "";
+
+  const preference = lookingForLabel(lookingFor);
+  if (preference) {
+    return `${translate(preference)} with ${nameList}`;
+  }
+
+  return `${translate("Introduction")} with ${nameList}`;
+}
 
 
 /* =========================================
@@ -185,6 +231,29 @@ export default function ContactPage() {
 
 
   const [
+    lookingFor,
+    setLookingFor,
+  ] =
+    useState("");
+
+
+  const [
+    selectedNames,
+    setSelectedNames,
+  ] =
+    useState(
+      () =>
+        lockedName
+          ? [lockedName]
+          : []
+    );
+
+
+  const isLongTerm =
+    lookingFor === "long-term";
+
+
+  const [
     submitting,
     setSubmitting,
   ] =
@@ -235,9 +304,94 @@ export default function ContactPage() {
       lockedName
     );
 
+    setSelectedNames(
+      lockedName
+        ? [lockedName]
+        : []
+    );
+
     setError("");
     setFieldErrors({});
   }, [lockedName]);
+
+
+  function syncSelectedNames(
+    nextNames
+  ) {
+    const unique = [
+      ...new Set(
+        nextNames.filter(Boolean)
+      ),
+    ];
+
+    setSelectedNames(unique);
+    setSelectedName(unique[0] || "");
+  }
+
+
+  function handleLookingForChange(
+    value
+  ) {
+    setLookingFor(value);
+    clearFieldError("lookingFor");
+
+    if (value === "long-term") {
+      syncSelectedNames(
+        lockedName
+          ? [lockedName]
+          : selectedNames.slice(0, LONG_TERM_MEMBER_COUNT)
+      );
+      return;
+    }
+
+    const keep =
+      lockedName ||
+      selectedNames[0] ||
+      selectedName ||
+      "";
+
+    syncSelectedNames(
+      keep ? [keep] : []
+    );
+  }
+
+
+  function toggleMemberName(
+    name
+  ) {
+    if (
+      lockedName &&
+      name === lockedName
+    ) {
+      return;
+    }
+
+    const exists =
+      selectedNames.includes(name);
+
+    if (exists) {
+      syncSelectedNames(
+        selectedNames.filter(
+          (item) => item !== name
+        )
+      );
+      clearFieldError("member");
+      return;
+    }
+
+    if (
+      selectedNames.length >=
+      LONG_TERM_MEMBER_COUNT
+    ) {
+      return;
+    }
+
+    syncSelectedNames([
+      ...selectedNames,
+      name,
+    ]);
+    clearFieldError("member");
+  }
 
 
   /* =========================================
@@ -371,9 +525,25 @@ export default function ContactPage() {
     const nextErrors = {};
 
 
+    /* LOOKING FOR */
+
+    if (!lookingFor) {
+      nextErrors.lookingFor =
+        "Please select what you are looking for.";
+    }
+
+
     /* SHE IS */
 
-    if (!selectedName) {
+    if (isLongTerm) {
+      if (
+        selectedNames.length !==
+        LONG_TERM_MEMBER_COUNT
+      ) {
+        nextErrors.member =
+          `Please select exactly ${LONG_TERM_MEMBER_COUNT} profiles for long-term relationship.`;
+      }
+    } else if (!selectedName) {
       nextErrors.member =
         "Please select a profile.";
     }
@@ -482,6 +652,7 @@ export default function ContactPage() {
         Browser validation popup use nahi hota.
       */
       const order = [
+        "lookingFor",
         "member",
         "name",
         "email",
@@ -521,7 +692,16 @@ export default function ContactPage() {
 
     return {
       memberName:
-        selectedName,
+        isLongTerm
+          ? selectedNames.join(", ")
+          : selectedName,
+
+      memberNames:
+        isLongTerm
+          ? selectedNames
+          : selectedName
+            ? [selectedName]
+            : [],
 
       name,
 
@@ -532,6 +712,8 @@ export default function ContactPage() {
       meetingDate,
 
       nightType,
+
+      lookingFor,
 
       subject,
 
@@ -615,6 +797,19 @@ export default function ContactPage() {
       }
 
 
+      const nextSlug =
+        data.slug ||
+        data.application?.slug ||
+        "";
+
+      if (nextSlug) {
+        storeManSlug(nextSlug);
+        navigate(
+          `${manProfilePath(nextSlug)}?submitted=1`
+        );
+        return;
+      }
+
       setApplicationId(
         String(
           data.applicationId
@@ -655,9 +850,16 @@ export default function ContactPage() {
     setApplicationId("");
     setError("");
     setFieldErrors({});
+    setLookingFor("");
 
     setSelectedName(
       lockedName
+    );
+
+    setSelectedNames(
+      lockedName
+        ? [lockedName]
+        : []
     );
   }
 
@@ -710,21 +912,24 @@ export default function ContactPage() {
 
 
             <h1>
-              {
-                selectedName
-                  ? `Ask for a night with ${selectedName}`
-                  : "Ask for a private night"
-              }
+              {t("Make a meaningful introduction")}
             </h1>
 
 
             <p className="page__lead">
-              {
-                selectedName
-                  ? `Tell us how you want to meet ${selectedName} — a late dinner, a hotel bar, a weekend away. We arrange the introduction discreetly.`
-                  : "Choose who you want to meet, then tell us how you prefer the night to go. We arrange the introduction discreetly."
-              }
+              {t("Choose someone who interests you, and we’ll help create a comfortable, private introduction.")}
             </p>
+
+            <div className="men-process">
+              <h2>{t("How it works")}</h2>
+              <ol className="men-process__steps">
+                {PROCESS_STEPS.map((step) => (
+                  <li key={step}>
+                    <span>{t(step)}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
 
           </div>
 
@@ -817,115 +1022,131 @@ export default function ContactPage() {
                 }
 
 
-                {/* SHE IS */}
+                {/* WHAT YOU ARE LOOKING FOR */}
 
                 <label>
-                  She is
+                  {t("What you are looking for")}
 
                   <select
-                    name="member"
-
+                    name="lookingFor"
+                    value={lookingFor}
                     aria-required="true"
-
-                    aria-invalid={
-                      Boolean(
-                        fieldErrors.member
-                      )
-                    }
-
+                    aria-invalid={Boolean(fieldErrors.lookingFor)}
                     style={
-                      fieldErrors.member
+                      fieldErrors.lookingFor
                         ? INVALID_FIELD_STYLE
                         : undefined
                     }
-
-                    disabled={
-                      Boolean(
-                        lockedName
-                      )
-                    }
-
-                    value={
-                      selectedName
-                    }
-
-                    onChange={
-                      (event) => {
-                        setSelectedName(
-                          event
-                            .target
-                            .value
-                        );
-
-                        clearFieldError(
-                          "member"
-                        );
-                      }
-                    }
+                    onChange={(event) => {
+                      handleLookingForChange(event.target.value);
+                    }}
                   >
-
-                    <option
-                      value=""
-                      disabled
-                    >
-                      Select a profile
+                    <option value="" disabled>
+                      {t("Select")}
                     </option>
-
-
-                    {
-                      names.map(
-                        (name) => (
-
-                          <option
-                            key={
-                              name
-                            }
-
-                            value={
-                              name
-                            }
-                          >
-                            {name}
-                          </option>
-
-                        )
-                      )
-                    }
-
+                    {LOOKING_FOR_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {t(option.label)}
+                      </option>
+                    ))}
                   </select>
 
-
-                  {
-                    fieldErrors.member && (
-
-                      <span
-                        style={
-                          FIELD_ERROR_STYLE
-                        }
-                      >
-                        {
-                          fieldErrors.member
-                        }
-                      </span>
-
-                    )
-                  }
+                  {fieldErrors.lookingFor ? (
+                    <span style={FIELD_ERROR_STYLE}>
+                      {fieldErrors.lookingFor}
+                    </span>
+                  ) : null}
+                </label>
 
 
-                  {
-                    lockedName && (
+                {/* SHE IS */}
 
-                      <input
-                        type="hidden"
-                        name="member"
-                        value={
-                          lockedName
-                        }
-                      />
+                <label className={isLongTerm ? "men-member-field" : undefined}>
+                  {t("She is")}
+                  {isLongTerm ? (
+                    <span className="men-member-hint">
+                      {t("Select exactly 3 profiles for long-term relationship.")}
+                      {" "}
+                      ({selectedNames.length}/{LONG_TERM_MEMBER_COUNT})
+                    </span>
+                  ) : null}
 
-                    )
-                  }
+                  {isLongTerm ? (
+                    <div
+                      className="men-member-multi"
+                      role="group"
+                      aria-label={t("She is")}
+                      style={
+                        fieldErrors.member
+                          ? INVALID_FIELD_STYLE
+                          : undefined
+                      }
+                    >
+                      {names.map((name) => {
+                        const checked = selectedNames.includes(name);
+                        const locked = Boolean(lockedName) && name === lockedName;
+                        const disableExtra =
+                          !checked &&
+                          selectedNames.length >= LONG_TERM_MEMBER_COUNT;
 
+                        return (
+                          <label key={name} className="men-member-option">
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              disabled={locked || disableExtra}
+                              onChange={() => toggleMemberName(name)}
+                            />
+                            <span>{name}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <select
+                      name="member"
+                      aria-required="true"
+                      aria-invalid={Boolean(fieldErrors.member)}
+                      style={
+                        fieldErrors.member
+                          ? INVALID_FIELD_STYLE
+                          : undefined
+                      }
+                      disabled={Boolean(lockedName)}
+                      value={selectedName}
+                      onChange={(event) => {
+                        syncSelectedNames(
+                          event.target.value
+                            ? [event.target.value]
+                            : []
+                        );
+                        clearFieldError("member");
+                      }}
+                    >
+                      <option value="" disabled>
+                        {t("Select a profile")}
+                      </option>
+                      {names.map((name) => (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
+                  {fieldErrors.member ? (
+                    <span style={FIELD_ERROR_STYLE}>
+                      {fieldErrors.member}
+                    </span>
+                  ) : null}
+
+                  {!isLongTerm && lockedName ? (
+                    <input
+                      type="hidden"
+                      name="member"
+                      value={lockedName}
+                    />
+                  ) : null}
                 </label>
 
 
@@ -1187,12 +1408,14 @@ export default function ContactPage() {
                     readOnly
 
                     value={
-                      selectedName
-                        ? `A private night with ${selectedName}`
-                        : ""
+                      buildMenSubject(
+                        lookingFor,
+                        selectedNames,
+                        t
+                      )
                     }
 
-                    placeholder="What are you hoping for?"
+                    placeholder={t("What are you hoping for?")}
                   />
                 </label>
 
@@ -1206,7 +1429,7 @@ export default function ContactPage() {
                     name="message"
                     rows={4}
 
-                    placeholder="Tell us the kind of night you want with her..."
+                    placeholder={t("Tell us what kind of connection you want...")}
 
                     aria-required="true"
 

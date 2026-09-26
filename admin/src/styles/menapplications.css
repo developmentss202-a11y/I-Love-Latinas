@@ -232,14 +232,15 @@
   overflow-x: auto;
   overflow-y: hidden;
   border-radius: 12px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .men-applications-page .admin-table {
-  width: 100%;
-  min-width: 1120px;
+  width: max-content;
+  min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  table-layout: fixed;
+  table-layout: auto;
 }
 
 .men-applications-page .admin-table thead tr {
@@ -299,70 +300,130 @@
 
 .men-applications-page .admin-table th:nth-child(1),
 .men-applications-page .admin-table td:nth-child(1) {
-  width: 5%;
+  width: 56px;
+  min-width: 56px;
   text-align: center;
 }
 
 .men-applications-page .admin-table th:nth-child(2),
 .men-applications-page .admin-table td:nth-child(2) {
-  width: 16%;
-  min-width: 130px;
+  min-width: 160px;
+  max-width: 200px;
   padding-left: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .men-applications-page .admin-table th:nth-child(3),
 .men-applications-page .admin-table td:nth-child(3) {
-  width: 12%;
-  min-width: 100px;
+  min-width: 170px;
+  max-width: 220px;
   padding-left: 8px;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .men-applications-page .admin-table th:nth-child(4),
 .men-applications-page .admin-table td:nth-child(4) {
-  width: 11%;
-  min-width: 100px;
+  min-width: 120px;
+  max-width: 160px;
   padding-left: 8px;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .men-applications-page .admin-table th:nth-child(5),
 .men-applications-page .admin-table td:nth-child(5) {
-  width: 16%;
-  min-width: 140px;
+  min-width: 120px;
   padding-left: 8px;
+  white-space: nowrap;
 }
 
 .men-applications-page .admin-table th:nth-child(6),
 .men-applications-page .admin-table td:nth-child(6) {
-  width: 12%;
-  min-width: 120px;
+  min-width: 180px;
+  max-width: 220px;
   padding-left: 8px;
-  padding-right: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .men-applications-page .admin-table th:nth-child(7),
 .men-applications-page .admin-table td:nth-child(7) {
-  width: 28%;
-  min-width: 300px;
-  padding-left: 12px;
+  min-width: 110px;
+  padding-left: 8px;
   padding-right: 12px;
-  text-align: right;
-  overflow: hidden;
   white-space: nowrap;
 }
 
-.men-applications-page .admin-table td:nth-child(3),
-.men-applications-page .admin-table td:nth-child(4),
-.men-applications-page .admin-table td:nth-child(5),
-.men-applications-page .admin-table td:nth-child(6) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.men-applications-page .admin-table th:nth-child(8),
+.men-applications-page .admin-table td:nth-child(8),
+.men-applications-page .admin-table th.men-action-col,
+.men-applications-page .admin-table td.men-action-col {
+  min-width: 280px;
+  padding-left: 12px;
+  padding-right: 12px;
+  text-align: right;
+  white-space: normal;
+  overflow: visible;
+}
+
+.men-applications-page .admin-table th.men-action-col {
+  text-align: right;
+}
+
+.men-action-heading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 270px;
+  max-width: 100%;
+  text-align: left;
+}
+
+.men-action-buttons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 270px;
+  max-width: 100%;
+  margin-left: 0;
+  flex-wrap: nowrap;
+  overflow: visible;
+  vertical-align: middle;
+}
+
+.men-member-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.men-member-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(138, 42, 79, 0.1);
+  border: 1px solid rgba(138, 42, 79, 0.22);
+  color: #6b1f3a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.men-profile-link {
+  color: #8a2a4f;
+  font-weight: 650;
+  word-break: break-all;
+}
+
+.men-she-is-text {
+  display: inline-block;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
 }
 
 .men-date-cell {
@@ -410,20 +471,8 @@
 
 /* =========================================================
    ACTION BUTTONS
-   Heading stays fixed.
-   Row buttons are moved slightly LEFT.
+   Column stays on the right. Header text aligns with View.
 ========================================================= */
-
-.men-action-buttons {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-left: 0;
-  flex-wrap: nowrap;
-  overflow: hidden;
-}
 
 .men-view-btn,
 .men-approve-btn,
@@ -437,7 +486,7 @@
   padding: 8px 14px;
   border-radius: 10px;
   box-sizing: border-box;
-  font-size: 13.5px;
+  font-size: 13px;
   line-height: 1;
   font-weight: 700;
   white-space: nowrap;
@@ -447,7 +496,7 @@
 
 .men-view-btn {
   width: auto;
-  min-width: 72px;
+  min-width: 84px;
   border: 1px solid #d7c7b8;
   background: var(--cream-100);
   color: var(--wine-deep);
@@ -455,6 +504,7 @@
 
 .men-approve-btn {
   width: auto;
+  min-width: 132px;
   border: 1px solid #e0c48e;
   background: var(--warning-100);
   color: var(--wine-deep);
@@ -744,25 +794,37 @@
 
   .men-applications-page .admin-table th,
   .men-applications-page .admin-table td {
-    font-size: 10px;
+    font-size: 13px;
   }
 
   .men-action-buttons {
+    width: 270px;
+    max-width: 100%;
     margin-left: 0;
-    justify-content: flex-end;
+    justify-content: flex-start;
     gap: 6px;
+    flex-wrap: nowrap;
+    overflow: visible;
+  }
+
+  .men-action-heading {
+    width: 270px;
+    justify-content: flex-start;
   }
 
   .men-view-btn {
-    width: 48px;
+    width: auto;
+    min-width: 78px;
   }
 
   .men-approve-btn {
-    width: 60px;
+    width: auto;
+    min-width: 128px;
   }
 
   .men-reject-btn {
-    width: 54px;
+    width: auto;
+    min-width: 54px;
   }
 
   .men-view-btn,
@@ -771,7 +833,7 @@
   .men-contact-btn {
     height: 38px;
     padding: 0 12px;
-    font-size: 13px;
+    font-size: 12.5px;
   }
 }
 
@@ -892,27 +954,27 @@
   }
 
   .men-applications-page .admin-table td:nth-child(2)::before {
-    content: "She Is";
+    content: "Looking For";
   }
 
   .men-applications-page .admin-table td:nth-child(3)::before {
-    content: "Name";
+    content: "She Is";
   }
 
   .men-applications-page .admin-table td:nth-child(4)::before {
-    content: "Mobile";
+    content: "Name";
   }
 
   .men-applications-page .admin-table td:nth-child(5)::before {
-    content: "Email";
+    content: "Mobile";
   }
 
   .men-applications-page .admin-table td:nth-child(6)::before {
-    content: "Date";
+    content: "Email";
   }
 
   .men-applications-page .admin-table td:nth-child(7)::before {
-    content: "Status";
+    content: "Date";
   }
 
   .men-applications-page .admin-table td:nth-child(8)::before {
@@ -927,8 +989,10 @@
   .men-applications-page .admin-table td:nth-child(3),
   .men-applications-page .admin-table td:nth-child(4),
   .men-applications-page .admin-table td:nth-child(5),
-  .men-applications-page .admin-table td:nth-child(6) {
+  .men-applications-page .admin-table td:nth-child(6),
+  .men-applications-page .admin-table td:nth-child(7) {
     overflow-wrap: anywhere !important;
+    white-space: normal !important;
   }
 
   .men-applications-page .status-badge {
@@ -948,21 +1012,24 @@
   .men-view-btn,
   .men-approve-btn,
   .men-reject-btn {
-    height: 29px;
-    font-size: 9px;
-    padding: 0 6px;
+    height: 34px;
+    font-size: 12px;
+    padding: 0 10px;
   }
 
   .men-view-btn {
-    width: 50px;
+    width: auto;
+    min-width: 72px;
   }
 
   .men-approve-btn {
-    width: 62px;
+    width: auto;
+    min-width: 128px;
   }
 
   .men-reject-btn {
-    width: 56px;
+    width: auto;
+    min-width: 56px;
   }
 }
 
@@ -1063,21 +1130,24 @@
   .men-view-btn,
   .men-approve-btn,
   .men-reject-btn {
-    height: 28px;
-    font-size: 8.5px;
-    padding: 0 5px;
+    height: 34px;
+    font-size: 12px;
+    padding: 0 10px;
   }
 
   .men-view-btn {
-    width: 47px;
+    width: auto;
+    min-width: 72px;
   }
 
   .men-approve-btn {
-    width: 59px;
+    width: auto;
+    min-width: 120px;
   }
 
   .men-reject-btn {
-    width: 53px;
+    width: auto;
+    min-width: 52px;
   }
 
   .men-view-overlay {

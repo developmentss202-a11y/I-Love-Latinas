@@ -28,6 +28,7 @@ import "../styles/admindashboard.css";
 import "../styles/womenapplications.css";
 import "../styles/admin-theme.css";
 import "../styles/application-detail-modal.css";
+import ProfileLinkCopy from "./ProfileLinkCopy";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
@@ -36,6 +37,17 @@ const API_URL =
 const WEBSITE_API_URL =
   import.meta.env.VITE_WEBSITE_API_URL ||
   "http://localhost:5000";
+
+const PUBLIC_SITE_URL = String(
+  import.meta.env.VITE_PUBLIC_SITE_URL ||
+  "https://latinas.myaibusiness.online"
+).replace(/\/$/, "");
+
+function getWomenProfileUrl(slug) {
+  const value = String(slug || "").trim();
+  if (!value) return "";
+  return `${PUBLIC_SITE_URL}/profile/${encodeURIComponent(value)}`;
+}
 
 
 function WomenApplications({
@@ -1785,6 +1797,27 @@ function WomenApplications({
 
 
                   <ApplicationDetail
+                    label="Profile Slug"
+
+                    value={
+                      viewApplication.slug || "-"
+                    }
+                  />
+
+
+                  <ApplicationDetail
+                    label="Profile Link"
+                    wide
+
+                    value={
+                      <ProfileLinkCopy
+                        url={getWomenProfileUrl(viewApplication.slug)}
+                      />
+                    }
+                  />
+
+
+                  <ApplicationDetail
                     label="Applied Date"
 
                     value={
@@ -2429,12 +2462,21 @@ function ApplicationDetail({
   value,
   wide = false,
 }) {
-  const hasValue =
-    value !== undefined &&
+  const isNode =
     value !== null &&
-    String(value).trim() !== "";
+    typeof value === "object";
 
-  const display = hasValue ? String(value) : "-";
+  const hasValue = isNode
+    ? true
+    : value !== undefined &&
+      value !== null &&
+      String(value).trim() !== "";
+
+  const display = hasValue
+    ? isNode
+      ? value
+      : String(value)
+    : "-";
 
   if (wide) {
     return (

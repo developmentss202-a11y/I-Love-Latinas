@@ -20,11 +20,31 @@ import { createPortal } from "react-dom";
 import "../styles/menapplications.css";
 import "../styles/admin-theme.css";
 import "../styles/application-detail-modal.css";
+import ProfileLinkCopy from "./ProfileLinkCopy";
 
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
   "http://localhost:5000";
+
+const PUBLIC_SITE_URL = String(
+  import.meta.env.VITE_PUBLIC_SITE_URL ||
+  "https://latinas.myaibusiness.online"
+).replace(/\/$/, "");
+
+const LOOKING_FOR_LABELS = {
+  dating: "Serious dating",
+  "long-term": "Long-term relationship",
+  marriage: "Marriage-minded",
+  "life-partner": "Life partner",
+};
+
+const MEETING_PREFERENCE_LABELS = {
+  dinner: "Late dinner",
+  hotel: "Hotel / private suite",
+  weekend: "Weekend away",
+  open: "Open to her suggestion",
+};
 
 
 function cleanMenValue(value) {
@@ -32,6 +52,58 @@ function cleanMenValue(value) {
     .trim()
     .toLowerCase()
     .replace(/\s+/g, " ");
+}
+
+
+function getMemberNames(application) {
+  if (
+    Array.isArray(application?.memberNames) &&
+    application.memberNames.length
+  ) {
+    return application.memberNames
+      .map((name) => String(name || "").trim())
+      .filter(Boolean);
+  }
+
+  const single = String(application?.memberName || "").trim();
+  if (!single) return [];
+
+  return single
+    .split(",")
+    .map((name) => name.trim())
+    .filter(Boolean);
+}
+
+
+function getMemberNamesDisplay(application) {
+  const names = getMemberNames(application);
+  return names.length ? names.join(", ") : "-";
+}
+
+
+function getLookingForDisplay(application) {
+  const raw = String(
+    application?.lookingForLabel ||
+    application?.lookingFor ||
+    ""
+  ).trim();
+
+  if (!raw) return "-";
+  return LOOKING_FOR_LABELS[raw] || raw;
+}
+
+
+function getMeetingPreferenceDisplay(application) {
+  const raw = String(application?.nightType || "").trim();
+  if (!raw) return "-";
+  return MEETING_PREFERENCE_LABELS[raw] || raw;
+}
+
+
+function getMenProfileUrl(slug) {
+  const value = String(slug || "").trim();
+  if (!value) return "";
+  return `${PUBLIC_SITE_URL}/men-profile/${encodeURIComponent(value)}`;
 }
 
 
@@ -62,7 +134,7 @@ function buildModelRows(items) {
 
   items.forEach((application) => {
     const modelKey =
-      cleanMenValue(application.memberName) || "-";
+      cleanMenValue(getMemberNamesDisplay(application)) || "-";
     const applicantName =
       String(application.name || "").trim() || "-";
     const bucketKey = `${applicantName}|${modelKey}`;
@@ -83,7 +155,7 @@ function buildModelRows(items) {
       key: bucketKey,
       applicantName:
         String(sorted[0].name || "").trim() || "-",
-      name: sorted[0].memberName || "-",
+      name: getMemberNamesDisplay(sorted[0]),
       count: modelItems.length,
       latestDate: sorted[0].createdAt,
       latest: sorted[0],
@@ -401,10 +473,18 @@ function MenApplications({
 
             const searchable =
               [
+                getMemberNamesDisplay(application),
                 application.memberName,
+                getLookingForDisplay(application),
+                application.lookingFor,
                 application.name,
                 application.email,
                 application.mobile,
+                application.slug,
+                application.subject,
+                getMeetingPreferenceDisplay(application),
+                application.nightType,
+                application.message,
               ]
                 .map(
                   (value) =>
@@ -1113,7 +1193,7 @@ function MenApplications({
       return (
         <tr>
           <td
-            colSpan="7"
+            colSpan="8"
             className="men-empty-row"
           >
             No Men applications found
@@ -1124,14 +1204,23 @@ function MenApplications({
 
     return paginatedApplications.map(
       (application, index) => {
+        const membersDisplay =
+          getMemberNamesDisplay(application);
+        const lookingForDisplay =
+          getLookingForDisplay(application);
+
         return (
           <tr key={application._id}>
             <td>
               {startIndex + index + 1}
             </td>
 
-            <td title={application.memberName || ""}>
-              {application.memberName || "-"}
+            <td title={lookingForDisplay}>
+              {lookingForDisplay}
+            </td>
+
+            <td title={membersDisplay}>
+              {membersDisplay}
             </td>
 
             <td title={application.name || ""}>
@@ -1153,7 +1242,7 @@ function MenApplications({
               {formatShortDate(application.createdAt)}
             </td>
 
-            <td>
+            <td className="men-action-col">
               <div className="men-action-buttons">
                 <button
                   type="button"
@@ -1389,6 +1478,10 @@ function MenApplications({
                   </th>
 
                   <th>
+                    Looking For
+                  </th>
+
+                  <th>
                     She Is
                   </th>
 
@@ -1408,8 +1501,8 @@ function MenApplications({
                     Date
                   </th>
 
-                  <th>
-                    Action
+                  <th className="men-action-col">
+                    <span className="men-action-heading">Action</span>
                   </th>
                 </tr>
               </thead>
@@ -1639,8 +1732,37 @@ function MenApplications({
                     </div>
                     <div className="detail-list">
                       <Detail
+                        label="Looking For"
+                        value={getLookingForDisplay(selectedApplication)}
+                      />
+                      <Detail
                         label="She Is"
-                        value={selectedApplication.memberName}
+                        value={
+                          <div className="men-member-chips">
+                            {getMemberNames(selectedApplication).length
+                              ? getMemberNames(selectedApplication).map(
+                                  (name) => (
+                                    <span
+                                      key={name}
+                                      className="men-member-chip"
+                                    >
+                                      {name}
+                                    </span>
+                                  )
+                                )
+                              : "-"}
+                          </div>
+                        }
+                      />
+                      <Detail
+                        label="Meeting Preference"
+                        value={getMeetingPreferenceDisplay(
+                          selectedApplication
+                        )}
+                      />
+                      <Detail
+                        label="When"
+                        value={formatDate(selectedApplication.meetingDate)}
                       />
                       <Detail
                         label="Name"
@@ -1655,21 +1777,31 @@ function MenApplications({
                         value={selectedApplication.email}
                       />
                       <Detail
-                        label="When"
-                        value={formatDate(selectedApplication.meetingDate)}
-                      />
-                      <Detail
-                        label="The Night"
-                        value={selectedApplication.nightType}
-                      />
-                      <Detail
                         label="Subject"
                         value={selectedApplication.subject}
+                        full
                       />
                       <Detail
                         label="What You Want"
                         value={selectedApplication.message}
                         full
+                      />
+                      <Detail
+                        label="Profile Slug"
+                        value={selectedApplication.slug || "-"}
+                      />
+                      <Detail
+                        label="Profile Link"
+                        value={
+                          <ProfileLinkCopy
+                            url={getMenProfileUrl(selectedApplication.slug)}
+                          />
+                        }
+                        full
+                      />
+                      <Detail
+                        label="Status"
+                        value={selectedApplication.status}
                       />
                       <Detail
                         label="Submitted Date"
@@ -1761,7 +1893,12 @@ function Detail({
   value,
   full = false,
 }) {
-  const display = value || "-";
+  const display =
+    value === 0
+      ? "0"
+      : value == null || value === ""
+        ? "-"
+        : value;
 
   if (full) {
     return (

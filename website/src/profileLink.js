@@ -31,6 +31,16 @@ export function profileAbsoluteUrl(slug) {
   return `${publicSiteOrigin()}${profilePath(slug)}`;
 }
 
+export function manProfilePath(slug) {
+  if (!slug) return "";
+  return `/men-profile/${encodeURIComponent(slug)}`;
+}
+
+export function manProfileAbsoluteUrl(slug) {
+  if (!slug) return "";
+  return `${publicSiteOrigin()}${manProfilePath(slug)}`;
+}
+
 export function readStoredSlug() {
   try {
     return sessionStorage.getItem("ill-application-slug") || "";
@@ -43,6 +53,23 @@ export function storeSlug(slug) {
   if (!slug) return;
   try {
     sessionStorage.setItem("ill-application-slug", String(slug));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function readStoredManSlug() {
+  try {
+    return sessionStorage.getItem("ill-men-application-slug") || "";
+  } catch {
+    return "";
+  }
+}
+
+export function storeManSlug(slug) {
+  if (!slug) return;
+  try {
+    sessionStorage.setItem("ill-men-application-slug", String(slug));
   } catch {
     /* ignore */
   }

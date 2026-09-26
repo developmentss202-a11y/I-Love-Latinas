@@ -76,6 +76,9 @@ export function mapApplicationToProfile(app) {
     role: String(app?.profession || "").trim(),
     bio: String(app?.visionStatement || app?.personalityType || "").trim(),
     tag: relationshipTag(app?.relationshipDesired),
+    relationshipDesired: String(app?.relationshipDesired || "")
+      .trim()
+      .toLowerCase(),
     photo,
     slug: String(app?.slug || "").trim(),
   };

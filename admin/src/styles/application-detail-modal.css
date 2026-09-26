@@ -1,4 +1,39 @@
-/* Application Details / Full Information modal */
+.men-profile-link,
+.women-profile-link,
+.admin-profile-link {
+  color: #8a2a4f;
+  font-weight: 650;
+  word-break: break-all;
+}
+
+.admin-profile-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-profile-link-row .admin-profile-link {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.admin-profile-copy-btn {
+  flex: 0 0 auto;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(138, 42, 79, 0.28);
+  background: rgba(138, 42, 79, 0.08);
+  color: #6b1f3a;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-profile-copy-btn:hover {
+  background: rgba(138, 42, 79, 0.14);
+}
 
 .modal-overlay,
 .admin-modal-overlay.application-view-overlay,

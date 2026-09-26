@@ -13,12 +13,22 @@ export default function Header({ variant = "default" }) {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const path = location.pathname;
-  const hideLang = path === "/men" || path === "/profiles" || variant === "navy";
+  const hideLang =
+    path === "/men" ||
+    path === "/profiles" ||
+    path === "/hotels" ||
+    path === "/hotels/" ||
+    path.startsWith("/men-profile/") ||
+    path === "/my-men-profile" ||
+    path === "/men-profile" ||
+    variant === "navy";
   const hideNav = variant === "minimal" || variant === "home" || variant === "dark";
   const navItems = variant === "navy" ? manNavItems : [];
 
   let logoTo = "/";
   if (path.startsWith("/profile/") || path === "/my-profile") {
+    logoTo = path;
+  } else if (path.startsWith("/men-profile/") || path === "/my-men-profile") {
     logoTo = path;
   } else if (path === "/pending") {
     logoTo = "/pending";

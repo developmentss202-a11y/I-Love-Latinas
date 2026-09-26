@@ -9,6 +9,16 @@ const MenApplication =
 const SiteSettings =
   require("../models/SiteSettings");
 
+const LOOKING_FOR_VALUES = [
+  "dating",
+  "long-term",
+  "marriage",
+  "life-partner",
+];
+
+const LONG_TERM_MEMBER_COUNT = 3;
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 
 /* =========================================
    HELPERS
@@ -16,6 +26,204 @@ const SiteSettings =
 
 function clean(value) {
   return String(value || "").trim();
+}
+
+
+function slugifyName(name) {
+  const base = String(name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return base || "member";
+}
+
+
+function randomSlugSuffix(length = 6) {
+  return crypto
+    .randomBytes(Math.ceil(length / 2))
+    .toString("hex")
+    .slice(0, length);
+}
+
+
+function mobileDigits(value) {
+  return String(value || "").replace(/\D/g, "");
+}
+
+
+async function createUniqueMenSlug(name) {
+  const base = slugifyName(name);
+  let candidate = `${base}-${randomSlugSuffix()}`;
+
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    const exists = await MenApplication.exists({ slug: candidate });
+    if (!exists) {
+      return candidate;
+    }
+    candidate = `${base}-${randomSlugSuffix()}`;
+  }
+
+  return `${base}-${Date.now().toString(36)}-${randomSlugSuffix(4)}`;
+}
+
+
+/*
+  Same man = same email OR same phone digits.
+  Reuse one shared slug so every booking shows on one profile.
+*/
+async function findMenByIdentity(email, mobile) {
+  const normalizedEmail = clean(email).toLowerCase();
+  const digits = mobileDigits(mobile);
+  const or = [];
+
+  if (normalizedEmail) {
+    or.push({ email: normalizedEmail });
+  }
+
+  if (digits) {
+    or.push({ mobileDigits: digits });
+    or.push({ mobile: clean(mobile) });
+  }
+
+  if (!or.length) {
+    return [];
+  }
+
+  return MenApplication.find({ $or: or })
+    .sort({ createdAt: 1 })
+    .lean();
+}
+
+
+async function resolveMenSlug(email, mobile, name) {
+  const related = await findMenByIdentity(email, mobile);
+  const existingSlug = related.find((item) => clean(item.slug))?.slug || "";
+  const slug = existingSlug || (await createUniqueMenSlug(name));
+  const digits = mobileDigits(mobile);
+
+  if (related.length) {
+    const ids = related.map((item) => item._id);
+    const $set = { slug };
+
+    if (digits) {
+      $set.mobileDigits = digits;
+    }
+
+    await MenApplication.updateMany(
+      { _id: { $in: ids } },
+      { $set }
+    );
+  }
+
+  return slug;
+}
+
+
+async function collectMenApplicationsForProfile(slug) {
+  const seeded = await MenApplication.find({ slug }).lean();
+
+  if (!seeded.length) {
+    return [];
+  }
+
+  const emails = [
+    ...new Set(
+      seeded
+        .map((item) => clean(item.email).toLowerCase())
+        .filter(Boolean)
+    ),
+  ];
+
+  const mobiles = [
+    ...new Set(
+      seeded
+        .map((item) => clean(item.mobile))
+        .filter(Boolean)
+    ),
+  ];
+
+  const digitsList = [
+    ...new Set(
+      seeded
+        .map((item) => item.mobileDigits || mobileDigits(item.mobile))
+        .filter(Boolean)
+    ),
+  ];
+
+  const or = [{ slug }];
+
+  emails.forEach((email) => or.push({ email }));
+  mobiles.forEach((mobile) => or.push({ mobile }));
+  digitsList.forEach((digits) => or.push({ mobileDigits: digits }));
+
+  const applications = await MenApplication.find({ $or: or })
+    .sort({ meetingDate: 1, createdAt: -1 })
+    .lean();
+
+  const unique = [];
+  const seen = new Set();
+
+  applications.forEach((item) => {
+    const id = String(item._id);
+    if (seen.has(id)) return;
+    seen.add(id);
+    unique.push(item);
+  });
+
+  const idsNeedingSlug = unique
+    .filter((item) => clean(item.slug) !== slug)
+    .map((item) => item._id);
+
+  if (idsNeedingSlug.length) {
+    await MenApplication.updateMany(
+      { _id: { $in: idsNeedingSlug } },
+      { $set: { slug } }
+    );
+  }
+
+  return unique.map((item) => ({ ...item, slug }));
+}
+
+
+function normalizeMemberNames(body) {
+  if (Array.isArray(body.memberNames)) {
+    return [
+      ...new Set(
+        body.memberNames
+          .map((item) => clean(item))
+          .filter(Boolean)
+      ),
+    ];
+  }
+
+  if (typeof body.memberNames === "string" && body.memberNames.trim()) {
+    return [
+      ...new Set(
+        body.memberNames
+          .split(",")
+          .map((item) => clean(item))
+          .filter(Boolean)
+      ),
+    ];
+  }
+
+  const single = clean(body.memberName);
+  return single ? [single] : [];
+}
+
+
+function lookingForLabel(value) {
+  const map = {
+    dating: "Serious dating",
+    "long-term": "Long-term relationship",
+    marriage: "Marriage-minded",
+    "life-partner": "Life partner",
+  };
+  return map[value] || value || "";
 }
 
 
@@ -41,12 +249,20 @@ function publicApplication(application) {
     return null;
   }
 
+  const memberNames = Array.isArray(application.memberNames) && application.memberNames.length
+    ? application.memberNames
+    : application.memberName
+      ? [application.memberName]
+      : [];
+
   return {
     _id:
       application._id,
 
     memberName:
       application.memberName,
+
+    memberNames,
 
     name:
       application.name,
@@ -63,11 +279,20 @@ function publicApplication(application) {
     nightType:
       application.nightType,
 
+    lookingFor:
+      application.lookingFor || "",
+
+    lookingForLabel:
+      lookingForLabel(application.lookingFor),
+
     subject:
       application.subject,
 
     message:
       application.message,
+
+    slug:
+      application.slug || "",
 
     status:
       application.status,
@@ -189,10 +414,11 @@ const createMenApplication =
          FORM DATA
       ============================== */
 
+      const memberNames =
+        normalizeMemberNames(req.body);
+
       const memberName =
-        clean(
-          req.body.memberName
-        );
+        memberNames.join(", ");
 
       const name =
         clean(
@@ -219,6 +445,11 @@ const createMenApplication =
           req.body.nightType
         );
 
+      const lookingFor =
+        clean(
+          req.body.lookingFor
+        );
+
       const subject =
         clean(
           req.body.subject
@@ -235,12 +466,13 @@ const createMenApplication =
       ============================== */
 
       if (
-        !memberName ||
+        !memberNames.length ||
         !name ||
         !email ||
         !mobile ||
         !meetingDate ||
         !nightType ||
+        !lookingFor ||
         !subject ||
         !message
       ) {
@@ -251,6 +483,52 @@ const createMenApplication =
 
             message:
               "Please fill all required fields",
+          });
+      }
+
+
+      if (
+        !LOOKING_FOR_VALUES.includes(
+          lookingFor
+        )
+      ) {
+        return res
+          .status(400)
+          .json({
+            success: false,
+
+            message:
+              "Please select what you are looking for",
+          });
+      }
+
+
+      if (
+        lookingFor === "long-term" &&
+        memberNames.length !== LONG_TERM_MEMBER_COUNT
+      ) {
+        return res
+          .status(400)
+          .json({
+            success: false,
+
+            message:
+              `For long-term relationship, please select exactly ${LONG_TERM_MEMBER_COUNT} profiles`,
+          });
+      }
+
+
+      if (
+        lookingFor !== "long-term" &&
+        memberNames.length !== 1
+      ) {
+        return res
+          .status(400)
+          .json({
+            success: false,
+
+            message:
+              "Please select one profile",
           });
       }
 
@@ -283,13 +561,23 @@ const createMenApplication =
 
 
       /* ==============================
-         TRACKING TOKEN
+         TRACKING TOKEN + SLUG
       ============================== */
 
       const publicToken =
         crypto
           .randomBytes(32)
           .toString("hex");
+
+      const digits =
+        mobileDigits(mobile);
+
+      const slug =
+        await resolveMenSlug(
+          email,
+          mobile,
+          name
+        );
 
 
       /* ==============================
@@ -314,20 +602,30 @@ const createMenApplication =
         await MenApplication.create({
           memberName,
 
+          memberNames,
+
           name,
 
           email,
 
           mobile,
 
+          mobileDigits:
+            digits ||
+            undefined,
+
           meetingDate:
             parsedMeetingDate,
 
           nightType,
 
+          lookingFor,
+
           subject,
 
           message,
+
+          slug,
 
           status:
             initialStatus,
@@ -356,6 +654,9 @@ const createMenApplication =
 
           applicationId:
             application._id,
+
+          slug:
+            application.slug,
 
           trackingToken:
             publicToken,
@@ -491,6 +792,61 @@ const getMenApplicationStatus =
 
 
 /* =========================================
+   PUBLIC MEN PROFILE BY SLUG
+   Returns every booking entry for that man.
+========================================= */
+
+const getMenApplicationsBySlug =
+  async (req, res) => {
+    try {
+      const slug = clean(req.params.slug).toLowerCase();
+
+      if (!slug || !SLUG_PATTERN.test(slug)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid profile link",
+        });
+      }
+
+      const applications =
+        await collectMenApplicationsForProfile(slug);
+
+      if (!applications.length) {
+        return res.status(404).json({
+          success: false,
+          message: "Profile not found",
+        });
+      }
+
+      const newest = [...applications].sort(
+        (a, b) =>
+          new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+      )[0];
+
+      return res.json({
+        success: true,
+        slug,
+        man: {
+          slug,
+          name: newest.name,
+          email: newest.email,
+          mobile: newest.mobile,
+          entryCount: applications.length,
+        },
+        applications: applications.map(publicApplication),
+      });
+    } catch (error) {
+      console.error("GET MEN BY SLUG ERROR:", error);
+
+      return res.status(500).json({
+        success: false,
+        message: "Unable to load profile",
+      });
+    }
+  };
+
+
+/* =========================================
    GET ALL MEN APPLICATIONS
    ADMIN ONLY
 ========================================= */
@@ -510,7 +866,13 @@ const getMenApplications =
       return res.json({
         success: true,
 
-        applications,
+        count:
+          applications.length,
+
+        applications:
+          applications.map(
+            publicApplication
+          ),
       });
 
     } catch (error) {
@@ -733,6 +1095,7 @@ const updateMenApplicationStatus =
 module.exports = {
   createMenApplication,
   getMenApplicationStatus,
+  getMenApplicationsBySlug,
   getMenApplications,
   updateMenApplicationStatus,
 };

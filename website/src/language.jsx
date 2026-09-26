@@ -183,6 +183,62 @@ const spanish = {
   "{label} must be maximum {max} MB.": "{label} debe ser de máximo {max} MB.",
   "Loading…": "Cargando…",
   "No approved profiles yet.": "Aún no hay perfiles aprobados.",
+  "No profiles match this relationship type.": "No hay perfiles con este tipo de relación.",
+  "All": "Todas",
+  "Scroll filters left": "Deslizar filtros a la izquierda",
+  "Scroll filters right": "Deslizar filtros a la derecha",
+  "Make a meaningful introduction": "Haz una presentación significativa",
+  "Choose someone who interests you, and we’ll help create a comfortable, private introduction.":
+    "Elige a alguien que te interese y te ayudaremos a crear una presentación cómoda y privada.",
+  "How it works": "Cómo funciona",
+  "Submit your introduction request with who you want to meet.":
+    "Envía tu solicitud de presentación con quién quieres conocer.",
+  "Our team reaches out based on your selections.":
+    "Nuestro equipo se pondrá en contacto según tus selecciones.",
+  "Meetings are arranged at our hotel for people seeking a real relationship.":
+    "Las reuniones se organizan en nuestro hotel para quienes buscan una relación real.",
+  "Introduction": "Presentación",
+  "Tell us what kind of connection you want...":
+    "Cuéntanos qué tipo de conexión deseas...",
+  "What are you hoping for?": "¿Qué esperas?",
+  "After you submit, our team will reach out based on your selections. Meetings are arranged at our hotel for people seeking a real relationship.":
+    "Después de enviar, nuestro equipo se pondrá en contacto según tus selecciones. Las reuniones se organizan en nuestro hotel para quienes buscan una relación real.",
+  "What you are looking for": "Qué estás buscando",
+  "Select exactly 3 profiles for long-term relationship.":
+    "Selecciona exactamente 3 perfiles para una relación a largo plazo.",
+  "Your bookings": "Tus reservas",
+  "Your introductions": "Tus presentaciones",
+  "{name}'s introductions": "Presentaciones de {name}",
+  "Review every request you submitted. Keep your link saved so you can return anytime.":
+    "Revisa cada solicitud que enviaste. Guarda tu enlace para volver cuando quieras.",
+  "Your calendar timings": "Tus horarios del calendario",
+  "These are the meeting times from your submissions.":
+    "Estos son los horarios de reunión de tus envíos.",
+  "Your entries": "Tus entradas",
+  "Tap an entry to expand and see full booking details.":
+    "Toca una entrada para expandirla y ver todos los detalles de la reserva.",
+  "Show details": "Ver detalles",
+  "Hide details": "Ocultar detalles",
+  "Entry": "Entrada",
+  "Explore More Options": "Explorar más opciones",
+  "Submit New Request": "Enviar nueva solicitud",
+  "Show entries": "Ver entradas",
+  "Go to profile": "Ir al perfil",
+  "Your application was submitted successfully. Copy your profile link below, then open your profile.":
+    "Tu solicitud se envió correctamente. Copia el enlace de tu perfil abajo y luego abre tu perfil.",
+  "Your application was submitted successfully. Copy your profile link below, then open your entries.":
+    "Tu solicitud se envió correctamente. Copia el enlace de tu perfil abajo y luego abre tus entradas.",
+  "Meeting Preference": "Preferencia de reunión",
+  "Late dinner": "Cena tarde",
+  "Hotel / private suite": "Hotel / suite privada",
+  "Weekend away": "Fin de semana fuera",
+  "Open to her suggestion": "Abierta a su sugerencia",
+  "Status": "Estado",
+  "pending": "pendiente",
+  "approved": "aprobada",
+  "rejected": "rechazada",
+  "contacted": "contactado",
+  "Select a profile": "Selecciona un perfil",
 
   // Media buttons
   "Add Photo": "Agregar foto",
@@ -284,8 +340,8 @@ const spanish = {
 
   "Private circle": "Círculo privado",
   "Women who want to be wanted": "Mujeres que quieren ser deseadas",
-  "Take your time with each one. When you feel the pull, apply to connect — we arrange the night.":
-    "Tómate tu tiempo con cada una. Cuando sientas la conexión, solicita el contacto y nosotras organizamos el encuentro.",
+  "Take your time to find a meaningful connection, and let us bring you together":
+    "Tómate tu tiempo para encontrar una conexión significativa y déjanos juntarlos",
 
   "United States": "Estados Unidos",
   "United Kingdom": "Reino Unido",

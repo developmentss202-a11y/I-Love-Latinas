@@ -8,6 +8,7 @@ const adminAuth =
 const {
   createMenApplication,
   getMenApplicationStatus,
+  getMenApplicationsBySlug,
   getMenApplications,
   updateMenApplicationStatus,
 } = require(
@@ -25,6 +26,12 @@ const router = express.Router();
 router.post(
   "/men-applications",
   createMenApplication
+);
+
+// Public booking profile by shared man slug
+router.get(
+  "/men-applications/by-slug/:slug",
+  getMenApplicationsBySlug
 );
 
 // User checks pending / approved / rejected

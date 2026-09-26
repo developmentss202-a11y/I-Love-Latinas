@@ -1,12 +1,29 @@
 
 const mongoose = require("mongoose");
 
+const LOOKING_FOR_VALUES = [
+  "dating",
+  "long-term",
+  "marriage",
+  "life-partner",
+];
+
 const menApplicationSchema = new mongoose.Schema(
   {
     memberName: {
       type: String,
       required: true,
       trim: true,
+    },
+
+    /*
+      Long-term requires exactly 3 profiles.
+      Other lookingFor values keep a single name.
+      memberName stays as a display string for older admin UI.
+    */
+    memberNames: {
+      type: [String],
+      default: undefined,
     },
 
     name: {
@@ -28,6 +45,16 @@ const menApplicationSchema = new mongoose.Schema(
       trim: true,
     },
 
+    /*
+      Digits-only mobile for matching the same man
+      across differently formatted numbers.
+    */
+    mobileDigits: {
+      type: String,
+      trim: true,
+      index: true,
+    },
+
     meetingDate: {
       type: Date,
       required: true,
@@ -37,6 +64,16 @@ const menApplicationSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+    },
+
+    /*
+      Same four options as men profile filters.
+    */
+    lookingFor: {
+      type: String,
+      enum: LOOKING_FOR_VALUES,
+      trim: true,
+      index: true,
     },
 
     subject: {
@@ -49,6 +86,17 @@ const menApplicationSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+    },
+
+    /*
+      Shared across every booking for the same man (matched by email).
+      Not unique on the collection because one man can have many entries.
+    */
+    slug: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      index: true,
     },
 
     /*
@@ -97,3 +145,5 @@ module.exports = mongoose.model(
   "MenApplication",
   menApplicationSchema
 );
+
+module.exports.LOOKING_FOR_VALUES = LOOKING_FOR_VALUES;
