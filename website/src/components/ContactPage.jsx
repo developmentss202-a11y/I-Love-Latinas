@@ -21,6 +21,7 @@ import {
   manProfilePath,
   storeManSlug,
 } from "../profileLink";
+import MeetingDateTimeField from "./MeetingDateTimeField";
 
 
 const LIVE_API =
@@ -50,11 +51,16 @@ const API_BASE = (() => {
 
 
 const LOOKING_FOR_OPTIONS = [
-  { value: "dating", label: "Serious dating" },
-  { value: "long-term", label: "Long-term relationship" },
-  { value: "marriage", label: "Marriage-minded" },
-  { value: "life-partner", label: "Life partner" },
+  { value: "short-term", label: "Short Term Relationship" },
+  { value: "long-term", label: "Long Term Relationship" },
 ];
+
+const MEETING_PREFERENCE_OPTIONS = [
+  { value: "hotel-beach", label: "Hotel at Beach" },
+  { value: "hotel-mountains", label: "Hotel at Mountains" },
+];
+
+const HOTEL_NAME = "Ecuador";
 
 const LONG_TERM_MEMBER_COUNT = 3;
 
@@ -587,20 +593,9 @@ export default function ContactPage() {
     if (!mobile) {
       nextErrors.mobile =
         "Please enter your mobile number.";
-    } else {
-      const digits =
-        mobile.replace(
-          /\D/g,
-          ""
-        );
-
-      if (
-        digits.length < 7 ||
-        digits.length > 15
-      ) {
-        nextErrors.mobile =
-          "Please enter a valid mobile number.";
-      }
+    } else if (!/^\d{10}$/.test(mobile)) {
+      nextErrors.mobile =
+        "Please enter a 10 digit mobile number.";
     }
 
 
@@ -672,17 +667,23 @@ export default function ContactPage() {
         const targetName =
           firstError;
 
-        const target =
-          form.elements[
-            targetName
-          ];
+        if (firstError === "datetime") {
+          document
+            .getElementById("meeting-datetime-trigger")
+            ?.focus();
+        } else {
+          const target =
+            form.elements[
+              targetName
+            ];
 
-        if (
-          target &&
-          typeof target.focus ===
-            "function"
-        ) {
-          target.focus();
+          if (
+            target &&
+            typeof target.focus ===
+              "function"
+          ) {
+            target.focus();
+          }
         }
       }
 
@@ -712,6 +713,8 @@ export default function ContactPage() {
       meetingDate,
 
       nightType,
+
+      hotelName: HOTEL_NAME,
 
       lookingFor,
 
@@ -898,7 +901,7 @@ export default function ContactPage() {
 
             <div className="contact-hero__top">
               <p className="gender-kicker">
-                Private introduction
+                {t("Ready for something real?")}
               </p>
 
               <button
@@ -912,12 +915,12 @@ export default function ContactPage() {
 
 
             <h1>
-              {t("Make a meaningful introduction")}
+              {t("Meet someone who's looking for a serious relationship")}
             </h1>
 
 
             <p className="page__lead">
-              {t("Choose someone who interests you, and we’ll help create a comfortable, private introduction.")}
+              {t("Choose someone who interests you, and take the first step toward getting to know each other.")}
             </p>
 
             <div className="men-process">
@@ -1244,9 +1247,20 @@ export default function ContactPage() {
                     Mobile number
 
                     <input
-                      type="tel"
+                      type="text"
+                      inputMode="numeric"
                       name="mobile"
-                      placeholder="+1 9999999999"
+                      placeholder="9999999999"
+                      maxLength={10}
+                      pattern="[0-9]{10}"
+                      autoComplete="tel"
+
+                      onInput={(event) => {
+                        event.currentTarget.value =
+                          event.currentTarget.value
+                            .replace(/\D/g, "")
+                            .slice(0, 10);
+                      }}
 
                       aria-required="true"
 
@@ -1289,25 +1303,12 @@ export default function ContactPage() {
                 <div className="field-row">
 
                   <label>
-                    When
+                    {t("Desired meeting date & time")}
 
-                    <input
-                      type="datetime-local"
-                      name="datetime"
-
-                      aria-required="true"
-
-                      aria-invalid={
-                        Boolean(
-                          fieldErrors.datetime
-                        )
-                      }
-
-                      style={
-                        fieldErrors.datetime
-                          ? INVALID_FIELD_STYLE
-                          : undefined
-                      }
+                    <MeetingDateTimeField
+                      invalid={Boolean(fieldErrors.datetime)}
+                      invalidStyle={INVALID_FIELD_STYLE}
+                      onValue={() => clearFieldError("datetime")}
                     />
 
                     {
@@ -1330,7 +1331,10 @@ export default function ContactPage() {
 
 
                   <label>
-                    Meeting Preference
+                    <span className="meeting-pref-label">
+                      {t("Meeting Preference")}
+                      <span className="hotel-name-tag">{t("Place Name")}: {HOTEL_NAME}</span>
+                    </span>
 
                     <select
                       name="travel"
@@ -1355,26 +1359,18 @@ export default function ContactPage() {
                         value=""
                         disabled
                       >
-                        Select
+                        {t("Select")}
                       </option>
 
-                      <option value="dinner">
-                        Late dinner
-                      </option>
-
-                      <option value="hotel">
-                        Hotel / private suite
-                      </option>
-
-                      <option value="weekend">
-                        Weekend away
-                      </option>
-
-                      <option value="open">
-                        Open to her suggestion
-                      </option>
+                      {MEETING_PREFERENCE_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {t(option.label)}
+                        </option>
+                      ))}
 
                     </select>
+
+                    <input type="hidden" name="hotelName" value={HOTEL_NAME} />
 
                     {
                       fieldErrors.travel && (

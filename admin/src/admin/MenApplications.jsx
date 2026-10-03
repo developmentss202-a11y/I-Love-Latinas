@@ -33,13 +33,16 @@ const PUBLIC_SITE_URL = String(
 ).replace(/\/$/, "");
 
 const LOOKING_FOR_LABELS = {
+  "short-term": "Short Term Relationship",
+  "long-term": "Long Term Relationship",
   dating: "Serious dating",
-  "long-term": "Long-term relationship",
   marriage: "Marriage-minded",
   "life-partner": "Life partner",
 };
 
 const MEETING_PREFERENCE_LABELS = {
+  "hotel-beach": "Hotel at Beach",
+  "hotel-mountains": "Hotel at Mountains",
   dinner: "Late dinner",
   hotel: "Hotel / private suite",
   weekend: "Weekend away",
@@ -1761,7 +1764,11 @@ function MenApplications({
                         )}
                       />
                       <Detail
-                        label="When"
+                        label="Place Name"
+                        value={selectedApplication.hotelName || "Ecuador"}
+                      />
+                      <Detail
+                        label="Desired meeting date & time"
                         value={formatDate(selectedApplication.meetingDate)}
                       />
                       <Detail

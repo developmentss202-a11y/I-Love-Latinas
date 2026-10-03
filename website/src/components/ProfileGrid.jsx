@@ -8,10 +8,8 @@ const PAGE_SIZE = 8;
 
 const RELATIONSHIP_FILTERS = [
   { value: "", label: "All" },
-  { value: "dating", label: "Serious dating" },
-  { value: "long-term", label: "Long-term relationship" },
-  { value: "marriage", label: "Marriage-minded" },
-  { value: "life-partner", label: "Life partner" },
+  { value: "short-term", label: "Short Term Relationship" },
+  { value: "long-term", label: "Long Term Relationship" },
 ];
 
 export default function ProfileGrid({ onRegister, onNavigate, onConnect, compact = false }) {
@@ -161,10 +159,10 @@ export default function ProfileGrid({ onRegister, onNavigate, onConnect, compact
                 </>
               ) : null}
             </div>
-            <h2>{compact ? t("Women who want to be wanted") : t("People currently seeking a match")}</h2>
+            <h2>{compact ? t("Where Meaningful Relationships Begin") : t("People currently seeking a match")}</h2>
             <p>
               {compact
-                ? t("Take your time to find a meaningful connection, and let us bring you together")
+                ? t("Take your time to find the right connection, and let us bring you together.")
                 : t("Eight profiles at a time. Take your time with each one — there's no swiping here.")}
             </p>
         </div>

@@ -10,11 +10,16 @@ const SiteSettings =
   require("../models/SiteSettings");
 
 const LOOKING_FOR_VALUES = [
-  "dating",
+  "short-term",
   "long-term",
-  "marriage",
-  "life-partner",
 ];
+
+const MEETING_PREFERENCE_VALUES = [
+  "hotel-beach",
+  "hotel-mountains",
+];
+
+const HOTEL_NAME = "Ecuador";
 
 const LONG_TERM_MEMBER_COUNT = 3;
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -218,10 +223,23 @@ function normalizeMemberNames(body) {
 
 function lookingForLabel(value) {
   const map = {
+    "short-term": "Short Term Relationship",
+    "long-term": "Long Term Relationship",
     dating: "Serious dating",
-    "long-term": "Long-term relationship",
     marriage: "Marriage-minded",
     "life-partner": "Life partner",
+  };
+  return map[value] || value || "";
+}
+
+function meetingPreferenceLabel(value) {
+  const map = {
+    "hotel-beach": "Hotel at Beach",
+    "hotel-mountains": "Hotel at Mountains",
+    dinner: "Late dinner",
+    hotel: "Hotel / private suite",
+    weekend: "Weekend away",
+    open: "Open to her suggestion",
   };
   return map[value] || value || "";
 }
@@ -278,6 +296,12 @@ function publicApplication(application) {
 
     nightType:
       application.nightType,
+
+    nightTypeLabel:
+      meetingPreferenceLabel(application.nightType),
+
+    hotelName:
+      application.hotelName || "Ecuador",
 
     lookingFor:
       application.lookingFor || "",
@@ -487,6 +511,18 @@ const createMenApplication =
       }
 
 
+      if (!/^\d{10}$/.test(mobile)) {
+        return res
+          .status(400)
+          .json({
+            success: false,
+
+            message:
+              "Please enter a 10 digit mobile number",
+          });
+      }
+
+
       if (
         !LOOKING_FOR_VALUES.includes(
           lookingFor
@@ -499,6 +535,22 @@ const createMenApplication =
 
             message:
               "Please select what you are looking for",
+          });
+      }
+
+
+      if (
+        !MEETING_PREFERENCE_VALUES.includes(
+          nightType
+        )
+      ) {
+        return res
+          .status(400)
+          .json({
+            success: false,
+
+            message:
+              "Please select a meeting preference",
           });
       }
 
@@ -618,6 +670,10 @@ const createMenApplication =
             parsedMeetingDate,
 
           nightType,
+
+          hotelName:
+            clean(req.body.hotelName) ||
+            HOTEL_NAME,
 
           lookingFor,
 

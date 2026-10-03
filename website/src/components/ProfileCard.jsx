@@ -58,8 +58,9 @@ function photoUrl(path, index = 0) {
 
 function relationshipTag(value) {
   const key = String(value || "").trim().toLowerCase();
+  if (key === "short-term") return "Short Term Relationship";
+  if (key === "long-term") return "Long Term Relationship";
   if (key === "marriage") return "Marriage";
-  if (key === "long-term") return "Long-term";
   if (key === "life-partner") return "Life-partner";
   if (key === "dating") return "Dating";
   if (key) return key.replace(/-/g, " ");

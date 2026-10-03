@@ -187,9 +187,11 @@ const spanish = {
   "All": "Todas",
   "Scroll filters left": "Deslizar filtros a la izquierda",
   "Scroll filters right": "Deslizar filtros a la derecha",
-  "Make a meaningful introduction": "Haz una presentación significativa",
-  "Choose someone who interests you, and we’ll help create a comfortable, private introduction.":
-    "Elige a alguien que te interese y te ayudaremos a crear una presentación cómoda y privada.",
+  "Ready for something real?": "¿Listo para algo real?",
+  "Meet someone who's looking for a serious relationship":
+    "Conoce a alguien que busca una relación seria",
+  "Choose someone who interests you, and take the first step toward getting to know each other.":
+    "Elige a alguien que te interese y da el primer paso para conocerse.",
   "How it works": "Cómo funciona",
   "Submit your introduction request with who you want to meet.":
     "Envía tu solicitud de presentación con quién quieres conocer.",
@@ -339,6 +341,25 @@ const spanish = {
     "Una vez aceptada, puedes actualizar datos desde tu espacio de membresía. Algunos campos sensibles pueden volver a revisarse.",
 
   "Private circle": "Círculo privado",
+  "Where Meaningful Relationships Begin": "Donde comienzan las relaciones significativas",
+  "Take your time to find the right connection, and let us bring you together.":
+    "Tómate tu tiempo para encontrar la conexión adecuada y déjanos juntarlos.",
+  "Short Term Relationship": "Relación a corto plazo",
+  "Long Term Relationship": "Relación a largo plazo",
+  "Hotel at Beach": "Hotel en la playa",
+  "Hotel at Mountains": "Hotel en las montañas",
+  "Place Name": "Nombre del lugar",
+  "Desired meeting date & time": "Fecha y hora deseada de la reunión",
+  "Previous month": "Mes anterior",
+  "Next month": "Mes siguiente",
+  "Time": "Hora",
+  "Hour": "Hora",
+  "Minute": "Minuto",
+  "AM or PM": "AM o PM",
+  "AM": "AM",
+  "PM": "PM",
+  "Clear": "Borrar",
+  "Done": "Listo",
   "Women who want to be wanted": "Mujeres que quieren ser deseadas",
   "Take your time to find a meaningful connection, and let us bring you together":
     "Tómate tu tiempo para encontrar una conexión significativa y déjanos juntarlos",

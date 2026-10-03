@@ -2,8 +2,9 @@
 const mongoose = require("mongoose");
 
 const LOOKING_FOR_VALUES = [
-  "dating",
+  "short-term",
   "long-term",
+  "dating",
   "marriage",
   "life-partner",
 ];
@@ -63,6 +64,12 @@ const menApplicationSchema = new mongoose.Schema(
     nightType: {
       type: String,
       required: true,
+      trim: true,
+    },
+
+    hotelName: {
+      type: String,
+      default: "Ecuador",
       trim: true,
     },
 

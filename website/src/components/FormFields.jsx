@@ -425,24 +425,12 @@ const formFields = [
 
     options: [
       {
-        value: "dating",
-        label:
-          "Serious dating",
+        value: "short-term",
+        label: "Short Term Relationship",
       },
       {
         value: "long-term",
-        label:
-          "Long-term relationship",
-      },
-      {
-        value: "marriage",
-        label:
-          "Marriage-minded",
-      },
-      {
-        value: "life-partner",
-        label:
-          "Life partner",
+        label: "Long Term Relationship",
       },
     ],
   },

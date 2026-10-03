@@ -58,6 +58,18 @@ function FieldValue({ field, application }) {
 
   if (raw === 0) return <span>0</span>;
   if (raw == null || raw === "") return <span>—</span>;
+
+  if (field.name === "relationshipDesired") {
+    const labels = {
+      "short-term": "Short Term Relationship",
+      "long-term": "Long Term Relationship",
+      dating: "Serious dating",
+      marriage: "Marriage-minded",
+      "life-partner": "Life partner",
+    };
+    return <span>{labels[String(raw)] || String(raw)}</span>;
+  }
+
   return <span>{String(raw)}</span>;
 }
 

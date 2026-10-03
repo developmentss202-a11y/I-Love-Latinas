@@ -18,6 +18,8 @@ const API_BASE = (() => {
 })();
 
 const NIGHT_LABELS = {
+  "hotel-beach": "Hotel at Beach",
+  "hotel-mountains": "Hotel at Mountains",
   dinner: "Late dinner",
   hotel: "Hotel / private suite",
   weekend: "Weekend away",
@@ -85,12 +87,16 @@ function EntryDetails({ entry, t, language }) {
         <dd>{members.length ? members.join(", ") : "—"}</dd>
       </div>
       <div>
-        <dt>{t("When")}</dt>
+        <dt>{t("Desired meeting date & time")}</dt>
         <dd>{formatMeetingDate(entry.meetingDate, language)}</dd>
       </div>
       <div>
         <dt>{t("Meeting Preference")}</dt>
         <dd>{nightLabel(entry.nightType, t)}</dd>
+      </div>
+      <div>
+        <dt>{t("Place Name")}</dt>
+        <dd>{entry.hotelName || "Ecuador"}</dd>
       </div>
       <div>
         <dt>{t("Your name")}</dt>

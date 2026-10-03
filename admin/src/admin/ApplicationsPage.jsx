@@ -1957,6 +1957,13 @@ function ApplicationsPage({
                   <ApplicationDetail
                     label="Relationship Desired"
                     value={
+                      ({
+                        "short-term": "Short Term Relationship",
+                        "long-term": "Long Term Relationship",
+                        dating: "Serious dating",
+                        marriage: "Marriage-minded",
+                        "life-partner": "Life partner",
+                      })[viewApplication.relationshipDesired] ||
                       viewApplication.relationshipDesired
                     }
                   />
