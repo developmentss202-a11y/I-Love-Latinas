@@ -1,53 +1,199 @@
-import { useState } from "react";
-import ProfileCard, { ProfileDetail, PROFILES } from "./ProfileCard";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ProfileCard, { ProfileDetail, fetchApprovedProfiles } from "./ProfileCard";
 import Pagination from "./Pagination";
 import { useLanguage } from "../language";
 
 const PAGE_SIZE = 8;
-const PAGE_COUNT = 3;
+
+const RELATIONSHIP_FILTERS = [
+  { value: "", label: "All" },
+  { value: "short-term", label: "Short Term Relationship" },
+  { value: "long-term", label: "Long Term Relationship" },
+];
 
 export default function ProfileGrid({ onRegister, onNavigate, onConnect, compact = false }) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const filtersRef = useRef(null);
   const [page, setPage] = useState(1);
   const [detailIndex, setDetailIndex] = useState(null);
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [relationshipFilter, setRelationshipFilter] = useState("");
+  const [filterScroll, setFilterScroll] = useState({ left: false, right: false });
+
+  useEffect(() => {
+    let active = true;
+
+    fetchApprovedProfiles().then((list) => {
+      if (!active) return;
+      setProfiles(list);
+      setLoading(false);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const el = filtersRef.current;
+    if (!el || !compact) return;
+
+    function updateScrollHints() {
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      setFilterScroll({
+        left: el.scrollLeft > 4,
+        right: maxScroll > 4 && el.scrollLeft < maxScroll - 4,
+      });
+    }
+
+    updateScrollHints();
+    el.addEventListener("scroll", updateScrollHints, { passive: true });
+    window.addEventListener("resize", updateScrollHints);
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateScrollHints) : null;
+    resizeObserver?.observe(el);
+
+    return () => {
+      el.removeEventListener("scroll", updateScrollHints);
+      window.removeEventListener("resize", updateScrollHints);
+      resizeObserver?.disconnect();
+    };
+  }, [compact, t]);
+
+  const filteredProfiles = useMemo(() => {
+    if (!relationshipFilter) return profiles;
+    return profiles.filter(
+      (profile) => profile.relationshipDesired === relationshipFilter
+    );
+  }, [profiles, relationshipFilter]);
 
   function goTo(next) {
     setPage(next);
+    setDetailIndex(null);
     document.getElementById("members")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  const start = (page - 1) * PAGE_SIZE;
-  const cards = Array.from({ length: PAGE_SIZE }, (_, i) => (start + i) % PROFILES.length);
-  const detailProfile = detailIndex != null ? PROFILES[detailIndex % PROFILES.length] : null;
+  function selectFilter(value) {
+    setRelationshipFilter(value);
+    setPage(1);
+    setDetailIndex(null);
+  }
+
+  function scrollFilters(direction) {
+    const el = filtersRef.current;
+    if (!el) return;
+    el.scrollBy({ left: direction * Math.max(140, el.clientWidth * 0.55), behavior: "smooth" });
+  }
+
+  const totalPages = Math.max(1, Math.ceil(filteredProfiles.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const start = (safePage - 1) * PAGE_SIZE;
+  const pageProfiles = filteredProfiles.slice(start, start + PAGE_SIZE);
+  const detailProfile = detailIndex != null ? filteredProfiles[detailIndex] : null;
 
   return (
     <>
       <section id="members" className={`members ${compact ? "members--browse" : ""}`}>
         <div className="members__intro">
-            <p className="eyebrow">
-              <span className="eyebrow__ring" aria-hidden="true" />
-              {t("Private circle")}
-            </p>
-            <h2>{compact ? t("Women who want to be wanted") : t("People currently seeking a match")}</h2>
+            <div className="members__intro-row">
+              <p className="eyebrow">
+                <span className="eyebrow__ring" aria-hidden="true" />
+                {t("Private circle")}
+              </p>
+              {compact ? (
+                <>
+                  <div
+                    className={`members__filters-wrap${
+                      filterScroll.left ? " has-left" : ""
+                    }${filterScroll.right ? " has-right" : ""}`}
+                  >
+                    <button
+                      type="button"
+                      className="members__filters-arrow members__filters-arrow--left"
+                      aria-label={t("Scroll filters left")}
+                      disabled={!filterScroll.left}
+                      onClick={() => scrollFilters(-1)}
+                    >
+                      ‹
+                    </button>
+                    <div
+                      ref={filtersRef}
+                      className="members__filters"
+                      role="group"
+                      aria-label={t("Relationship desired")}
+                    >
+                      {RELATIONSHIP_FILTERS.map((filter) => (
+                        <button
+                          key={filter.label}
+                          type="button"
+                          className={`members__filter-pill${
+                            relationshipFilter === filter.value ? " is-active" : ""
+                          }`}
+                          onClick={() => selectFilter(filter.value)}
+                        >
+                          {t(filter.label)}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      className="members__filters-arrow members__filters-arrow--right"
+                      aria-label={t("Scroll filters right")}
+                      disabled={!filterScroll.right}
+                      onClick={() => scrollFilters(1)}
+                    >
+                      ›
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    className="page-back members__back"
+                    onClick={() => navigate("/men")}
+                  >
+                    ← {t("Back")}
+                  </button>
+                </>
+              ) : null}
+            </div>
+            <h2>{compact ? t("Where Meaningful Relationships Begin") : t("People currently seeking a match")}</h2>
             <p>
               {compact
-                ? t("Take your time with each one. When you feel the pull, apply to connect — we arrange the night.")
+                ? t("Take your time to find the right connection, and let us bring you together.")
                 : t("Eight profiles at a time. Take your time with each one — there's no swiping here.")}
             </p>
         </div>
 
         <div className="profile-grid">
-          {cards.map((profileIndex, i) => (
-            <ProfileCard
-              key={`${page}-${i}`}
-              profile={PROFILES[profileIndex]}
-              index={profileIndex}
-              onReadMore={() => setDetailIndex(profileIndex)}
-            />
-          ))}
+          {loading ? (
+            <p className="pending-card__body">{t("Loading…")}</p>
+          ) : pageProfiles.length === 0 ? (
+            <p className="pending-card__body">
+              {relationshipFilter
+                ? t("No profiles match this relationship type.")
+                : t("No approved profiles yet.")}
+            </p>
+          ) : (
+            pageProfiles.map((profile, i) => {
+              const absoluteIndex = start + i;
+              return (
+                <ProfileCard
+                  key={profile.slug || `${profile.name}-${absoluteIndex}`}
+                  profile={profile}
+                  index={absoluteIndex}
+                  onReadMore={() => setDetailIndex(absoluteIndex)}
+                />
+              );
+            })
+          )}
         </div>
 
-        <Pagination page={page} totalPages={PAGE_COUNT} onChange={goTo} />
+        {!loading && filteredProfiles.length > PAGE_SIZE ? (
+          <Pagination page={safePage} totalPages={totalPages} onChange={goTo} />
+        ) : null}
       </section>
 
       {compact ? null : (

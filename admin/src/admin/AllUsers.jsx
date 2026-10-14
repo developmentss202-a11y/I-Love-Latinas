@@ -7,6 +7,7 @@ import {
 } from "react";
 
 import "../styles/allusers.css";
+import "../styles/admin-theme.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||

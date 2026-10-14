@@ -9,18 +9,246 @@ import {
 import {
   Eye,
   Check,
+  Plus,
   X,
+  ChevronDown,
+  RefreshCw,
+  ClipboardList,
 } from "lucide-react";
+import { createPortal } from "react-dom";
 
 import "../styles/menapplications.css";
+import "../styles/admin-theme.css";
+import "../styles/application-detail-modal.css";
+import ProfileLinkCopy from "./ProfileLinkCopy";
 
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
   "http://localhost:5000";
 
+const PUBLIC_SITE_URL = String(
+  import.meta.env.VITE_PUBLIC_SITE_URL ||
+  "https://latinas.myaibusiness.online"
+).replace(/\/$/, "");
 
-function MenApplications() {
+const LOOKING_FOR_LABELS = {
+  "short-term": "Short Term Relationship",
+  "long-term": "Long Term Relationship",
+  dating: "Serious dating",
+  marriage: "Marriage-minded",
+  "life-partner": "Life partner",
+};
+
+const MEETING_PREFERENCE_LABELS = {
+  "hotel-beach": "Hotel at Beach",
+  "hotel-mountains": "Hotel at Mountains",
+  dinner: "Late dinner",
+  hotel: "Hotel / private suite",
+  weekend: "Weekend away",
+  open: "Open to her suggestion",
+};
+
+
+function cleanMenValue(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+}
+
+
+function getMemberNames(application) {
+  if (
+    Array.isArray(application?.memberNames) &&
+    application.memberNames.length
+  ) {
+    return application.memberNames
+      .map((name) => String(name || "").trim())
+      .filter(Boolean);
+  }
+
+  const single = String(application?.memberName || "").trim();
+  if (!single) return [];
+
+  return single
+    .split(",")
+    .map((name) => name.trim())
+    .filter(Boolean);
+}
+
+
+function getMemberNamesDisplay(application) {
+  const names = getMemberNames(application);
+  return names.length ? names.join(", ") : "-";
+}
+
+
+function getLookingForDisplay(application) {
+  const raw = String(
+    application?.lookingForLabel ||
+    application?.lookingFor ||
+    ""
+  ).trim();
+
+  if (!raw) return "-";
+  return LOOKING_FOR_LABELS[raw] || raw;
+}
+
+
+function getMeetingPreferenceDisplay(application) {
+  const raw = String(application?.nightType || "").trim();
+  if (!raw) return "-";
+  return MEETING_PREFERENCE_LABELS[raw] || raw;
+}
+
+
+function getMenProfileUrl(slug) {
+  const value = String(slug || "").trim();
+  if (!value) return "";
+  return `${PUBLIC_SITE_URL}/men-profile/${encodeURIComponent(value)}`;
+}
+
+
+function duplicateGroupKey(application) {
+  const email = cleanMenValue(application.email);
+  const mobile = cleanMenValue(application.mobile);
+
+  if (!email || !mobile) {
+    return "";
+  }
+
+  return `${email}|${mobile}`;
+}
+
+
+function sortByNewest(items) {
+  return [...items].sort((a, b) => {
+    return (
+      new Date(b.createdAt || 0) -
+      new Date(a.createdAt || 0)
+    );
+  });
+}
+
+
+function buildModelRows(items) {
+  const buckets = new Map();
+
+  items.forEach((application) => {
+    const modelKey =
+      cleanMenValue(getMemberNamesDisplay(application)) || "-";
+    const applicantName =
+      String(application.name || "").trim() || "-";
+    const bucketKey = `${applicantName}|${modelKey}`;
+
+    if (!buckets.has(bucketKey)) {
+      buckets.set(bucketKey, []);
+    }
+
+    buckets.get(bucketKey).push(application);
+  });
+
+  const models = [];
+
+  buckets.forEach((modelItems, bucketKey) => {
+    const sorted = sortByNewest(modelItems);
+
+    models.push({
+      key: bucketKey,
+      applicantName:
+        String(sorted[0].name || "").trim() || "-",
+      name: getMemberNamesDisplay(sorted[0]),
+      count: modelItems.length,
+      latestDate: sorted[0].createdAt,
+      latest: sorted[0],
+    });
+  });
+
+  models.sort((a, b) => {
+    if (b.count !== a.count) {
+      return b.count - a.count;
+    }
+
+    return (
+      new Date(b.latestDate || 0) -
+      new Date(a.latestDate || 0)
+    );
+  });
+
+  return models;
+}
+
+
+function timesLabel(count) {
+  if (count === 1) {
+    return "1 time";
+  }
+
+  return `${count} times`;
+}
+
+
+function buildDuplicateGroups(list) {
+  const buckets = new Map();
+
+  list.forEach((application) => {
+    const key = duplicateGroupKey(application);
+
+    if (!key) {
+      return;
+    }
+
+    if (!buckets.has(key)) {
+      buckets.set(key, []);
+    }
+
+    buckets.get(key).push(application);
+  });
+
+  const groups = [];
+
+  buckets.forEach((items, key) => {
+    if (items.length < 2) {
+      return;
+    }
+
+    const sorted = sortByNewest(items);
+
+    groups.push({
+      key,
+      count: items.length,
+      latest: sorted[0],
+      items: sorted,
+      models: buildModelRows(sorted),
+    });
+  });
+
+  return groups;
+}
+
+
+function isOnMenPage(status, pageStatus) {
+  const current = String(status || "pending")
+    .trim()
+    .toLowerCase();
+
+  if (pageStatus === "contacted") {
+    return current === "contacted" || current === "approved";
+  }
+
+  if (pageStatus === "duplicates") {
+    return false;
+  }
+
+  return current === "pending";
+}
+
+
+function MenApplications({
+  pageStatus = "pending",
+  title = "Men Pending",
+}) {
   const [
     applications,
     setApplications,
@@ -63,6 +291,18 @@ function MenApplications() {
     useState(null);
 
 
+  const [
+    moveConfirm,
+    setMoveConfirm,
+  ] =
+    useState({
+      open: false,
+      id: null,
+      status: null,
+      loading: false,
+    });
+
+
   /* =========================================
      FILTERS
   ========================================= */
@@ -72,13 +312,6 @@ function MenApplications() {
     setSearch,
   ] =
     useState("");
-
-
-  const [
-    statusFilter,
-    setStatusFilter,
-  ] =
-    useState("all");
 
 
   const [
@@ -104,6 +337,13 @@ function MenApplications() {
     setCurrentPage,
   ] =
     useState(1);
+
+
+  const [
+    openDuplicateKeys,
+    setOpenDuplicateKeys,
+  ] =
+    useState({});
 
 
   const itemsPerPage =
@@ -213,9 +453,20 @@ function MenApplications() {
      FILTER
   ========================================= */
 
+  const duplicateGroups =
+    useMemo(
+      () => buildDuplicateGroups(applications),
+      [applications]
+    );
+
+
   const filteredApplications =
     useMemo(
       () => {
+        if (pageStatus === "duplicates") {
+          return [];
+        }
+
         return applications.filter(
           (application) => {
             const text =
@@ -225,10 +476,18 @@ function MenApplications() {
 
             const searchable =
               [
+                getMemberNamesDisplay(application),
                 application.memberName,
+                getLookingForDisplay(application),
+                application.lookingFor,
                 application.name,
                 application.email,
                 application.mobile,
+                application.slug,
+                application.subject,
+                getMeetingPreferenceDisplay(application),
+                application.nightType,
+                application.message,
               ]
                 .map(
                   (value) =>
@@ -255,10 +514,10 @@ function MenApplications() {
                 .toLowerCase();
 
             const matchesStatus =
-              statusFilter ===
-                "all" ||
-              currentStatus ===
-                statusFilter;
+              isOnMenPage(
+                currentStatus,
+                pageStatus
+              );
 
 
             let matchesFrom =
@@ -317,7 +576,108 @@ function MenApplications() {
       [
         applications,
         search,
-        statusFilter,
+        pageStatus,
+        fromDate,
+        toDate,
+      ]
+    );
+
+
+  const filteredDuplicateGroups =
+    useMemo(
+      () => {
+        if (pageStatus !== "duplicates") {
+          return [];
+        }
+
+        return duplicateGroups.filter(
+          (group) => {
+            const application =
+              group.latest;
+
+            const text =
+              search
+                .trim()
+                .toLowerCase();
+
+            const searchable =
+              [
+                application.name,
+                application.email,
+                application.mobile,
+                ...group.models.map(
+                  (model) => model.name
+                ),
+              ]
+                .map(
+                  (value) =>
+                    String(
+                      value ||
+                      ""
+                    )
+                      .toLowerCase()
+                )
+                .join(" ");
+
+            const matchesSearch =
+              !text ||
+              searchable.includes(
+                text
+              );
+
+
+            let matchesFrom =
+              true;
+
+            if (fromDate) {
+              const from =
+                new Date(
+                  `${fromDate}T00:00:00`
+                );
+
+              matchesFrom =
+                group.items.some(
+                  (item) =>
+                    item.createdAt &&
+                    new Date(
+                      item.createdAt
+                    ) >= from
+                );
+            }
+
+
+            let matchesTo =
+              true;
+
+            if (toDate) {
+              const to =
+                new Date(
+                  `${toDate}T23:59:59`
+                );
+
+              matchesTo =
+                group.items.some(
+                  (item) =>
+                    item.createdAt &&
+                    new Date(
+                      item.createdAt
+                    ) <= to
+                );
+            }
+
+
+            return (
+              matchesSearch &&
+              matchesFrom &&
+              matchesTo
+            );
+          }
+        );
+      },
+      [
+        duplicateGroups,
+        pageStatus,
+        search,
         fromDate,
         toDate,
       ]
@@ -326,19 +686,26 @@ function MenApplications() {
 
   useEffect(() => {
     setCurrentPage(1);
+    setOpenDuplicateKeys({});
   }, [
     search,
-    statusFilter,
+    pageStatus,
     fromDate,
     toDate,
   ]);
+
+
+  const listLength =
+    pageStatus === "duplicates"
+      ? filteredDuplicateGroups.length
+      : filteredApplications.length;
 
 
   const totalPages =
     Math.max(
       1,
       Math.ceil(
-        filteredApplications.length /
+        listLength /
         itemsPerPage
       )
     );
@@ -372,9 +739,16 @@ function MenApplications() {
     );
 
 
+  const paginatedDuplicateGroups =
+    filteredDuplicateGroups.slice(
+      startIndex,
+      startIndex +
+      itemsPerPage
+    );
+
+
   function clearFilters() {
     setSearch("");
-    setStatusFilter("all");
     setFromDate("");
     setToDate("");
     setCurrentPage(1);
@@ -384,6 +758,62 @@ function MenApplications() {
   /* =========================================
      APPROVE / REJECT
   ========================================= */
+
+  function openMoveConfirm(id, status) {
+    setMoveConfirm({
+      open: true,
+      id,
+      status,
+      loading: false,
+    });
+  }
+
+
+  function closeMoveConfirm() {
+    if (moveConfirm.loading) {
+      return;
+    }
+
+    setMoveConfirm({
+      open: false,
+      id: null,
+      status: null,
+      loading: false,
+    });
+  }
+
+
+  async function confirmMoveStatus() {
+    if (!moveConfirm.id || !moveConfirm.status) {
+      return;
+    }
+
+    setMoveConfirm((prev) => ({
+      ...prev,
+      loading: true,
+    }));
+
+    const ok = await updateStatus(
+      moveConfirm.id,
+      moveConfirm.status
+    );
+
+    if (ok) {
+      setMoveConfirm({
+        open: false,
+        id: null,
+        status: null,
+        loading: false,
+      });
+      return;
+    }
+
+    setMoveConfirm((prev) => ({
+      ...prev,
+      loading: false,
+    }));
+  }
+
 
   async function updateStatus(
     id,
@@ -408,7 +838,7 @@ function MenApplications() {
         if (
           enteredReason === null
         ) {
-          return;
+          return false;
         }
 
         reason =
@@ -418,7 +848,7 @@ function MenApplications() {
           setError(
             "Please enter rejection reason"
           );
-          return;
+          return false;
         }
       }
 
@@ -478,7 +908,7 @@ function MenApplications() {
         window.location.href =
           "/#/admin/login";
 
-        return;
+        return false;
       }
 
 
@@ -491,10 +921,10 @@ function MenApplications() {
 
 
       if (
-        status === "approved"
+        status === "contacted"
       ) {
         setActionMessage(
-          "Application approved successfully"
+          "Application moved to Contacted"
         );
 
         setActionMessageType(
@@ -504,10 +934,23 @@ function MenApplications() {
 
 
       if (
-        status === "rejected"
+        status === "pending"
       ) {
         setActionMessage(
-          "Application rejected successfully"
+          "Application moved to Pending"
+        );
+
+        setActionMessageType(
+          "approved"
+        );
+      }
+
+
+      if (
+        status === "duplicate"
+      ) {
+        setActionMessage(
+          "Application moved to Duplicates"
         );
 
         setActionMessageType(
@@ -543,6 +986,8 @@ function MenApplications() {
       await loadApplications(
         false
       );
+
+      return true;
     } catch (
       statusError
     ) {
@@ -550,6 +995,7 @@ function MenApplications() {
         statusError.message ||
         "Unable to update application"
       );
+      return false;
     }
   }
 
@@ -606,6 +1052,229 @@ function MenApplications() {
 
 
 
+  function toggleDuplicate(key) {
+    setOpenDuplicateKeys((current) => {
+      const next = {
+        ...current,
+      };
+
+      if (next[key]) {
+        delete next[key];
+      } else {
+        next[key] = true;
+      }
+
+      return next;
+    });
+  }
+
+
+  function renderDuplicateList() {
+    if (paginatedDuplicateGroups.length === 0) {
+      return (
+        <div className="men-empty-row men-duplicate-empty">
+          No duplicate applications found
+        </div>
+      );
+    }
+
+    return paginatedDuplicateGroups.map(
+      (group, index) => {
+        const application = group.latest;
+        const isOpen = Boolean(openDuplicateKeys[group.key]);
+
+        return (
+          <div
+            key={group.key}
+            className={
+              isOpen
+                ? "men-duplicate-item open"
+                : "men-duplicate-item"
+            }
+          >
+            <button
+              type="button"
+              className="men-duplicate-header"
+              aria-expanded={isOpen}
+              onClick={() => toggleDuplicate(group.key)}
+            >
+              <span className="men-duplicate-sno">
+                {startIndex + index + 1}
+              </span>
+
+              <span
+                className="men-duplicate-mobile"
+                title={application.mobile || ""}
+              >
+                {application.mobile || "-"}
+              </span>
+
+              <span
+                className="men-duplicate-email"
+                title={application.email || ""}
+              >
+                {application.email || "-"}
+              </span>
+
+              <span className="men-duplicate-summary">
+                {group.models.length} models
+              </span>
+
+              <ChevronDown
+                size={16}
+                className="men-duplicate-chevron"
+              />
+            </button>
+
+            {isOpen ? (
+              <div className="men-duplicate-panel">
+                <div className="men-duplicate-models-head">
+                  <span>Name</span>
+                  <span>Model Name</span>
+                  <span>Count</span>
+                  <span>Date Added</span>
+                  <span>Action</span>
+                </div>
+
+                {group.models.map((model) => (
+                  <div
+                    key={model.key}
+                    className="men-duplicate-model-row"
+                  >
+                    <span
+                      className="men-duplicate-applicant-name"
+                      title={model.applicantName}
+                    >
+                      {model.applicantName}
+                    </span>
+
+                    <span
+                      className="men-duplicate-model-name"
+                      title={model.name}
+                    >
+                      {model.name}
+                    </span>
+
+                    <span className="men-duplicate-model-count">
+                      {timesLabel(model.count)}
+                    </span>
+
+                    <span
+                      className="men-duplicate-model-date"
+                      title={formatDate(model.latestDate)}
+                    >
+                      {formatShortDate(model.latestDate)}
+                    </span>
+
+                    <span className="men-duplicate-model-action">
+                      <button
+                        type="button"
+                        className="men-view-btn"
+                        title="View full information"
+                        aria-label="View full information"
+                        onClick={() =>
+                          setSelectedApplication(model.latest)
+                        }
+                      >
+                        <Eye size={14} />
+                        <span>View</span>
+                      </button>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        );
+      }
+    );
+  }
+
+
+  function renderTableRows() {
+    if (paginatedApplications.length === 0) {
+      return (
+        <tr>
+          <td
+            colSpan="8"
+            className="men-empty-row"
+          >
+            No Men applications found
+          </td>
+        </tr>
+      );
+    }
+
+    return paginatedApplications.map(
+      (application, index) => {
+        const membersDisplay =
+          getMemberNamesDisplay(application);
+        const lookingForDisplay =
+          getLookingForDisplay(application);
+
+        return (
+          <tr key={application._id}>
+            <td>
+              {startIndex + index + 1}
+            </td>
+
+            <td title={lookingForDisplay}>
+              {lookingForDisplay}
+            </td>
+
+            <td title={membersDisplay}>
+              {membersDisplay}
+            </td>
+
+            <td title={application.name || ""}>
+              {application.name || "-"}
+            </td>
+
+            <td title={application.mobile || ""}>
+              {application.mobile || "-"}
+            </td>
+
+            <td title={application.email || ""}>
+              {application.email || "-"}
+            </td>
+
+            <td
+              className="men-date-cell"
+              title={formatDate(application.createdAt)}
+            >
+              {formatShortDate(application.createdAt)}
+            </td>
+
+            <td className="men-action-col">
+              <div className="men-action-buttons">
+                <button
+                  type="button"
+                  className="men-view-btn"
+                  title="View full information"
+                  aria-label="View full information"
+                  onClick={() =>
+                    setSelectedApplication(application)
+                  }
+                >
+                  <Eye size={16} />
+                  <span>View</span>
+                </button>
+
+                <MenMoveButton
+                  pageStatus={pageStatus}
+                  applicationId={application._id}
+                  onMove={openMoveConfirm}
+                  variant="table"
+                />
+              </div>
+            </td>
+          </tr>
+        );
+      }
+    );
+  }
+
+
   if (loading) {
     return (
       <section
@@ -613,7 +1282,7 @@ function MenApplications() {
       >
         <div className="men-page-heading">
           <h1>
-            Men Applications
+            {title}
           </h1>
 
           <div className="men-heading-actions">
@@ -623,6 +1292,7 @@ function MenApplications() {
               onClick={() => loadApplications(true)}
               disabled={loading}
             >
+              <RefreshCw size={14} />
               Refresh to see the new entries
             </button>
           </div>
@@ -647,7 +1317,7 @@ function MenApplications() {
       <div className="men-page-heading">
 
         <h1>
-          Men Applications
+          {title}
         </h1>
 
         <div className="men-heading-actions">
@@ -657,12 +1327,13 @@ function MenApplications() {
             onClick={() => loadApplications(true)}
             disabled={loading}
           >
+            <RefreshCw size={14} />
             Refresh to see the new entries
           </button>
 
           <div className="men-count-pill">
             {
-              filteredApplications.length
+              listLength
             }
             {" "}of{" "}
             {
@@ -696,41 +1367,6 @@ function MenApplications() {
                 )
             }
           />
-        </div>
-
-
-        <div className="men-filter-field">
-          <label>
-            Status
-          </label>
-
-          <select
-            value={
-              statusFilter
-            }
-            onChange={
-              (event) =>
-                setStatusFilter(
-                  event.target.value
-                )
-            }
-          >
-            <option value="all">
-              All Status
-            </option>
-
-            <option value="pending">
-              Pending
-            </option>
-
-            <option value="approved">
-              Approved
-            </option>
-
-            <option value="rejected">
-              Rejected
-            </option>
-          </select>
         </div>
 
 
@@ -821,265 +1457,74 @@ function MenApplications() {
 
       <div className="admin-data-card">
 
-        <div className="men-table-scroll">
+        {pageStatus === "duplicates" ? (
+          <div className="men-duplicate-list">
+            <div className="men-duplicate-list-head">
+              <span>#</span>
+              <span>Mobile</span>
+              <span>Email</span>
+              <span>Models</span>
+              <span></span>
+            </div>
 
-          <table className="admin-table">
+            {renderDuplicateList()}
+          </div>
+        ) : (
+          <div className="men-table-scroll">
 
-            <thead>
-              <tr>
-                <th>
-                  S.No.
-                </th>
+            <table className="admin-table">
 
-                <th>
-                  She Is
-                </th>
+              <thead>
+                <tr>
+                  <th>
+                    S.No.
+                  </th>
 
-                <th>
-                  Name
-                </th>
+                  <th>
+                    Looking For
+                  </th>
 
-                <th>
-                  Mobile
-                </th>
+                  <th>
+                    She Is
+                  </th>
 
-                <th>
-                  Email
-                </th>
+                  <th>
+                    Name
+                  </th>
 
-                <th>
-                  Date
-                </th>
+                  <th>
+                    Mobile
+                  </th>
 
-                <th>
-                  Status
-                </th>
+                  <th>
+                    Email
+                  </th>
 
-                <th>
-                  Action
-                </th>
-              </tr>
-            </thead>
+                  <th>
+                    Date
+                  </th>
 
-
-            <tbody>
-
-              {
-                paginatedApplications.length ===
-                0
-                  ? (
-
-                  <tr>
-                    <td
-                      colSpan="8"
-                      className="men-empty-row"
-                    >
-                      No Men applications found
-                    </td>
-                  </tr>
-
-                ) : (
-
-                  paginatedApplications.map(
-                    (
-                      application,
-                      index
-                    ) => {
-                      const status =
-                        String(
-                          application.status ||
-                          "pending"
-                        )
-                          .trim()
-                          .toLowerCase();
-
-                      return (
-                        <tr
-                          key={
-                            application._id
-                          }
-                        >
-
-                          <td>
-                            {
-                              startIndex +
-                              index +
-                              1
-                            }
-                          </td>
+                  <th className="men-action-col">
+                    <span className="men-action-heading">Action</span>
+                  </th>
+                </tr>
+              </thead>
 
 
-                          <td
-                            title={
-                              application.memberName ||
-                              ""
-                            }
-                          >
-                            {
-                              application.memberName ||
-                              "-"
-                            }
-                          </td>
+              <tbody>
+                {renderTableRows()}
+              </tbody>
 
+            </table>
 
-                          <td
-                            title={
-                              application.name ||
-                              ""
-                            }
-                          >
-                            {
-                              application.name ||
-                              "-"
-                            }
-                          </td>
-
-
-                          <td
-                            title={
-                              application.mobile ||
-                              ""
-                            }
-                          >
-                            {
-                              application.mobile ||
-                              "-"
-                            }
-                          </td>
-
-
-                          <td
-                            title={
-                              application.email ||
-                              ""
-                            }
-                          >
-                            {
-                              application.email ||
-                              "-"
-                            }
-                          </td>
-
-
-                          <td
-                            className="men-date-cell"
-                            title={
-                              formatDate(
-                                application.createdAt
-                              )
-                            }
-                          >
-                            {
-                              formatShortDate(
-                                application.createdAt
-                              )
-                            }
-                          </td>
-
-
-                          <td>
-                            <span
-                              className={
-                                `status-badge ${status}`
-                              }
-                            >
-                              {
-                                status
-                              }
-                            </span>
-                          </td>
-
-
-                          <td>
-                            <div className="men-action-buttons">
-
-                              <button
-                                type="button"
-                                className="men-view-btn"
-                                title="View full information"
-                                aria-label="View full information"
-                                onClick={
-                                  () =>
-                                    setSelectedApplication(
-                                      application
-                                    )
-                                }
-                              >
-                                <Eye
-                                  size={14}
-                                />
-                                <span>View</span>
-                              </button>
-
-
-                              <button
-                                type="button"
-                                className="men-approve-btn"
-                                title="Approve"
-                                aria-label="Approve"
-                                disabled={
-                                  status !==
-                                  "pending"
-                                }
-                                onClick={
-                                  () =>
-                                    updateStatus(
-                                      application._id,
-                                      "approved"
-                                    )
-                                }
-                              >
-                                <Check
-                                  size={14}
-                                />
-                                <span>Approve</span>
-                              </button>
-
-
-                              <button
-                                type="button"
-                                className="men-reject-btn"
-                                title="Reject"
-                                aria-label="Reject"
-                                disabled={
-                                  status !==
-                                  "pending"
-                                }
-                                onClick={
-                                  () =>
-                                    updateStatus(
-                                      application._id,
-                                      "rejected"
-                                    )
-                                }
-                              >
-                                <X
-                                  size={14}
-                                />
-                                <span>Reject</span>
-                              </button>
-
-                            </div>
-                          </td>
-
-                        </tr>
-                      );
-                    }
-                  )
-                )
-              }
-
-            </tbody>
-
-          </table>
-
-        </div>
+          </div>
+        )}
 
 
         {/* PAGINATION */}
 
         {
-          filteredApplications.length >
+          listLength >
             itemsPerPage && (
 
             <div className="men-pagination">
@@ -1180,222 +1625,220 @@ function MenApplications() {
 
       {/* VIEW MODAL */}
 
-      {
-        selectedApplication && (
-
+      {moveConfirm.open &&
+        createPortal(
           <div
-            className="men-view-overlay"
-            onClick={
-              () =>
-                setSelectedApplication(
-                  null
-                )
-            }
+            className="confirm-action-overlay men-confirm-overlay"
+            onClick={closeMoveConfirm}
           >
-
             <div
-              className="men-view-modal"
-              onClick={
-                (event) =>
-                  event.stopPropagation()
-              }
+              className="confirm-action-modal"
+              onClick={(event) => event.stopPropagation()}
             >
+              <button
+                type="button"
+                className="confirm-action-close"
+                onClick={closeMoveConfirm}
+                disabled={moveConfirm.loading}
+              >
+                ×
+              </button>
 
-              <div className="men-view-header">
+              <div className="confirm-action-icon approve">
+                {moveConfirm.status === "contacted" ? "+" : "✓"}
+              </div>
 
-                <div>
-                  <span className="men-view-kicker">
-                    Full Information
-                  </span>
+              <h2>
+                {moveConfirm.status === "contacted"
+                  ? "Add to Contacted?"
+                  : "Add to Pending?"}
+              </h2>
 
-                  <h2>
-                    Men Application Details
-                  </h2>
-                </div>
+              <p>
+                Are you sure you want to{" "}
+                <strong>
+                  {moveConfirm.status === "contacted"
+                    ? "add this application to Contacted"
+                    : "move this application back to Pending"}
+                </strong>
+                ?
+              </p>
 
+              <div className="confirm-action-buttons">
+                <button
+                  type="button"
+                  className="confirm-cancel-btn"
+                  onClick={closeMoveConfirm}
+                  disabled={moveConfirm.loading}
+                >
+                  Cancel
+                </button>
 
                 <button
                   type="button"
+                  className="confirm-approve-btn"
+                  onClick={confirmMoveStatus}
+                  disabled={moveConfirm.loading}
+                >
+                  {moveConfirm.loading
+                    ? "Please wait..."
+                    : moveConfirm.status === "contacted"
+                      ? "+ Add to Contacted"
+                      : "✓ Add to Pending"}
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
+
+
+      {
+        selectedApplication && createPortal(
+          <div
+            className="modal-overlay men-view-overlay"
+            onClick={() => setSelectedApplication(null)}
+          >
+            <div
+              className="modal men-view-modal"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="modal-head men-view-header">
+                <div>
+                  <h2>Full Information</h2>
+                  <p>
+                    {selectedApplication.name ||
+                      selectedApplication.subject ||
+                      "Men Application Details"}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="modal-close"
                   title="Close"
                   aria-label="Close"
-                  onClick={
-                    () =>
-                      setSelectedApplication(
-                        null
-                      )
-                  }
+                  onClick={() => setSelectedApplication(null)}
                 >
-                  <X
-                    size={18}
-                  />
+                  <X size={18} />
                 </button>
-
               </div>
 
-
-              <div className="men-view-grid">
-
-                <Detail
-                  label="She Is"
-                  value={
-                    selectedApplication
-                      .memberName
-                  }
-                />
-
-                <Detail
-                  label="Name"
-                  value={
-                    selectedApplication
-                      .name
-                  }
-                />
-
-                <Detail
-                  label="Mobile"
-                  value={
-                    selectedApplication
-                      .mobile
-                  }
-                />
-
-                <Detail
-                  label="Email"
-                  value={
-                    selectedApplication
-                      .email
-                  }
-                />
-
-                <Detail
-                  label="When"
-                  value={
-                    formatDate(
-                      selectedApplication
-                        .meetingDate
-                    )
-                  }
-                />
-
-                <Detail
-                  label="The Night"
-                  value={
-                    selectedApplication
-                      .nightType
-                  }
-                />
-
-                <Detail
-                  label="Subject"
-                  value={
-                    selectedApplication
-                      .subject
-                  }
-                />
-
-                <Detail
-                  label="What You Want"
-                  value={
-                    selectedApplication
-                      .message
-                  }
-                  full
-                />
-
-                <Detail
-                  label="Status"
-                  value={
-                    selectedApplication
-                      .status ||
-                    "pending"
-                  }
-                />
-
-                <Detail
-                  label="Submitted Date"
-                  value={
-                    formatDate(
-                      selectedApplication
-                        .createdAt
-                    )
-                  }
-                />
-
-                {
-                  selectedApplication
-                    .rejectReason && (
-
-                    <Detail
-                      label="Reject Reason"
-                      value={
-                        selectedApplication
-                          .rejectReason
-                      }
-                      full
-                    />
-
-                  )
-                }
-
-              </div>
-
-
-              {
-                String(
-                  selectedApplication.status ||
-                  "pending"
-                )
-                  .toLowerCase() ===
-                  "pending" && (
-
-                  <div className="men-modal-actions">
-
-                    <button
-                      type="button"
-                      className="men-modal-approve"
-                      onClick={
-                        () =>
-                          updateStatus(
-                            selectedApplication._id,
-                            "approved"
-                          )
-                      }
-                    >
-                      <Check
-                        size={15}
+              <div className="modal-body application-view-body">
+                <div className="modal-section">
+                  <div className="detail-card">
+                    <div className="detail-card-head">
+                      <div className="sec-icon">
+                        <ClipboardList size={16} />
+                      </div>
+                      <h4>Contact & Booking Details</h4>
+                    </div>
+                    <div className="detail-list">
+                      <Detail
+                        label="Looking For"
+                        value={getLookingForDisplay(selectedApplication)}
                       />
-
-                      Approve
-                    </button>
-
-
-                    <button
-                      type="button"
-                      className="men-modal-reject"
-                      onClick={
-                        () =>
-                          updateStatus(
-                            selectedApplication._id,
-                            "rejected"
-                          )
-                      }
-                    >
-                      <X
-                        size={15}
+                      <Detail
+                        label="She Is"
+                        value={
+                          <div className="men-member-chips">
+                            {getMemberNames(selectedApplication).length
+                              ? getMemberNames(selectedApplication).map(
+                                  (name) => (
+                                    <span
+                                      key={name}
+                                      className="men-member-chip"
+                                    >
+                                      {name}
+                                    </span>
+                                  )
+                                )
+                              : "-"}
+                          </div>
+                        }
                       />
-
-                      Reject
-                    </button>
-
+                      <Detail
+                        label="Meeting Preference"
+                        value={getMeetingPreferenceDisplay(
+                          selectedApplication
+                        )}
+                      />
+                      <Detail
+                        label="Place Name"
+                        value={selectedApplication.hotelName || "Ecuador"}
+                      />
+                      <Detail
+                        label="Desired meeting date & time"
+                        value={formatDate(selectedApplication.meetingDate)}
+                      />
+                      <Detail
+                        label="Name"
+                        value={selectedApplication.name}
+                      />
+                      <Detail
+                        label="Mobile"
+                        value={selectedApplication.mobile}
+                      />
+                      <Detail
+                        label="Email"
+                        value={selectedApplication.email}
+                      />
+                      <Detail
+                        label="Subject"
+                        value={selectedApplication.subject}
+                        full
+                      />
+                      <Detail
+                        label="What You Want"
+                        value={selectedApplication.message}
+                        full
+                      />
+                      <Detail
+                        label="Profile Slug"
+                        value={selectedApplication.slug || "-"}
+                      />
+                      <Detail
+                        label="Profile Link"
+                        value={
+                          <ProfileLinkCopy
+                            url={getMenProfileUrl(selectedApplication.slug)}
+                          />
+                        }
+                        full
+                      />
+                      <Detail
+                        label="Status"
+                        value={selectedApplication.status}
+                      />
+                      <Detail
+                        label="Submitted Date"
+                        value={formatDate(selectedApplication.createdAt)}
+                      />
+                    </div>
                   </div>
+                </div>
+              </div>
 
-                )
-              }
-
+              <div className="modal-foot men-modal-actions">
+                {pageStatus === "duplicates" ? null : (
+                  <MenMoveButton
+                    pageStatus={pageStatus}
+                    applicationId={selectedApplication._id}
+                    onMove={openMoveConfirm}
+                    variant="modal"
+                  />
+                )}
+                <button
+                  type="button"
+                  className="modal-close-btn"
+                  onClick={() => setSelectedApplication(null)}
+                >
+                  Close
+                </button>
+              </div>
             </div>
-
-          </div>
-
+          </div>,
+          document.body
         )
       }
 
@@ -1404,31 +1847,79 @@ function MenApplications() {
 }
 
 
+function MenMoveButton({
+  pageStatus,
+  applicationId,
+  onMove,
+  variant,
+}) {
+  const className =
+    variant === "modal"
+      ? "men-modal-approve"
+      : "men-contact-btn";
+
+  const iconSize =
+    variant === "modal" ? 17 : 16;
+
+  if (pageStatus === "pending") {
+    return (
+      <button
+        type="button"
+        className={className}
+        title="Add to Contacted"
+        aria-label="Add to Contacted"
+        onClick={() => onMove(applicationId, "contacted")}
+      >
+        <Plus size={iconSize} />
+        <span>Add to Contacted</span>
+      </button>
+    );
+  }
+
+  if (pageStatus === "contacted") {
+    return (
+      <button
+        type="button"
+        className={className}
+        title="Add to Pending"
+        aria-label="Add to Pending"
+        onClick={() => onMove(applicationId, "pending")}
+      >
+        <Check size={iconSize} />
+        <span>Add to Pending</span>
+      </button>
+    );
+  }
+
+  return null;
+}
+
+
 function Detail({
   label,
   value,
   full = false,
 }) {
-  return (
-    <div
-      className={
-        `men-detail-item ${
-          full
-            ? "men-detail-item--full"
-            : ""
-        }`
-      }
-    >
-      <span>
-        {label}
-      </span>
+  const display =
+    value === 0
+      ? "0"
+      : value == null || value === ""
+        ? "-"
+        : value;
 
-      <strong>
-        {
-          value ||
-          "-"
-        }
-      </strong>
+  if (full) {
+    return (
+      <div className="text-row men-detail-item men-detail-item--full">
+        <span className="detail-label">{label}</span>
+        <span className="detail-value">{display}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="detail-row men-detail-item">
+      <span className="detail-label">{label}</span>
+      <span className="detail-value">{display}</span>
     </div>
   );
 }

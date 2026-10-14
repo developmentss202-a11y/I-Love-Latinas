@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 
 import "../styles/adminforgotpassword.css";
+import "../styles/admin-theme.css";
 
 
 function AdminForgotPassword() {

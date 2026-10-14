@@ -13,15 +13,88 @@ import {
 } from "react-router-dom";
 
 import {
-  PROFILES,
+  fetchApprovedProfiles,
 } from "./ProfileCard";
 
+import { useLanguage } from "../language";
+import {
+  manProfilePath,
+  storeManSlug,
+} from "../profileLink";
+import MeetingDateTimeField from "./MeetingDateTimeField";
 
-const API_BASE =
-  (
-    import.meta.env.VITE_API_URL ||
-    "http://localhost:5000"
-  ).replace(/\/$/, "");
+
+const LIVE_API =
+  "https://node.latina.myaibusiness.online";
+
+const API_BASE = (() => {
+  const fromEnv =
+    String(
+      import.meta.env.VITE_API_URL ||
+      ""
+    ).trim();
+
+  if (
+    !fromEnv ||
+    /localhost/i.test(
+      fromEnv
+    )
+  ) {
+    return LIVE_API;
+  }
+
+  return fromEnv.replace(
+    /\/$/,
+    ""
+  );
+})();
+
+
+const LOOKING_FOR_OPTIONS = [
+  { value: "short-term", label: "Short Term Relationship" },
+  { value: "long-term", label: "Long Term Relationship" },
+];
+
+const MEETING_PREFERENCE_OPTIONS = [
+  { value: "hotel-beach", label: "Hotel at Beach" },
+  { value: "hotel-mountains", label: "Hotel at Mountains" },
+];
+
+const HOTEL_NAME = "Ecuador";
+
+const LONG_TERM_MEMBER_COUNT = 3;
+
+const PROCESS_STEPS = [
+  "Submit your introduction request with who you want to meet.",
+  "Our team reaches out based on your selections.",
+  "Meetings are arranged at our hotel for people seeking a real relationship.",
+];
+
+function lookingForLabel(value) {
+  return (
+    LOOKING_FOR_OPTIONS.find((option) => option.value === value)?.label || ""
+  );
+}
+
+function formatNameList(names) {
+  const list = names.filter(Boolean);
+  if (!list.length) return "";
+  if (list.length === 1) return list[0];
+  if (list.length === 2) return `${list[0]} and ${list[1]}`;
+  return `${list.slice(0, -1).join(", ")}, and ${list[list.length - 1]}`;
+}
+
+function buildMenSubject(lookingFor, names, translate) {
+  const nameList = formatNameList(names);
+  if (!nameList) return "";
+
+  const preference = lookingForLabel(lookingFor);
+  if (preference) {
+    return `${translate(preference)} with ${nameList}`;
+  }
+
+  return `${translate("Introduction")} with ${nameList}`;
+}
 
 
 /* =========================================
@@ -81,29 +154,8 @@ function memberLabel(item) {
 
 /* =========================================
    LOAD WOMEN / MEMBER NAMES
-
-   Remark:
-   Profile names will later come from the backend API
-   (GET /api/profiles or /api/members). Wire that fetch
-   back in once the endpoint is ready.
-
-   For now the API is not returning model names yet, so
-   the Contact dropdown uses the local PROFILES list.
-   That way opening Contact directly (Men → Contact)
-   still lists every profile, not only the name passed
-   through Connect (?member=).
+   Approved profiles from live API only.
 ========================================= */
-
-function localProfileNames() {
-  return [
-    ...new Set(
-      PROFILES
-        .map(memberLabel)
-        .filter(Boolean)
-    ),
-  ];
-}
-
 
 function withLockedName(
   list,
@@ -126,12 +178,16 @@ function withLockedName(
 
 
 async function fetchMemberNames() {
-  // TODO: Replace this with the backend profiles API.
-  // Example:
-  // const response = await fetch(`${API_BASE}/api/profiles`);
-  // const data = await response.json();
-  // return unique names from data.profiles / data.members
-  return localProfileNames();
+  const profiles =
+    await fetchApprovedProfiles();
+
+  return [
+    ...new Set(
+      profiles
+        .map(memberLabel)
+        .filter(Boolean)
+    ),
+  ];
 }
 
 
@@ -140,6 +196,8 @@ async function fetchMemberNames() {
 ========================================= */
 
 export default function ContactPage() {
+  const { t } = useLanguage();
+
   const [
     params,
   ] =
@@ -163,7 +221,7 @@ export default function ContactPage() {
     useState(
       () =>
         withLockedName(
-          localProfileNames(),
+          [],
           lockedName
         )
     );
@@ -176,6 +234,29 @@ export default function ContactPage() {
     useState(
       lockedName
     );
+
+
+  const [
+    lookingFor,
+    setLookingFor,
+  ] =
+    useState("");
+
+
+  const [
+    selectedNames,
+    setSelectedNames,
+  ] =
+    useState(
+      () =>
+        lockedName
+          ? [lockedName]
+          : []
+    );
+
+
+  const isLongTerm =
+    lookingFor === "long-term";
 
 
   const [
@@ -229,16 +310,98 @@ export default function ContactPage() {
       lockedName
     );
 
+    setSelectedNames(
+      lockedName
+        ? [lockedName]
+        : []
+    );
+
     setError("");
     setFieldErrors({});
   }, [lockedName]);
 
 
-  /* =========================================
-     LOAD PROFILE NAMES
+  function syncSelectedNames(
+    nextNames
+  ) {
+    const unique = [
+      ...new Set(
+        nextNames.filter(Boolean)
+      ),
+    ];
 
-     Uses local PROFILES for now.
-     Swap fetchMemberNames to the backend API later.
+    setSelectedNames(unique);
+    setSelectedName(unique[0] || "");
+  }
+
+
+  function handleLookingForChange(
+    value
+  ) {
+    setLookingFor(value);
+    clearFieldError("lookingFor");
+
+    if (value === "long-term") {
+      syncSelectedNames(
+        lockedName
+          ? [lockedName]
+          : selectedNames.slice(0, LONG_TERM_MEMBER_COUNT)
+      );
+      return;
+    }
+
+    const keep =
+      lockedName ||
+      selectedNames[0] ||
+      selectedName ||
+      "";
+
+    syncSelectedNames(
+      keep ? [keep] : []
+    );
+  }
+
+
+  function toggleMemberName(
+    name
+  ) {
+    if (
+      lockedName &&
+      name === lockedName
+    ) {
+      return;
+    }
+
+    const exists =
+      selectedNames.includes(name);
+
+    if (exists) {
+      syncSelectedNames(
+        selectedNames.filter(
+          (item) => item !== name
+        )
+      );
+      clearFieldError("member");
+      return;
+    }
+
+    if (
+      selectedNames.length >=
+      LONG_TERM_MEMBER_COUNT
+    ) {
+      return;
+    }
+
+    syncSelectedNames([
+      ...selectedNames,
+      name,
+    ]);
+    clearFieldError("member");
+  }
+
+
+  /* =========================================
+     LOAD PROFILE NAMES (approved only, live API)
   ========================================= */
 
   useEffect(() => {
@@ -368,9 +531,25 @@ export default function ContactPage() {
     const nextErrors = {};
 
 
+    /* LOOKING FOR */
+
+    if (!lookingFor) {
+      nextErrors.lookingFor =
+        "Please select what you are looking for.";
+    }
+
+
     /* SHE IS */
 
-    if (!selectedName) {
+    if (isLongTerm) {
+      if (
+        selectedNames.length !==
+        LONG_TERM_MEMBER_COUNT
+      ) {
+        nextErrors.member =
+          `Please select exactly ${LONG_TERM_MEMBER_COUNT} profiles for long-term relationship.`;
+      }
+    } else if (!selectedName) {
       nextErrors.member =
         "Please select a profile.";
     }
@@ -414,20 +593,9 @@ export default function ContactPage() {
     if (!mobile) {
       nextErrors.mobile =
         "Please enter your mobile number.";
-    } else {
-      const digits =
-        mobile.replace(
-          /\D/g,
-          ""
-        );
-
-      if (
-        digits.length < 7 ||
-        digits.length > 15
-      ) {
-        nextErrors.mobile =
-          "Please enter a valid mobile number.";
-      }
+    } else if (!/^\d{10}$/.test(mobile)) {
+      nextErrors.mobile =
+        "Please enter a 10 digit mobile number.";
     }
 
 
@@ -479,6 +647,7 @@ export default function ContactPage() {
         Browser validation popup use nahi hota.
       */
       const order = [
+        "lookingFor",
         "member",
         "name",
         "email",
@@ -498,17 +667,23 @@ export default function ContactPage() {
         const targetName =
           firstError;
 
-        const target =
-          form.elements[
-            targetName
-          ];
+        if (firstError === "datetime") {
+          document
+            .getElementById("meeting-datetime-trigger")
+            ?.focus();
+        } else {
+          const target =
+            form.elements[
+              targetName
+            ];
 
-        if (
-          target &&
-          typeof target.focus ===
-            "function"
-        ) {
-          target.focus();
+          if (
+            target &&
+            typeof target.focus ===
+              "function"
+          ) {
+            target.focus();
+          }
         }
       }
 
@@ -518,7 +693,16 @@ export default function ContactPage() {
 
     return {
       memberName:
-        selectedName,
+        isLongTerm
+          ? selectedNames.join(", ")
+          : selectedName,
+
+      memberNames:
+        isLongTerm
+          ? selectedNames
+          : selectedName
+            ? [selectedName]
+            : [],
 
       name,
 
@@ -529,6 +713,10 @@ export default function ContactPage() {
       meetingDate,
 
       nightType,
+
+      hotelName: HOTEL_NAME,
+
+      lookingFor,
 
       subject,
 
@@ -612,6 +800,19 @@ export default function ContactPage() {
       }
 
 
+      const nextSlug =
+        data.slug ||
+        data.application?.slug ||
+        "";
+
+      if (nextSlug) {
+        storeManSlug(nextSlug);
+        navigate(
+          `${manProfilePath(nextSlug)}?submitted=1`
+        );
+        return;
+      }
+
       setApplicationId(
         String(
           data.applicationId
@@ -652,9 +853,16 @@ export default function ContactPage() {
     setApplicationId("");
     setError("");
     setFieldErrors({});
+    setLookingFor("");
 
     setSelectedName(
       lockedName
+    );
+
+    setSelectedNames(
+      lockedName
+        ? [lockedName]
+        : []
     );
   }
 
@@ -691,27 +899,40 @@ export default function ContactPage() {
 
           <div className="contact-hero__copy">
 
-            <p className="gender-kicker">
-              Private introduction
-            </p>
+            <div className="contact-hero__top">
+              <p className="gender-kicker">
+                {t("Ready for something real?")}
+              </p>
+
+              <button
+                type="button"
+                className="page-back"
+                onClick={() => navigate("/profiles")}
+              >
+                ← {t("Back")}
+              </button>
+            </div>
 
 
             <h1>
-              {
-                selectedName
-                  ? `Ask for a night with ${selectedName}`
-                  : "Ask for a private night"
-              }
+              {t("Meet someone who's looking for a serious relationship")}
             </h1>
 
 
             <p className="page__lead">
-              {
-                selectedName
-                  ? `Tell us how you want to meet ${selectedName} — a late dinner, a hotel bar, a weekend away. We arrange the introduction discreetly.`
-                  : "Choose who you want to meet, then tell us how you prefer the night to go. We arrange the introduction discreetly."
-              }
+              {t("Choose someone who interests you, and take the first step toward getting to know each other.")}
             </p>
+
+            <div className="men-process">
+              <h2>{t("How it works")}</h2>
+              <ol className="men-process__steps">
+                {PROCESS_STEPS.map((step) => (
+                  <li key={step}>
+                    <span>{t(step)}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
 
           </div>
 
@@ -804,115 +1025,131 @@ export default function ContactPage() {
                 }
 
 
-                {/* SHE IS */}
+                {/* WHAT YOU ARE LOOKING FOR */}
 
                 <label>
-                  She is
+                  {t("What you are looking for")}
 
                   <select
-                    name="member"
-
+                    name="lookingFor"
+                    value={lookingFor}
                     aria-required="true"
-
-                    aria-invalid={
-                      Boolean(
-                        fieldErrors.member
-                      )
-                    }
-
+                    aria-invalid={Boolean(fieldErrors.lookingFor)}
                     style={
-                      fieldErrors.member
+                      fieldErrors.lookingFor
                         ? INVALID_FIELD_STYLE
                         : undefined
                     }
-
-                    disabled={
-                      Boolean(
-                        lockedName
-                      )
-                    }
-
-                    value={
-                      selectedName
-                    }
-
-                    onChange={
-                      (event) => {
-                        setSelectedName(
-                          event
-                            .target
-                            .value
-                        );
-
-                        clearFieldError(
-                          "member"
-                        );
-                      }
-                    }
+                    onChange={(event) => {
+                      handleLookingForChange(event.target.value);
+                    }}
                   >
-
-                    <option
-                      value=""
-                      disabled
-                    >
-                      Select a profile
+                    <option value="" disabled>
+                      {t("Select")}
                     </option>
-
-
-                    {
-                      names.map(
-                        (name) => (
-
-                          <option
-                            key={
-                              name
-                            }
-
-                            value={
-                              name
-                            }
-                          >
-                            {name}
-                          </option>
-
-                        )
-                      )
-                    }
-
+                    {LOOKING_FOR_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {t(option.label)}
+                      </option>
+                    ))}
                   </select>
 
-
-                  {
-                    fieldErrors.member && (
-
-                      <span
-                        style={
-                          FIELD_ERROR_STYLE
-                        }
-                      >
-                        {
-                          fieldErrors.member
-                        }
-                      </span>
-
-                    )
-                  }
+                  {fieldErrors.lookingFor ? (
+                    <span style={FIELD_ERROR_STYLE}>
+                      {fieldErrors.lookingFor}
+                    </span>
+                  ) : null}
+                </label>
 
 
-                  {
-                    lockedName && (
+                {/* SHE IS */}
 
-                      <input
-                        type="hidden"
-                        name="member"
-                        value={
-                          lockedName
-                        }
-                      />
+                <label className={isLongTerm ? "men-member-field" : undefined}>
+                  {t("She is")}
+                  {isLongTerm ? (
+                    <span className="men-member-hint">
+                      {t("Select exactly 3 profiles for long-term relationship.")}
+                      {" "}
+                      ({selectedNames.length}/{LONG_TERM_MEMBER_COUNT})
+                    </span>
+                  ) : null}
 
-                    )
-                  }
+                  {isLongTerm ? (
+                    <div
+                      className="men-member-multi"
+                      role="group"
+                      aria-label={t("She is")}
+                      style={
+                        fieldErrors.member
+                          ? INVALID_FIELD_STYLE
+                          : undefined
+                      }
+                    >
+                      {names.map((name) => {
+                        const checked = selectedNames.includes(name);
+                        const locked = Boolean(lockedName) && name === lockedName;
+                        const disableExtra =
+                          !checked &&
+                          selectedNames.length >= LONG_TERM_MEMBER_COUNT;
 
+                        return (
+                          <label key={name} className="men-member-option">
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              disabled={locked || disableExtra}
+                              onChange={() => toggleMemberName(name)}
+                            />
+                            <span>{name}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <select
+                      name="member"
+                      aria-required="true"
+                      aria-invalid={Boolean(fieldErrors.member)}
+                      style={
+                        fieldErrors.member
+                          ? INVALID_FIELD_STYLE
+                          : undefined
+                      }
+                      disabled={Boolean(lockedName)}
+                      value={selectedName}
+                      onChange={(event) => {
+                        syncSelectedNames(
+                          event.target.value
+                            ? [event.target.value]
+                            : []
+                        );
+                        clearFieldError("member");
+                      }}
+                    >
+                      <option value="" disabled>
+                        {t("Select a profile")}
+                      </option>
+                      {names.map((name) => (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
+                  {fieldErrors.member ? (
+                    <span style={FIELD_ERROR_STYLE}>
+                      {fieldErrors.member}
+                    </span>
+                  ) : null}
+
+                  {!isLongTerm && lockedName ? (
+                    <input
+                      type="hidden"
+                      name="member"
+                      value={lockedName}
+                    />
+                  ) : null}
                 </label>
 
 
@@ -1010,9 +1247,20 @@ export default function ContactPage() {
                     Mobile number
 
                     <input
-                      type="tel"
+                      type="text"
+                      inputMode="numeric"
                       name="mobile"
-                      placeholder="+91 9999999999"
+                      placeholder="9999999999"
+                      maxLength={10}
+                      pattern="[0-9]{10}"
+                      autoComplete="tel"
+
+                      onInput={(event) => {
+                        event.currentTarget.value =
+                          event.currentTarget.value
+                            .replace(/\D/g, "")
+                            .slice(0, 10);
+                      }}
 
                       aria-required="true"
 
@@ -1055,25 +1303,12 @@ export default function ContactPage() {
                 <div className="field-row">
 
                   <label>
-                    When
+                    {t("Desired meeting date & time")}
 
-                    <input
-                      type="datetime-local"
-                      name="datetime"
-
-                      aria-required="true"
-
-                      aria-invalid={
-                        Boolean(
-                          fieldErrors.datetime
-                        )
-                      }
-
-                      style={
-                        fieldErrors.datetime
-                          ? INVALID_FIELD_STYLE
-                          : undefined
-                      }
+                    <MeetingDateTimeField
+                      invalid={Boolean(fieldErrors.datetime)}
+                      invalidStyle={INVALID_FIELD_STYLE}
+                      onValue={() => clearFieldError("datetime")}
                     />
 
                     {
@@ -1096,7 +1331,10 @@ export default function ContactPage() {
 
 
                   <label>
-                    Meeting Preference
+                    <span className="meeting-pref-label">
+                      {t("Meeting Preference")}
+                      <span className="hotel-name-tag">{t("Place Name")}: {HOTEL_NAME}</span>
+                    </span>
 
                     <select
                       name="travel"
@@ -1121,26 +1359,18 @@ export default function ContactPage() {
                         value=""
                         disabled
                       >
-                        Select
+                        {t("Select")}
                       </option>
 
-                      <option value="dinner">
-                        Late dinner
-                      </option>
-
-                      <option value="hotel">
-                        Hotel / private suite
-                      </option>
-
-                      <option value="weekend">
-                        Weekend away
-                      </option>
-
-                      <option value="open">
-                        Open to her suggestion
-                      </option>
+                      {MEETING_PREFERENCE_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {t(option.label)}
+                        </option>
+                      ))}
 
                     </select>
+
+                    <input type="hidden" name="hotelName" value={HOTEL_NAME} />
 
                     {
                       fieldErrors.travel && (
@@ -1174,12 +1404,14 @@ export default function ContactPage() {
                     readOnly
 
                     value={
-                      selectedName
-                        ? `A private night with ${selectedName}`
-                        : ""
+                      buildMenSubject(
+                        lookingFor,
+                        selectedNames,
+                        t
+                      )
                     }
 
-                    placeholder="What are you hoping for?"
+                    placeholder={t("What are you hoping for?")}
                   />
                 </label>
 
@@ -1193,7 +1425,7 @@ export default function ContactPage() {
                     name="message"
                     rows={4}
 
-                    placeholder="Tell us the kind of night you want with her..."
+                    placeholder={t("Tell us what kind of connection you want...")}
 
                     aria-required="true"
 

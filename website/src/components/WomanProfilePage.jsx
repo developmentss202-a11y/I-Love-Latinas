@@ -58,7 +58,27 @@ function FieldValue({ field, application }) {
 
   if (raw === 0) return <span>0</span>;
   if (raw == null || raw === "") return <span>—</span>;
+
+  if (field.name === "relationshipDesired") {
+    const labels = {
+      "short-term": "Short Term Relationship",
+      "long-term": "Long Term Relationship",
+      dating: "Serious dating",
+      marriage: "Marriage-minded",
+      "life-partner": "Life partner",
+    };
+    return <span>{labels[String(raw)] || String(raw)}</span>;
+  }
+
   return <span>{String(raw)}</span>;
+}
+
+function statusLabel(status) {
+  const value = String(status || "pending").trim().toLowerCase();
+
+  if (value === "approved") return "Approved";
+  if (value === "rejected") return "Rejected";
+  return "Pending";
 }
 
 export default function WomanProfilePage() {
@@ -70,6 +90,7 @@ export default function WomanProfilePage() {
   const [loading, setLoading] = useState(true);
 
   const slug = slugParam || readStoredSlug();
+  const applicationStatus = statusLabel(application?.status);
 
   useEffect(() => {
     if (slugParam) storeSlug(slugParam);
@@ -86,33 +107,50 @@ export default function WomanProfilePage() {
     }
 
     let cancelled = false;
-    setLoading(true);
-    setError("");
 
-    fetch(`${API_BASE}/api/applications/by-slug/${encodeURIComponent(slug)}`)
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => {
-        if (cancelled) return;
-        const next = data?.application;
-        if (!next) {
-          setApplication(null);
-          setError("We could not find this profile. Check that you used the full copied link.");
-          return;
-        }
-        storeSlug(next.slug || slug);
-        setApplication(next);
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setError("We could not load this profile right now.");
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
+    function loadProfile(isRefresh = false) {
+      if (!isRefresh) {
+        setError("");
+        setLoading(true);
+      }
+
+      fetch(`${API_BASE}/api/applications/by-slug/${encodeURIComponent(slug)}`)
+        .then((response) => (response.ok ? response.json() : null))
+        .then((data) => {
+          if (cancelled) return;
+          const next = data?.application;
+          if (!next) {
+            if (!isRefresh) {
+              setApplication(null);
+              setError("We could not find this profile. Check that you used the full copied link.");
+            }
+            return;
+          }
+          setError("");
+          storeSlug(next.slug || slug);
+          setApplication(next);
+        })
+        .catch(() => {
+          if (!cancelled && !isRefresh) {
+            setError("We could not load this profile right now.");
+          }
+        })
+        .finally(() => {
+          if (!cancelled) setLoading(false);
+        });
+    }
+
+    loadProfile();
+
+    function onFocus() {
+      loadProfile(true);
+    }
+
+    window.addEventListener("focus", onFocus);
 
     return () => {
       cancelled = true;
+      window.removeEventListener("focus", onFocus);
     };
   }, [navigate, slug, slugParam]);
 
@@ -151,7 +189,14 @@ export default function WomanProfilePage() {
               <img src={photo} alt={name} />
               <div>
                 <p className="gender-kicker">{t("Your listing")}</p>
-                <h2>{name}</h2>
+                <div className="woman-form__identity-head">
+                  <h2>{name}</h2>
+                  <span
+                    className={`profile-status-pill profile-status-pill--${applicationStatus.toLowerCase()}`}
+                  >
+                    {t(applicationStatus)}
+                  </span>
+                </div>
                 <p>{t("All of the details you submitted are shown below.")}</p>
               </div>
             </div>

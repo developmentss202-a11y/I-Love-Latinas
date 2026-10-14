@@ -40,6 +40,68 @@ export function profilePhoto(index) {
   return PROFILE_PHOTOS[index % PROFILE_PHOTOS.length];
 }
 
+const LIVE_API = "https://node.latina.myaibusiness.online";
+
+function getApiBase() {
+  const fromEnv = String(import.meta.env.VITE_API_URL || "").trim();
+  if (!fromEnv || /localhost/i.test(fromEnv)) {
+    return LIVE_API;
+  }
+  return fromEnv.replace(/\/$/, "");
+}
+
+function photoUrl(path, index = 0) {
+  if (!path) return profilePhoto(index);
+  if (/^https?:\/\//i.test(path)) return path;
+  return `${getApiBase()}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+function relationshipTag(value) {
+  const key = String(value || "").trim().toLowerCase();
+  if (key === "short-term") return "Short Term Relationship";
+  if (key === "long-term") return "Long Term Relationship";
+  if (key === "marriage") return "Marriage";
+  if (key === "life-partner") return "Life-partner";
+  if (key === "dating") return "Dating";
+  if (key) return key.replace(/-/g, " ");
+  return "Companionship";
+}
+
+export function mapApplicationToProfile(app) {
+  const photo = Array.isArray(app?.photos) ? app.photos[0] : "";
+
+  return {
+    name: String(app?.firstName || "").trim(),
+    age: app?.age || "",
+    city: String(app?.countryOfResidence || app?.countryOfBirth || "").trim(),
+    role: String(app?.profession || "").trim(),
+    bio: String(app?.visionStatement || app?.personalityType || "").trim(),
+    tag: relationshipTag(app?.relationshipDesired),
+    relationshipDesired: String(app?.relationshipDesired || "")
+      .trim()
+      .toLowerCase(),
+    photo,
+    slug: String(app?.slug || "").trim(),
+  };
+}
+
+/* Live API only — approved profiles */
+export async function fetchApprovedProfiles() {
+  try {
+    const response = await fetch(`${getApiBase()}/api/applications/approved`);
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    const list = Array.isArray(data?.applications) ? data.applications : [];
+
+    return list
+      .map(mapApplicationToProfile)
+      .filter((profile) => profile.name);
+  } catch {
+    return [];
+  }
+}
+
 export function ProfileDetail({ profile, index, onClose, onRegister, onConnect }) {
   return (
     <div className="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="profile-detail-title">
@@ -49,7 +111,7 @@ export function ProfileDetail({ profile, index, onClose, onRegister, onConnect }
         </button>
         <div className="pmodal-layout">
           <div className="pmodal-photo">
-            <img src={profilePhoto(index)} alt={profile.name} />
+            <img src={photoUrl(profile.photo, index)} alt={profile.name} />
           </div>
           <div className="pmodal-body">
             <p className="profile-card__tag pmodal-tag">{profile.tag}</p>
@@ -78,6 +140,8 @@ export function ProfileDetail({ profile, index, onClose, onRegister, onConnect }
 }
 
 export default function ProfileCard({ profile, index, onReadMore }) {
+  const tagLabel = String(profile.tag || "").split(" ")[0] || profile.tag;
+
   return (
     <article
       className="profile-card"
@@ -93,8 +157,8 @@ export default function ProfileCard({ profile, index, onReadMore }) {
       aria-label={`Read more about ${profile.name}`}
     >
       <div className="profile-card__photo">
-        <img src={profilePhoto(index)} alt={profile.name} />
-        <span className="profile-card__tag">{profile.tag.split(" ")[0]}</span>
+        <img src={photoUrl(profile.photo, index)} alt={profile.name} />
+        <span className="profile-card__tag">{tagLabel}</span>
       </div>
       <div className="profile-card__body">
         <h3>{profile.name}</h3>

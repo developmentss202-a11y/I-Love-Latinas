@@ -4,7 +4,7 @@
 ===================================================== */
 
 .admin-left-sidebar {
-  width: 280px;
+  width: 300px;
   height: 100vh;
 
   position: fixed;
@@ -20,9 +20,9 @@
 
   background: linear-gradient(
     180deg,
-    #430015 0%,
-    #65051f 55%,
-    #7c1534 100%
+    #1a0810 0%,
+    #2a0a19 42%,
+    #3f1024 100%
   );
 
   color: #ffffff;
@@ -100,12 +100,12 @@
 }
 
 .brand-love {
-  color: #ff9fb6;
+  color: #eccfa0;
   font-style: italic;
 }
 
 .brand-latinas {
-  color: #ffd35c;
+  color: #caa46a;
 }
 
 
@@ -136,9 +136,9 @@
   display: flex;
   align-items: center;
 
-  gap: 13px;
+  gap: 10px;
 
-  padding: 0 15px;
+  padding: 0 12px;
 
   box-sizing: border-box;
 
@@ -149,7 +149,7 @@
 
   color: #ffffff;
 
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
 
   text-align: left;
@@ -166,12 +166,16 @@
   min-width: 21px;
   flex-shrink: 0;
 
-  color: #ffd42d;
+  color: #eccfa0;
 }
 
 
 .sidebar-menu-item span {
   flex: 1;
+  min-width: 0;
+  padding-right: 12px;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
 
@@ -184,16 +188,16 @@
 /* ACTIVE */
 
 .sidebar-menu-item.active {
-  background: #fff9f6;
+  background: #fdf6f1;
 
-  color: #59142d;
+  color: #2a0a19;
 
   font-weight: 700;
 }
 
 
 .sidebar-menu-item.active svg {
-  color: #ff4f72;
+  color: #caa46a;
 }
 
 
@@ -212,7 +216,7 @@
 
   border-radius: 0 5px 5px 0;
 
-  background: #ff5274;
+  background: #caa46a;
 }
 
 
@@ -221,7 +225,10 @@
 ===================================================== */
 
 .sidebar-chevron {
-  margin-left: auto;
+  margin-left: 4px;
+  flex-shrink: 0;
+  width: 18px;
+  min-width: 18px;
 
   transition: transform 0.25s ease;
 }
@@ -280,7 +287,7 @@
 .sidebar-submenu-item svg {
   min-width: 19px;
 
-  color: #ffffff;
+  color: #eccfa0;
 }
 
 
@@ -291,16 +298,16 @@
 
 
 .sidebar-submenu-item.active {
-  background: #fff8f5;
+  background: #fdf6f1;
 
-  color: #5d1830;
+  color: #2a0a19;
 
   font-weight: 700;
 }
 
 
 .sidebar-submenu-item.active svg {
-  color: #741631;
+  color: #caa46a;
 }
 
 
@@ -344,8 +351,12 @@
 
 
 .sidebar-logout button:hover {
-  background:
-    rgba(255,255,255,0.08);
+  background: rgba(202, 164, 106, 0.16);
+  color: #eccfa0;
+}
+
+.sidebar-logout button:hover svg {
+  color: #eccfa0;
 }
 
 
@@ -381,9 +392,9 @@
 @media (max-width: 1100px) {
 
   .admin-left-sidebar {
-    width: 230px;
+    width: 300px;
 
-    padding: 16px 11px;
+    padding: 16px 12px;
   }
 
   .sidebar-logo-icon {
@@ -434,7 +445,7 @@
     position: fixed;
     inset: 0;
     z-index: 1100;
-    background: rgba(18, 8, 14, 0.45);
+    background: rgba(20, 6, 12, 0.5);
   }
 
   .sidebar-overlay.is-open {
@@ -446,8 +457,8 @@
     min-width: 0 !important;
     padding: 20px 14px !important;
     align-items: stretch;
-    transform: translateX(-105%);
-    transition: transform 0.22s ease;
+    transform: translateX(-104%);
+    transition: transform 0.2s ease;
     z-index: 1200;
   }
 
@@ -542,18 +553,18 @@
 /* LARGE DESKTOP */
 @media (min-width: 1701px) {
   .admin-left-sidebar {
-    width: 260px !important;
-    min-width: 260px !important;
+    width: 300px !important;
+    min-width: 300px !important;
   }
 }
 
 
-/* LAPTOP - आपके screenshot के लिए */
+/* LAPTOP */
 @media (min-width: 769px) and (max-width: 1700px) {
 
   .admin-left-sidebar {
-    width: 230px !important;
-    min-width: 230px !important;
+    width: 300px !important;
+    min-width: 300px !important;
 
     padding: 16px 12px !important;
   }
@@ -574,13 +585,13 @@
   }
 
   .sidebar-menu-item {
-    min-height: 48px !important;
+    min-height: 50px !important;
 
-    padding: 0 13px !important;
+    padding: 0 12px !important;
 
-    font-size: 14px !important;
+    font-size: 15px !important;
 
-    gap: 11px !important;
+    gap: 10px !important;
   }
 
   .applications-submenu {
@@ -650,8 +661,8 @@
   .admin-dashboard-main,
   .admin-content,
   .admin-page-wrapper {
-    margin-left: 260px !important;
-    width: calc(100% - 260px) !important;
+    margin-left: 300px !important;
+    width: calc(100% - 300px) !important;
     box-sizing: border-box !important;
   }
 }
@@ -664,8 +675,8 @@
   .admin-dashboard-main,
   .admin-content,
   .admin-page-wrapper {
-    margin-left: 230px !important;
-    width: calc(100% - 230px) !important;
+    margin-left: 300px !important;
+    width: calc(100% - 300px) !important;
     box-sizing: border-box !important;
   }
 

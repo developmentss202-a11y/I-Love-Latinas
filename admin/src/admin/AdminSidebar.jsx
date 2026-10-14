@@ -9,21 +9,19 @@ import { useState } from "react";
 
 import {
   LayoutDashboard,
-  ClipboardList,
-  UserRound,
   Settings,
   LogOut,
   ChevronDown,
   Mars,
   Venus,
-
-  SlidersHorizontal,
-  UserPlus,
-  FileCheck2,
-  ShieldCheck,
+  Clock,
+  Check,
+  X,
+  Copy,
 } from "lucide-react";
 
 import "../styles/adminsidebar.css";
+import "../styles/admin-theme.css";
 
 function AdminSidebar({
   activeMenu,
@@ -37,15 +35,21 @@ function AdminSidebar({
      APPLICATIONS
   ===================================== */
 
-  const [applicationsOpen, setApplicationsOpen] =
-    useState(
-      activeMenu === "Men Applications" ||
-      activeMenu === "Women Applications"
-    );
+  const womenActive =
+    activeMenu === "Women Pending" ||
+    activeMenu === "Women Approved" ||
+    activeMenu === "Women Rejected";
 
-  const applicationsActive =
-    activeMenu === "Men Applications" ||
-    activeMenu === "Women Applications";
+  const [womenOpen, setWomenOpen] =
+    useState(womenActive);
+
+  const menActive =
+    activeMenu === "Men Pending" ||
+    activeMenu === "Men Contacted" ||
+    activeMenu === "Men Duplicates";
+
+  const [menOpen, setMenOpen] =
+    useState(menActive);
 
 
   /* =====================================
@@ -57,10 +61,9 @@ function AdminSidebar({
     activeMenu === "Settings General" ||
     activeMenu === "Settings Registration" ||
     activeMenu === "Settings Application" ||
-    activeMenu === "Settings System";
-
-  const [settingsOpen, setSettingsOpen] =
-    useState(settingsActive);
+    activeMenu === "Settings System" ||
+    activeMenu === "Profile" ||
+    activeMenu === "Settings Profile";
 
 
   return (
@@ -121,135 +124,137 @@ function AdminSidebar({
 
 
         {/* =====================================
-            APPLICATIONS
+            WOMEN APPLICATIONS
         ===================================== */}
 
         <button
           type="button"
           className={`sidebar-menu-item ${
-            applicationsActive
+            womenActive
               ? "active"
               : ""
           }`}
           onClick={() => {
+            if (!womenActive) {
+              setActiveMenu("Women Pending");
+            }
 
-            setApplicationsOpen(
-              (prev) => !prev
-            );
-
+            setWomenOpen((prev) => !prev);
           }}
         >
-
-          <ClipboardList size={21} />
-
-          <span>
-            Applications
-          </span>
-
+          <Venus size={21} />
+          <span>Women Applications</span>
           <ChevronDown
             size={18}
             className={`sidebar-chevron ${
-              applicationsOpen
-                ? "open"
-                : ""
+              womenOpen ? "open" : ""
             }`}
           />
-
         </button>
 
-
-        {applicationsOpen && (
-
+        {womenOpen && (
           <div className="applications-submenu">
-
-
-            {/* MEN */}
+            <button
+              type="button"
+              className={`sidebar-submenu-item ${
+                activeMenu === "Women Pending" ? "active" : ""
+              }`}
+              onClick={() => setActiveMenu("Women Pending")}
+            >
+              <Clock size={19} />
+              <span>Pending</span>
+            </button>
 
             <button
               type="button"
               className={`sidebar-submenu-item ${
-                activeMenu ===
-                "Men Applications"
-                  ? "active"
-                  : ""
+                activeMenu === "Women Approved" ? "active" : ""
               }`}
-              onClick={() => {
-
-                setActiveMenu(
-                  "Men Applications"
-                );
-
-              }}
+              onClick={() => setActiveMenu("Women Approved")}
             >
-
-              <Mars size={20} />
-
-              <span>
-                Men
-              </span>
-
+              <Check size={19} />
+              <span>Approved</span>
             </button>
-
-
-            {/* WOMEN */}
 
             <button
               type="button"
               className={`sidebar-submenu-item ${
-                activeMenu ===
-                "Women Applications"
-                  ? "active"
-                  : ""
+                activeMenu === "Women Rejected" ? "active" : ""
               }`}
-              onClick={() => {
-
-                setActiveMenu(
-                  "Women Applications"
-                );
-
-              }}
+              onClick={() => setActiveMenu("Women Rejected")}
             >
-
-              <Venus size={20} />
-
-              <span>
-                Women
-              </span>
-
+              <X size={19} />
+              <span>Rejected</span>
             </button>
-
           </div>
-
         )}
 
 
         {/* =====================================
-            PROFILE
+            MEN APPLICATIONS
         ===================================== */}
 
         <button
           type="button"
           className={`sidebar-menu-item ${
-            activeMenu === "Profile"
+            menActive
               ? "active"
               : ""
           }`}
           onClick={() => {
+            if (!menActive) {
+              setActiveMenu("Men Pending");
+            }
 
-            setActiveMenu(
-              "Profile"
-            );
-
+            setMenOpen((prev) => !prev);
           }}
         >
-
-          <UserRound size={21} />
-
-          <span>
-            Profile
-          </span>
-
+          <Mars size={21} />
+          <span>Men Applications</span>
+          <ChevronDown
+            size={18}
+            className={`sidebar-chevron ${
+              menOpen ? "open" : ""
+            }`}
+          />
         </button>
+
+        {menOpen && (
+          <div className="applications-submenu">
+            <button
+              type="button"
+              className={`sidebar-submenu-item ${
+                activeMenu === "Men Pending" ? "active" : ""
+              }`}
+              onClick={() => setActiveMenu("Men Pending")}
+            >
+              <Clock size={19} />
+              <span>Pending</span>
+            </button>
+
+            <button
+              type="button"
+              className={`sidebar-submenu-item ${
+                activeMenu === "Men Contacted" ? "active" : ""
+              }`}
+              onClick={() => setActiveMenu("Men Contacted")}
+            >
+              <Check size={19} />
+              <span>Contacted</span>
+            </button>
+
+            <button
+              type="button"
+              className={`sidebar-submenu-item ${
+                activeMenu === "Men Duplicates" ? "active" : ""
+              }`}
+              onClick={() => setActiveMenu("Men Duplicates")}
+            >
+              <Copy size={19} />
+              <span>Duplicates</span>
+            </button>
+          </div>
+        )}
 
 
         {/* =====================================
@@ -264,17 +269,9 @@ function AdminSidebar({
               : ""
           }`}
           onClick={() => {
-
-            if (!settingsActive) {
-              setActiveMenu(
-                "Settings General"
-              );
-            }
-
-            setSettingsOpen(
-              (prev) => !prev
+            setActiveMenu(
+              "Settings General"
             );
-
           }}
         >
 
@@ -284,133 +281,7 @@ function AdminSidebar({
             Settings
           </span>
 
-          <ChevronDown
-            size={18}
-            className={`sidebar-chevron ${
-              settingsOpen
-                ? "open"
-                : ""
-            }`}
-          />
-
         </button>
-
-
-        {/* SETTINGS SUB MENU */}
-
-        {settingsOpen && (
-
-          <div className="applications-submenu">
-
-
-            {/* GENERAL */}
-
-            <button
-              type="button"
-              className={`sidebar-submenu-item ${
-                activeMenu ===
-                "Settings General"
-                  ? "active"
-                  : ""
-              }`}
-              onClick={() => {
-                setActiveMenu(
-                  "Settings General"
-                );
-              }}
-            >
-
-              <SlidersHorizontal
-                size={19}
-              />
-
-              <span>
-                General
-              </span>
-
-            </button>
-
-
-            {/* REGISTRATION */}
-
-            <button
-              type="button"
-              className={`sidebar-submenu-item ${
-                activeMenu ===
-                "Settings Registration"
-                  ? "active"
-                  : ""
-              }`}
-              onClick={() => {
-                setActiveMenu(
-                  "Settings Registration"
-                );
-              }}
-            >
-
-              <UserPlus size={19} />
-
-              <span>
-                Registration
-              </span>
-
-            </button>
-
-
-            {/* APPLICATION */}
-
-            <button
-              type="button"
-              className={`sidebar-submenu-item ${
-                activeMenu ===
-                "Settings Application"
-                  ? "active"
-                  : ""
-              }`}
-              onClick={() => {
-                setActiveMenu(
-                  "Settings Application"
-                );
-              }}
-            >
-
-              <FileCheck2 size={19} />
-
-              <span>
-                Application
-              </span>
-
-            </button>
-
-
-            {/* SYSTEM */}
-
-            <button
-              type="button"
-              className={`sidebar-submenu-item ${
-                activeMenu ===
-                "Settings System"
-                  ? "active"
-                  : ""
-              }`}
-              onClick={() => {
-                setActiveMenu(
-                  "Settings System"
-                );
-              }}
-            >
-
-              <ShieldCheck size={19} />
-
-              <span>
-                System
-              </span>
-
-            </button>
-
-          </div>
-
-        )}
 
 
       </div>

@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import { useLanguage } from "../language";
 
 
@@ -17,6 +18,70 @@ import { useLanguage } from "../language";
 const PHOTO_MAX_MB = 3;
 const VOICE_MAX_MB = 5;
 const VIDEO_MAX_MB = 10;
+
+
+// =====================================================
+// BRANDED NOTICE (replaces browser alert)
+// =====================================================
+
+const noticeListeners = new Set();
+
+function showFormNotice(message) {
+  const text = String(message || "").trim();
+  if (!text) return;
+
+  if (noticeListeners.size === 0) {
+    window.alert(text);
+    return;
+  }
+
+  noticeListeners.forEach((listener) => listener(text));
+}
+
+export function FormNoticeHost() {
+  const { t } = useLanguage();
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    noticeListeners.add(setMessage);
+    return () => noticeListeners.delete(setMessage);
+  }, []);
+
+  if (!message) {
+    return null;
+  }
+
+  return createPortal(
+    <div
+      className="popup-overlay form-notice-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="form-notice-title"
+      onClick={() => setMessage("")}
+    >
+      <div
+        className="popup form-notice-popup"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="form-notice-popup__icon" aria-hidden="true">
+          !
+        </div>
+        <h2 id="form-notice-title">{t("Notice")}</h2>
+        <p>{message}</p>
+        <div className="popup-actions">
+          <button
+            type="button"
+            className="btn btn--gold"
+            onClick={() => setMessage("")}
+          >
+            {t("Got it")}
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
 
 
 // =====================================================
@@ -89,7 +154,7 @@ function validateFileSize(
     1024;
 
   if (file.size > maxBytes) {
-    alert(
+    showFormNotice(
       t
         ? t("{label} must be maximum {max} MB.", { label: t(label), max: maxSizeMB })
         : `${label} must be maximum ${maxSizeMB} MB.`
@@ -367,7 +432,7 @@ function PhotoControl({
       );
 
 
-      alert(
+      showFormNotice(
         t("Please allow camera permission.")
       );
     }
@@ -970,7 +1035,7 @@ function VoiceControl({
       );
 
 
-      alert(
+      showFormNotice(
         t("Please allow microphone permission.")
       );
     }
@@ -1411,7 +1476,7 @@ function VideoControl({
       );
 
 
-      alert(
+      showFormNotice(
         t("Please allow camera and microphone permission.")
       );
     }

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useLanguage } from "../language";
-import { profileAbsoluteUrl } from "../profileLink";
+import { manProfileAbsoluteUrl, profileAbsoluteUrl } from "../profileLink";
 
-export default function CopyProfileLink({ slug }) {
+export default function CopyProfileLink({ slug, kind = "woman" }) {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
-  const link = profileAbsoluteUrl(slug);
+  const link =
+    kind === "man" ? manProfileAbsoluteUrl(slug) : profileAbsoluteUrl(slug);
 
   if (!link) return null;
 

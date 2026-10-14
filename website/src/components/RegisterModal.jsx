@@ -102,11 +102,26 @@ export default function RegisterModal({
   const formRef =
     useRef(null);
 
+  const dashRef =
+    useRef(null);
+
 
   const progress =
     (step /
       formSteps.length) *
     100;
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    dashRef.current?.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, [open, step]);
 
 
   // =====================================================
@@ -462,6 +477,25 @@ export default function RegisterModal({
         .length < 2
     ) {
       return t("First name must contain at least 2 characters.");
+    }
+
+
+    if (field.name === "phone") {
+      const phone = String(value || "").replace(/[^\d+]/g, "");
+
+      if (phone.replace(/\D/g, "").length < 7) {
+        return t("Please enter a valid phone number.");
+      }
+    }
+
+
+    if (field.name === "email") {
+      const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailPattern.test(String(value || "").trim())) {
+        return t("Please enter a valid email address.");
+      }
     }
 
 
@@ -1164,7 +1198,10 @@ export default function RegisterModal({
       aria-labelledby="register-title"
     >
 
-      <div className="register-dash">
+      <div
+        className="register-dash"
+        ref={dashRef}
+      >
 
 
         {/* =================================================
@@ -1343,7 +1380,12 @@ export default function RegisterModal({
             <div className="register-form__scroll">
 
 
-              {/* ALERT */}
+              {step === 1 ? (
+                <div className="register-privacy-pill">
+                  {t("Your phone number and email address are kept private and will not be visible to other users. This information is accessible only to authorized administrators.")}
+                </div>
+              ) : null}
+
 
               {formAlert ? (
 

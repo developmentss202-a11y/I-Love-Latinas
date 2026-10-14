@@ -60,7 +60,8 @@ const spanish = {
 
   "Identity": "Identidad",
   "Who you are": "Quién eres",
-  "Ten fields about you.": "Diez datos sobre ti.",
+  "Ten fields about you.": "Doce datos sobre ti.",
+  "Your identity details.": "Tus datos de identidad.",
   "Lifestyle": "Estilo de vida",
   "How you live": "Cómo vives",
   "Work, family, and travel.": "Trabajo, familia y viajes.",
@@ -70,6 +71,8 @@ const spanish = {
 
   // Field labels
   "First name": "Nombre",
+  "Phone number": "Número de teléfono",
+  "Email": "Correo electrónico",
   "Age": "Edad",
   "Gender": "Género",
   "Photo": "Foto",
@@ -104,6 +107,8 @@ const spanish = {
 
   // Placeholders
   "Enter first name": "Ingresa tu nombre",
+  "Enter phone number": "Ingresa tu número de teléfono",
+  "Enter email address": "Ingresa tu correo electrónico",
   "Enter age": "Ingresa tu edad",
   "Select Gender": "Selecciona el género",
   "Select Athletic type": "Selecciona el tipo atlético",
@@ -115,6 +120,8 @@ const spanish = {
   "Maximum 5 MB": "Máximo 5 MB",
   "Personal / professional • Maximum 10 MB": "Personal / profesional • Máximo 10 MB",
   "Age must be between {min} and {max} years": "La edad debe estar entre {min} y {max} años",
+  "Notice": "Aviso",
+  "Got it": "Entendido",
 
   // Options
   "Yes": "Sí",
@@ -163,6 +170,10 @@ const spanish = {
   "Maximum age is {max} years. Please enter age {max} or below.":
     "La edad máxima es {max} años. Ingresa {max} o menos.",
   "First name must contain at least 2 characters.": "El nombre debe tener al menos 2 caracteres.",
+  "Please enter a valid phone number.": "Ingresa un número de teléfono válido.",
+  "Please enter a valid email address.": "Ingresa un correo electrónico válido.",
+  "Your phone number and email address are kept private and will not be visible to other users. This information is accessible only to authorized administrators.":
+    "Tu número de teléfono y correo electrónico se mantienen privados y no serán visibles para otros usuarios. Esta información solo es accesible para administradores autorizados.",
   "Please complete the current step before continuing.": "Completa el paso actual antes de continuar.",
   "Website is currently under maintenance. Please try again later.":
     "El sitio está en mantenimiento. Inténtalo más tarde.",
@@ -170,6 +181,66 @@ const spanish = {
   "Women registration is currently closed.": "El registro de mujeres está cerrado.",
   "Something went wrong while submitting your application.": "Ocurrió un error al enviar tu solicitud.",
   "{label} must be maximum {max} MB.": "{label} debe ser de máximo {max} MB.",
+  "Loading…": "Cargando…",
+  "No approved profiles yet.": "Aún no hay perfiles aprobados.",
+  "No profiles match this relationship type.": "No hay perfiles con este tipo de relación.",
+  "All": "Todas",
+  "Scroll filters left": "Deslizar filtros a la izquierda",
+  "Scroll filters right": "Deslizar filtros a la derecha",
+  "Ready for something real?": "¿Listo para algo real?",
+  "Meet someone who's looking for a serious relationship":
+    "Conoce a alguien que busca una relación seria",
+  "Choose someone who interests you, and take the first step toward getting to know each other.":
+    "Elige a alguien que te interese y da el primer paso para conocerse.",
+  "How it works": "Cómo funciona",
+  "Submit your introduction request with who you want to meet.":
+    "Envía tu solicitud de presentación con quién quieres conocer.",
+  "Our team reaches out based on your selections.":
+    "Nuestro equipo se pondrá en contacto según tus selecciones.",
+  "Meetings are arranged at our hotel for people seeking a real relationship.":
+    "Las reuniones se organizan en nuestro hotel para quienes buscan una relación real.",
+  "Introduction": "Presentación",
+  "Tell us what kind of connection you want...":
+    "Cuéntanos qué tipo de conexión deseas...",
+  "What are you hoping for?": "¿Qué esperas?",
+  "After you submit, our team will reach out based on your selections. Meetings are arranged at our hotel for people seeking a real relationship.":
+    "Después de enviar, nuestro equipo se pondrá en contacto según tus selecciones. Las reuniones se organizan en nuestro hotel para quienes buscan una relación real.",
+  "What you are looking for": "Qué estás buscando",
+  "Select exactly 3 profiles for long-term relationship.":
+    "Selecciona exactamente 3 perfiles para una relación a largo plazo.",
+  "Your bookings": "Tus reservas",
+  "Your introductions": "Tus presentaciones",
+  "{name}'s introductions": "Presentaciones de {name}",
+  "Review every request you submitted. Keep your link saved so you can return anytime.":
+    "Revisa cada solicitud que enviaste. Guarda tu enlace para volver cuando quieras.",
+  "Your calendar timings": "Tus horarios del calendario",
+  "These are the meeting times from your submissions.":
+    "Estos son los horarios de reunión de tus envíos.",
+  "Your entries": "Tus entradas",
+  "Tap an entry to expand and see full booking details.":
+    "Toca una entrada para expandirla y ver todos los detalles de la reserva.",
+  "Show details": "Ver detalles",
+  "Hide details": "Ocultar detalles",
+  "Entry": "Entrada",
+  "Explore More Options": "Explorar más opciones",
+  "Submit New Request": "Enviar nueva solicitud",
+  "Show entries": "Ver entradas",
+  "Go to profile": "Ir al perfil",
+  "Your application was submitted successfully. Copy your profile link below, then open your profile.":
+    "Tu solicitud se envió correctamente. Copia el enlace de tu perfil abajo y luego abre tu perfil.",
+  "Your application was submitted successfully. Copy your profile link below, then open your entries.":
+    "Tu solicitud se envió correctamente. Copia el enlace de tu perfil abajo y luego abre tus entradas.",
+  "Meeting Preference": "Preferencia de reunión",
+  "Late dinner": "Cena tarde",
+  "Hotel / private suite": "Hotel / suite privada",
+  "Weekend away": "Fin de semana fuera",
+  "Open to her suggestion": "Abierta a su sugerencia",
+  "Status": "Estado",
+  "pending": "pendiente",
+  "approved": "aprobada",
+  "rejected": "rechazada",
+  "contacted": "contactado",
+  "Select a profile": "Selecciona un perfil",
 
   // Media buttons
   "Add Photo": "Agregar foto",
@@ -209,6 +280,9 @@ const spanish = {
     "Esta es tu página de perfil. Guarda el enlace copiado para volver más tarde.",
   "Loading your profile…": "Cargando tu perfil…",
   "Your listing": "Tu ficha",
+  "Pending": "Pendiente",
+  "Approved": "Aprobada",
+  "Rejected": "Rechazada",
   "All of the details you submitted are shown below.": "A continuación están todos los datos que enviaste.",
   "Copy link": "Copiar enlace",
   "Save this link. You will need it to return to your profile later.":
@@ -267,9 +341,28 @@ const spanish = {
     "Una vez aceptada, puedes actualizar datos desde tu espacio de membresía. Algunos campos sensibles pueden volver a revisarse.",
 
   "Private circle": "Círculo privado",
+  "Where Meaningful Relationships Begin": "Donde comienzan las relaciones significativas",
+  "Take your time to find the right connection, and let us bring you together.":
+    "Tómate tu tiempo para encontrar la conexión adecuada y déjanos juntarlos.",
+  "Short Term Relationship": "Relación a corto plazo",
+  "Long Term Relationship": "Relación a largo plazo",
+  "Hotel at Beach": "Hotel en la playa",
+  "Hotel at Mountains": "Hotel en las montañas",
+  "Place Name": "Nombre del lugar",
+  "Desired meeting date & time": "Fecha y hora deseada de la reunión",
+  "Previous month": "Mes anterior",
+  "Next month": "Mes siguiente",
+  "Time": "Hora",
+  "Hour": "Hora",
+  "Minute": "Minuto",
+  "AM or PM": "AM o PM",
+  "AM": "AM",
+  "PM": "PM",
+  "Clear": "Borrar",
+  "Done": "Listo",
   "Women who want to be wanted": "Mujeres que quieren ser deseadas",
-  "Take your time with each one. When you feel the pull, apply to connect — we arrange the night.":
-    "Tómate tu tiempo con cada una. Cuando sientas la conexión, solicita el contacto y nosotras organizamos el encuentro.",
+  "Take your time to find a meaningful connection, and let us bring you together":
+    "Tómate tu tiempo para encontrar una conexión significativa y déjanos juntarlos",
 
   "United States": "Estados Unidos",
   "United Kingdom": "Reino Unido",

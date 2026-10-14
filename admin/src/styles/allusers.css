@@ -25,17 +25,17 @@
 
 .users-title-row h1 {
   margin: 0;
-  color: #082f5f;
-  font-size: 22px;
-  line-height: 1;
-  font-weight: 900;
-  letter-spacing: -0.4px;
+  color: var(--ink-900);
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.3px;
 }
 
 .users-title-row p {
   margin: 3px 0 0;
-  color: #8f6f78;
-  font-size: 9px;
+  color: var(--ink-700);
+  font-size: 15px;
 }
 
 .users-count {

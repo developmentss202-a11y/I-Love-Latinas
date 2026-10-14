@@ -10,6 +10,7 @@ import ContactPage from './components/ContactPage'
 import SupportPage from './components/SupportPage'
 import PendingPage from './components/PendingPage'
 import WomanProfilePage from './components/WomanProfilePage'
+import ManProfilePage from './components/ManProfilePage'
 import HotelsPage from './components/HotelsPage'
 
 const ROLE_KEY = 'ill-role'
@@ -24,6 +25,10 @@ function readRole() {
 
 function isWomanProfilePath(path) {
   return path === '/profile' || path.startsWith('/profile/') || path === '/my-profile'
+}
+
+function isManProfilePath(path) {
+  return path === '/men-profile' || path.startsWith('/men-profile/') || path === '/my-men-profile'
 }
 
 function isHotelsPath(path) {
@@ -58,19 +63,19 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
     if (path === '/') writeRole(null)
-    else if (path === '/men' || path === '/profiles') writeRole('man')
+    else if (path === '/men' || path === '/profiles' || path === '/contact' || isManProfilePath(path)) writeRole('man')
     else if (path === '/women' || path === '/register' || path === '/pending' || isWomanProfilePath(path)) writeRole('woman')
   }, [path])
 
   const role =
-    path === '/men' || path === '/profiles' || (path === '/contact' && storedRole === 'man')
+    path === '/men' || path === '/profiles' || isManProfilePath(path) || (path === '/contact' && storedRole === 'man')
       ? 'man'
       : path === '/women' || path === '/pending' || path === '/register' || isWomanProfilePath(path)
         ? 'woman'
         : storedRole
 
   const headerVariant =
-    path === '/pending' || isHotelsPath(path) || isWomanProfilePath(path)
+    path === '/pending' || isHotelsPath(path) || isWomanProfilePath(path) || isManProfilePath(path)
       ? 'dark'
       : path === '/men' || path === '/women' || path === '/register'
         ? 'home'
@@ -89,6 +94,7 @@ export default function App() {
         path === '/register' ||
         path === '/pending' ||
         isWomanProfilePath(path) ||
+        isManProfilePath(path) ||
         role === 'man'
 
   return (
@@ -147,6 +153,9 @@ export default function App() {
           <Route path="/profile/:slug" element={<WomanProfilePage />} />
           <Route path="/my-profile" element={<WomanProfilePage />} />
           <Route path="/profile" element={<Navigate to="/my-profile" replace />} />
+          <Route path="/men-profile/:slug" element={<ManProfilePage />} />
+          <Route path="/my-men-profile" element={<ManProfilePage />} />
+          <Route path="/men-profile" element={<Navigate to="/my-men-profile" replace />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/support" element={<SupportPage />} />

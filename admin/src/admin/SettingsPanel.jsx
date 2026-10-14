@@ -10,6 +10,7 @@ import {
 } from "react";
 
 import "../styles/settingspanel.css";
+import "../styles/admin-theme.css";
 
 
 const API_URL =
@@ -368,13 +369,9 @@ function SettingsPanel({
   if (loading) {
 
     return (
-      <section className="admin-page-content">
-
-        <div className="settings-loading">
-          Loading settings...
-        </div>
-
-      </section>
+      <div className="settings-loading">
+        Loading settings...
+      </div>
     );
   }
 
@@ -385,39 +382,7 @@ function SettingsPanel({
 
   return (
 
-    <section className="admin-page-content">
-
-      <div className="new-settings-page">
-
-
-        {/* PAGE HEADING */}
-
-        <div className="settings-page-heading">
-
-          <div>
-
-            <h1>
-              {
-                SECTION_INFO[
-                  currentSection
-                ].title
-              }
-            </h1>
-
-            <p>
-              {
-                SECTION_INFO[
-                  currentSection
-                ].description
-              }
-            </p>
-
-          </div>
-
-        </div>
-
-
-        {/* MESSAGE */}
+    <div className="new-settings-page">
 
         {message && (
 
@@ -532,6 +497,8 @@ function SettingsPanel({
 
 
               </div>
+
+              <SettingsSaveBar saving={saving} />
 
             </div>
 
@@ -665,6 +632,8 @@ function SettingsPanel({
 
               </div>
 
+              <SettingsSaveBar saving={saving} />
+
             </div>
 
           )}
@@ -759,7 +728,7 @@ function SettingsPanel({
 
               </div>
 
-
+              <SettingsSaveBar saving={saving} />
 
             </div>
 
@@ -813,40 +782,16 @@ function SettingsPanel({
                 }
               />
 
+              <SettingsSaveBar saving={saving} />
+
             </div>
 
           )}
 
 
-          {/* SAVE BUTTON */}
-
-          <div className="settings-save-area">
-
-            <button
-              type="submit"
-              className="settings-save-button"
-
-              disabled={
-                saving
-              }
-            >
-
-              {
-                saving
-                  ? "Saving..."
-                  : "Save Settings"
-              }
-
-            </button>
-
-          </div>
-
-
         </form>
 
       </div>
-
-    </section>
 
   );
 }
@@ -855,6 +800,21 @@ function SettingsPanel({
 /* =========================================
    TOGGLE COMPONENT
 ========================================= */
+
+function SettingsSaveBar({ saving }) {
+  return (
+    <div className="settings-save-area">
+      <button
+        type="submit"
+        className="settings-save-button"
+        disabled={saving}
+      >
+        {saving ? "Saving..." : "Save Settings"}
+      </button>
+    </div>
+  );
+}
+
 
 function SettingToggle({
   title,

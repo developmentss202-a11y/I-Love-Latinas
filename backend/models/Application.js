@@ -69,6 +69,21 @@ const applicationSchema = new mongoose.Schema(
       trim: true,
     },
 
+    phone: {
+      type: String,
+      default: "",
+      trim: true,
+      maxlength: 30,
+    },
+
+    email: {
+      type: String,
+      default: "",
+      trim: true,
+      lowercase: true,
+      maxlength: 120,
+    },
+
     businessOwner: {
       type: String,
       default: "",

@@ -3,7 +3,7 @@
 
 
 
-import FormField from "./FormField";
+import FormField, { FormNoticeHost } from "./FormField";
 import { useLanguage } from "../language";
 
 
@@ -83,7 +83,7 @@ export const formSteps = [
     id: 1,
     title: "Identity",
     subtitle: "Who you are",
-    description: "Ten fields about you.",
+    description: "Your identity details.",
   },
 
   {
@@ -118,6 +118,24 @@ const formFields = [
     label: "First name",
     type: "text",
     placeholder: "Enter first name",
+  },
+
+  {
+    step: 1,
+    name: "phone",
+    label: "Phone number",
+    type: "tel",
+    placeholder: "Enter phone number",
+    private: true,
+  },
+
+  {
+    step: 1,
+    name: "email",
+    label: "Email",
+    type: "email",
+    placeholder: "Enter email address",
+    private: true,
   },
 
   {
@@ -407,24 +425,12 @@ const formFields = [
 
     options: [
       {
-        value: "dating",
-        label:
-          "Serious dating",
+        value: "short-term",
+        label: "Short Term Relationship",
       },
       {
         value: "long-term",
-        label:
-          "Long-term relationship",
-      },
-      {
-        value: "marriage",
-        label:
-          "Marriage-minded",
-      },
-      {
-        value: "life-partner",
-        label:
-          "Life partner",
+        label: "Long Term Relationship",
       },
     ],
   },
@@ -597,7 +603,9 @@ export default function FormFields({
 
 
   return (
-    <div className="register-grid">
+    <>
+      <FormNoticeHost />
+      <div className="register-grid">
 
       {fields.map(
         (field) => {
@@ -679,6 +687,7 @@ export default function FormFields({
         }
       )}
 
-    </div>
+      </div>
+    </>
   );
 }
